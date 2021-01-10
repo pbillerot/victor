@@ -1,0 +1,39 @@
+
+/* BEE STYLES.CSS */
+
+/*******************************
+             Global
+*******************************/
+
+/* TOP MENU */
+.ui.menu .item img.logo {
+    margin-right: 1.5em;
+}
+/* MAIN */
+main {
+    flex: 1;
+    margin-top: 6em;
+    margin-bottom: 1em;
+}
+.ui.breadcrumb .section {
+    padding-bottom: 1em;
+}
+#ace_editor {
+    border: 1px;
+}
+.ui.segment {
+    padding: 0;
+}
+
+/* Mobile */
+@media only screen and (max-width: 820px) {
+    .bee-desktop {
+        display: none !important;
+    }
+}
+/* Desktop */
+@media only screen and (min-width: 821px) {
+    .bee-mobile {
+        display: none !important;
+    }    
+}  

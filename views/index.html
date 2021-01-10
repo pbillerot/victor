@@ -1,0 +1,149 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html>
+{{template "_head.html" .}}
+
+<body>
+  <!-- MENU HORIZONTAL FIXED -->
+  <div class="ui top fixed menu" style="background-color: #f9fafb;">
+    <div class="ui container">
+      <a href="#" class="header item">
+        <img class="logo" src="{{.Config.Icon}}">
+        {{.Config.Title}}
+      </a>
+      <div class="right menu">
+        <div class="item bee-desktop">
+          <div class="ui basic small buttons">
+            <div class="ui icon button" title="Renommer...">
+              <i class="pencil alternate icon"></i>
+            </div>
+            <div class="ui icon button" title="Copier...">
+              <i class="copy outline icon"></i>
+            </div>
+            <div class="ui icon button" title="Déplacer...">
+              <i class="arrow right icon"></i>
+            </div>
+            <div class="ui icon button" title="Supprimer...">
+              <i class="trash alternate outline icon"></i>
+            </div>
+          </div>
+        </div>
+        <div class="item bee-desktop">
+          <div class="ui basic small buttons">
+            <div class="ui icon button" title="Editer...">
+              <i class="edit icon"></i>
+            </div>
+            <div class="ui icon button" title="Enregistrer">
+              <i class="save icon"></i>
+            </div>
+          </div>
+        </div>
+        <div class="item bee-desktop">
+          <div class="ui basic small buttons">
+            <div class="ui icon button" title="Importer...">
+              <i class="upload icon"></i>
+            </div>
+            <div class="ui icon button" title="Télécharger...">
+              <i class="download icon"></i>
+            </div>
+          </div>
+        </div>
+        <div class="ui dropdown item bee-mobile">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            <a class="ui icon item">
+              <i class="pencil alternate icon"></i> Renommer...
+            </a>
+            <a class="ui icon item">
+              <i class="copy outline icon"></i> Copier...
+            </a>
+            <a class="ui icon item">
+              <i class="arrow right icon"></i> Déplacer...
+            </a>
+            <a class="ui icon item">
+              <i class="trash alternate outline icon"></i> Supprimer...
+            </a>
+            <a class="ui icon item">
+              <i class="upload icon"></i> Importer...
+            </a><a class="ui icon item">
+              <i class="download icon"></i> Télécharger...
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui center aligned container">
+      <div class="ui large breadcrumb">
+        <a class="section"><i class="ui home icon"></i></a>
+        <i class="right chevron icon divider"></i>
+        <a class="section">Registration</a>
+        <i class="right chevron icon divider"></i>
+        <div class="active section">Personal Information</div>
+      </div>
+    </div>
+    <div class="ui container">
+      <div class="ui segment">
+        <pre id="ace_editor" style="opacity:0">
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+&lt;title>ACE in Action&lt;/title>
+&lt;style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+&lt;/style>
+&lt;/head>
+&lt;body>
+
+&lt;div id="editor">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+}
+&lt;/div>
+
+&lt;script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8">&lt;/script>
+&lt;script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+&lt;/script>
+&lt;/body>
+&lt;/html></pre>
+      </div>
+      <div class="ui placeholder segment">
+        <img id="img_editor" class="ui centered image" src="/static/img/victor.svg">
+      </div>
+    </div>
+  </main>
+  {{template "_foot.html" .}}
+  <script>
+    $(document).ready(function () {
+      // ace.config.set("basePath", "./files/ace");
+      var editor = ace.edit("ace_editor");
+      // aff de l'éditeur
+      editor.container.style.opacity = "";
+      // def du language
+      editor.session.setMode("ace/mode/html");
+      // editor.setAutoScrollEditorIntoView(true);
+      // hauteur 
+      editor.setOption("maxLines", 100);
+      editor.setOption("theme", 'ace/theme/eclipse');
+      // taille font
+      document.getElementById('ace_editor').style.fontSize = '13px';
+      editor.session.setUseWrapMode(true);
+      editor.session.setTabSize(2);
+      editor.setShowPrintMargin(false);
+      editor.setReadOnly(false);
+    });
+  </script>
+</body>
+
+</html>

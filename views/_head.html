@@ -1,0 +1,27 @@
+<!-- _head.html -->
+
+<head>
+    <meta charset="utf-8">
+    <title>{{.Config.Title}}</title>
+    <meta name="description" content="{{.Config.Description}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="_xsrf" content="{{.xsrf_token}}" />
+
+    <link rel="apple-touch-icon" sizes="72x72" href="{{.Config.Favicon}}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{.Config.Favicon}}">
+    <link rel="apple-touch-icon" href="{{.Config.Favicon}}">
+    <link rel="apple-touch-startup-image" href="{{.Config.Favicon}}">
+
+    <link rel="icon" type="image/png" href="{{.Config.Favicon}}" />
+    <link rel="shortcut icon" sizes="196x196" href="{{.Config.Favicon}}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Semantic CSS -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
+    <!-- Custom CSS -->
+    <link href="/static/css/bee_styles.css" rel="stylesheet">
+</head>
