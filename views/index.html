@@ -11,81 +11,114 @@
         <img class="logo" src="{{.Config.Icon}}">
         {{.Config.Title}}
       </a>
-      <div class="right menu">
-        <div class="item bee-desktop">
-          <div class="ui basic small buttons">
-            <div class="ui icon button" title="Renommer...">
-              <i class="pencil alternate icon"></i>
-            </div>
-            <div class="ui icon button" title="Copier...">
-              <i class="copy outline icon"></i>
-            </div>
-            <div class="ui icon button" title="Déplacer...">
-              <i class="arrow right icon"></i>
-            </div>
-            <div class="ui icon button" title="Supprimer...">
-              <i class="trash alternate outline icon"></i>
-            </div>
-          </div>
-        </div>
-        <div class="item bee-desktop">
-          <div class="ui basic small buttons">
-            <div class="ui icon button" title="Editer...">
-              <i class="edit icon"></i>
-            </div>
-            <div class="ui icon button" title="Enregistrer">
-              <i class="save icon"></i>
-            </div>
-          </div>
-        </div>
-        <div class="item bee-desktop">
-          <div class="ui basic small buttons">
-            <div class="ui icon button" title="Importer...">
-              <i class="upload icon"></i>
-            </div>
-            <div class="ui icon button" title="Télécharger...">
-              <i class="download icon"></i>
-            </div>
-          </div>
-        </div>
-        <div class="ui dropdown item bee-mobile">
-          <i class="ellipsis vertical icon"></i>
-          <div class="menu">
-            <a class="ui icon item">
-              <i class="pencil alternate icon"></i> Renommer...
-            </a>
-            <a class="ui icon item">
-              <i class="copy outline icon"></i> Copier...
-            </a>
-            <a class="ui icon item">
-              <i class="arrow right icon"></i> Déplacer...
-            </a>
-            <a class="ui icon item">
-              <i class="trash alternate outline icon"></i> Supprimer...
-            </a>
-            <a class="ui icon item">
-              <i class="upload icon"></i> Importer...
-            </a><a class="ui icon item">
-              <i class="download icon"></i> Télécharger...
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
   <!-- MAIN -->
   <main>
-    <div class="ui center aligned container">
-      <div class="ui large breadcrumb">
-        <a class="section"><i class="ui home icon"></i></a>
-        <i class="right chevron icon divider"></i>
-        <a class="section">Registration</a>
-        <i class="right chevron icon divider"></i>
-        <div class="active section">Personal Information</div>
-      </div>
-    </div>
     <div class="ui container">
-      <div class="ui segment">
+      <div class="ui top attached tabular stackable menu">
+        <div class="item active" data-tab="folder">
+          <div class="ui breadcrumb">
+            <div class="section" href="/"><i class="ui home icon"></i></div>
+            <i class="right chevron icon divider"></i>
+            <div class="section" href="/tab">Registration</div>
+            <i class="right chevron icon divider"></i>
+            <div class="active section">Personal Information</div>
+          </div>
+        </div>
+        <div class="item" data-tab="document"><i class="ui file outline icon"></i>Document</div>
+      </div>
+      <!-- FOLDER -->
+      <div class="ui bottom attached tab segment active" data-tab="folder">
+        <div class="ui secondary stackable menu">
+          <div class="item">
+            <div class="ui breadcrumb">
+              <a class="section" href="/"><i class="ui home icon"></i></a>
+              <i class="right chevron icon divider"></i>
+              <a class="section" href="/tab">Registration</a>
+              <i class="right chevron icon divider"></i>
+              <div class="active section">Personal Information</div>
+            </div>
+          </div>
+          <div class="right menu">
+            <div class="item">
+              <div class="ui basic small buttons">
+                <div class="ui icon button" title="Changer le mode d'affichage">
+                  <i class="th icon"></i>
+                </div>
+                <div class="ui icon button" title="Changer le mode d'affichage">
+                  <i class="th list icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui basic small buttons">
+                <div class="ui icon button" title="Renommer...">
+                  <i class="pencil alternate icon"></i>
+                </div>
+                <div class="ui icon button" title="Copier...">
+                  <i class="copy outline icon"></i>
+                </div>
+                <div class="ui icon button" title="Déplacer...">
+                  <i class="arrow right icon"></i>
+                </div>
+                <div class="ui icon button" title="Supprimer...">
+                  <i class="trash alternate outline icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui basic small buttons">
+                <div class="ui icon button" title="Importer...">
+                  <i class="upload icon"></i>
+                </div>
+                <div class="ui icon button" title="Télécharger...">
+                  <i class="download icon"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui placeholder segment">
+          <img id="img_editor" class="ui centered image" src="/static/img/victor.svg">
+        </div>
+      </div>
+      <!-- DOCUMENT -->
+      <div class="ui bottom attached tab segment" data-tab="document">
+        <div class="ui secondary stackable menu">
+          <div class="right menu">
+            <div class="item">
+              <div class="ui basic small buttons">
+                <div class="ui icon button" title="Renommer...">
+                  <i class="pencil alternate icon"></i>
+                </div>
+                <div class="ui icon button" title="Copier...">
+                  <i class="copy outline icon"></i>
+                </div>
+                <div class="ui icon button" title="Déplacer...">
+                  <i class="arrow right icon"></i>
+                </div>
+                <div class="ui icon button" title="Supprimer...">
+                  <i class="trash alternate outline icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui basic small buttons">
+                <div class="ui icon button" title="Enregistrer">
+                  <i class="save icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui basic small buttons">
+                <div class="ui icon button" title="Télécharger...">
+                  <i class="download icon"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <pre id="ace_editor" style="opacity:0">
 &lt;!DOCTYPE html>
 &lt;html lang="en">
@@ -118,9 +151,6 @@
 &lt;/body>
 &lt;/html></pre>
       </div>
-      <div class="ui placeholder segment">
-        <img id="img_editor" class="ui centered image" src="/static/img/victor.svg">
-      </div>
     </div>
   </main>
   {{template "_foot.html" .}}
@@ -142,6 +172,10 @@
       editor.session.setTabSize(2);
       editor.setShowPrintMargin(false);
       editor.setReadOnly(false);
+
+      $('.menu .item').tab({
+
+      });
     });
   </script>
 </body>
