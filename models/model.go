@@ -58,7 +58,6 @@ type AppConfig struct {
 	Version     string
 	Favicon     string
 	Icon        string
-	Theme       string
 	HugoRacine  string
 	HugoDeploy  string
 }

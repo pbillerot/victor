@@ -124,7 +124,7 @@ func (c *MainController) List() {
 	} else {
 		c.Data["Records"] = recordFiltered
 	}
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/list/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/list/%s", appid))
 	c.TplName = "hugo_list.html"
 }
 
@@ -185,7 +185,7 @@ func (c *MainController) Image() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/image/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/image/%s", appid))
 	c.TplName = "hugo_image.html"
 }
 
@@ -213,7 +213,7 @@ func (c *MainController) Pdf() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/image/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/image/%s", appid))
 	c.TplName = "hugo_pdf.html"
 }
 
@@ -280,7 +280,7 @@ func (c *MainController) Document() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/document/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/document/%s", appid))
 	c.TplName = "hugo_document.html"
 }
 
@@ -308,7 +308,7 @@ func (c *MainController) File() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/file/%s/%s", appid, keyid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/file/%s/%s", appid, keyid))
 	c.TplName = "hugo_file.html"
 }
 
@@ -336,7 +336,7 @@ func (c *MainController) Directory() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/directory/%s/%s", appid, keyid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/directory/%s/%s", appid, keyid))
 	c.TplName = "hugo_directory.html"
 }
 

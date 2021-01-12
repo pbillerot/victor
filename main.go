@@ -23,9 +23,6 @@ func init() {
 	if val, ok := config.String("description"); ok == nil {
 		controllers.AppConfig.Description = val
 	}
-	if val, ok := config.String("theme"); ok == nil {
-		controllers.AppConfig.Theme = val
-	}
 	if val, ok := config.String("favicon"); ok == nil {
 		controllers.AppConfig.Favicon = val
 	}
