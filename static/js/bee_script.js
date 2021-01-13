@@ -3,6 +3,15 @@
  */
 $(document).ready(function () {
 
+    // Changement de répertoire
+    $('.victor-folder-submit').on('click', function (event) {
+        $('#victor-folder').val($(this).data('path'));
+        $('#victor-action').val($(this).data('action'));
+        $('form', document).submit();
+        event.preventDefault();
+    });
+
+
     var isUsed = false;
 
     // CLIC IMAGE POPUP
@@ -55,68 +64,6 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-    // RECHERCHE
-    // Ouvrir la recherche
-    $('#crud-search-active').on('click', function (event) {
-        $('#crud-search').show();
-        // $('#crud-header').hide();
-        $('#crud-search-active').hide();
-        $('#search').focus();
-        event.preventDefault();
-    });
-    // Fermer la recherche
-    $('#crud-search-close').on('click', function (event) {
-        $('#crud-search').hide();
-        // $('#crud-header').show();
-        $('#crud-search-active').show();
-        $('#search').val('');
-        $('#crud-form-search').val('')
-        $('#crud-form-searchstop').val('true')
-        $('form').submit();
-        event.preventDefault();
-    });
-    // Validation par touche entrée
-    $('#search').on('keypress', function (e) {
-        if (e.which == 13) {
-            $('#crud-search-go').trigger('click');
-        }
-    });
-    // Lancement de la recherche
-    $('#crud-search-go').on('click', function (event) {
-        var value = $('#search').val().toLowerCase();
-        if (value.length > 0) {
-            $('#crud-form-search').val(value)
-        } else {
-            $('#crud-form-search').val('')
-            $('#crud-form-searchstop').val('true')
-        }
-        $('form').submit();
-        event.preventDefault();
-    });
-
-    // TRI COLONNE DE LA TABLE
-    $(document).on('click', '.crud-ajax-sort', function (event) {
-        var $sortdirection = "ascending"
-        if (!$(this).hasClass('sorted')) {
-            $(this).closest('tr').find('.sorted').removeClass('sorted');
-            $(this).closest('tr').find('.ascending').removeClass('ascending');
-            $(this).closest('tr').find('.descending').removeClass('descending');
-            $(this).addClass("sorted")
-            $(this).addClass($sortdirection)
-        } else {
-            // on inverse le tri
-            if ($(this).hasClass('ascending')) {
-                $(this).closest('tr').find('.ascending').removeClass('ascending');
-                $sortdirection = "descending"
-                $(this).addClass($sortdirection)
-            }
-        }
-        $('#crud-form-sortid').val(this.id.substring(4))
-        $('#crud-form-sortdirection').val($sortdirection)
-        $('form').submit();
-        event.preventDefault();
-    });
-
     // CLIC URL
     $('.crud-jquery-url').on('click', function (event) {
         if (isUsed) {
@@ -148,13 +95,6 @@ $(document).ready(function () {
         } else {
             window.open($(this).data('url'), $target);
         }
-        event.preventDefault();
-    });
-
-    // VALIDATION FORMULAIRE
-    $('.crud-jquery-submit').on('click', function (event) {
-        $('form', document).submit();
-        $(this).attr('disabled', 'disabled');
         event.preventDefault();
     });
 
@@ -363,15 +303,6 @@ $(document).ready(function () {
             }
         }
     }
-
-    // Actualisation de la fenetre parent
-    if ($hugo_refresh && $hugo_refresh.length > 0) {
-        var val = Cookies.get($hugo_refresh)
-        if (val == "true") {
-            window.opener.location.reload();
-            Cookies.remove($hugo_refresh);
-        }
-    } // end hugo_refresh
 
     if ($hugo_view && $hugo_view.length > 0) {
         // Si recherche dans Cookie : aff du input et sélection

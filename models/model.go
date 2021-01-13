@@ -1,10 +1,25 @@
 package models
 
-import "os"
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/astaxie/beego/logs"
+	"github.com/beego/beego/v2/core/config"
+	"gopkg.in/yaml.v2"
+)
+
+// Config de config.yaml
+var Config AppConfig
 
 // HugoFile propriétés d'un fichier dans le répertoire hugoDir
 type HugoFile struct {
-	ID          int
 	Key         string
 	Root        string
 	Path        string
@@ -33,8 +48,8 @@ type HugoFile struct {
 	SRC         string
 }
 
-// HugoMeta meta données
-type HugoMeta struct {
+// HugoFileMeta meta données
+type HugoFileMeta struct {
 	Title       string   `yaml:"title"`
 	Draft       bool     `yaml:"draft"`
 	Date        string   `yaml:"date"`
@@ -59,5 +74,200 @@ type AppConfig struct {
 	Favicon     string
 	Icon        string
 	HugoRacine  string
+	HugoURL     string
 	HugoDeploy  string
+}
+
+// Breadcrumb as
+type Breadcrumb struct {
+	Base   string
+	Path   string
+	IsLast bool
+}
+
+func init() {
+	// Initialisation de models.Config
+	if val, ok := config.String("hugo_racine"); ok == nil {
+		Config.HugoRacine = val
+	}
+	if val, ok := config.String("hugo_url"); ok == nil {
+		Config.HugoURL = val
+	}
+	if val, ok := config.String("hugo_deploy"); ok == nil {
+		Config.HugoDeploy = val
+	}
+	if val, ok := config.String("title"); ok == nil {
+		Config.Title = val
+	}
+	if val, ok := config.String("description"); ok == nil {
+		Config.Description = val
+	}
+	if val, ok := config.String("favicon"); ok == nil {
+		Config.Favicon = val
+	}
+	if val, ok := config.String("icon"); ok == nil {
+		Config.Icon = val
+	}
+	logs.Info("Config", Config)
+}
+
+// GetFilesFolder retourne la liste des fichiers du <folder>
+func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
+	// suppression du / à la fin
+	hugoFolder := strings.TrimSuffix(Config.HugoRacine+"/content"+folder, "/")
+	var pis []HugoPathInfo
+	err = readDir(hugoFolder, &pis)
+	if err != nil {
+		return
+	}
+	for _, pi := range pis {
+		record := fileRecord(hugoFolder, pi.Path, pi.Info)
+		// ajout dans hugo
+		hugoFiles = append(hugoFiles, record)
+	}
+
+	return
+}
+
+func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record HugoFile) {
+
+	// On elève le chemin absolu du path
+	lenPrefixe := len(Config.HugoRacine + "/content")
+	path := pathAbsolu[lenPrefixe:]
+	if path == "" {
+		return
+	}
+
+	record.PathAbsolu = pathAbsolu
+	record.Path = path // on enlève la partie hugoDirectory du chemin
+	record.Dir = filepath.Dir(path)
+	record.Base = filepath.Base(path)
+	if info.IsDir() {
+		record.IsDir = 1
+		if record.Dir == "/" {
+			record.Dir += record.Base
+		} else {
+			record.Dir += "/" + record.Base
+		}
+	} else {
+		record.IsDir = 0
+	}
+	islash := strings.Index(record.Dir[1:], "/")
+	if islash > 0 {
+		record.Root = record.Dir[1 : islash+1]
+	} else {
+		record.Root = record.Dir[1:]
+	}
+	record.Level = strings.Count(record.Dir, "/")
+	record.Ext = filepath.Ext(path)
+	record.SRC = fmt.Sprintf("%s/content%s", Config.HugoURL, record.Path)
+	// record.URL = fmt.Sprintf("%s/%d", Config.HugoURL) TODO
+
+	ext := filepath.Ext(path)
+	if record.Base == "config.yaml" {
+		// le fichier a son clone dans /data
+		// lecture du fichier yaml
+		content, err := ioutil.ReadFile(pathAbsolu)
+		if err != nil {
+			logs.Error(err)
+		}
+		record.Content = string(content[:])
+		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/data/", 1)
+	} else if ext == ".md" || ext == ".yaml" {
+		// lecture des metadata du fichier markdown
+		content, err := ioutil.ReadFile(pathAbsolu)
+		if err != nil {
+			logs.Error(err)
+		}
+		// Extraction des meta entre les --- meta ---
+		var meta HugoFileMeta
+		err = yaml.Unmarshal(content, &meta)
+		if err != nil {
+			logs.Error(err)
+		}
+		record.Title = meta.Title
+		record.Date = meta.Date
+		record.Action = meta.Action
+		record.DatePublish = meta.DatePublish
+		record.DateExpiry = meta.DateExpiry
+		record.Inline = true
+		if record.DatePublish != "" && record.DatePublish > time.Now().Format("2006-01-02") {
+			record.Inline = false
+			record.Planified = true
+			// metaPlanified = append(metaPlanified, id)
+		}
+		if record.DateExpiry != "" && record.DateExpiry <= time.Now().Format("2006-01-02") {
+			record.Inline = false
+			record.Expired = true
+			// metaExpired = append(metaExpired, id)
+		}
+		if meta.Draft {
+			record.Draft = "1"
+			record.Inline = false
+			// metaDraft = append(metaDraft, id)
+		} else {
+			record.Draft = "0"
+		}
+		record.Tags = strings.Join(meta.Tags, ",")
+		record.Categories = strings.Join(meta.Categories, ",")
+		record.Content = string(content[:])
+		record.HugoPath = strings.Replace(record.Path, ".md", "", 1)
+		// maj meta
+		// for _, v := range meta.Categories {
+		// 	metaCat[v] = append(metaCat[v], id)
+		// }
+		// for _, v := range meta.Tags {
+		// 	metaTag[v] = append(metaTag[v], id)
+		// }
+
+	}
+	return
+}
+
+// readDir retourne la liste des fichiers dans HugoPathInfo
+func readDir(dirname string, info *[]HugoPathInfo) (err error) {
+	// ouverture du répertoire
+	f, err := os.Open(dirname)
+	if err != nil {
+		return
+	}
+	// lecture ds fichiers et répertoires du répertoire courant
+	list, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		return
+	}
+	// tri des répertoires sur le nom inversé si numérique
+	sort.Slice(list, func(i, j int) bool {
+		if _, err := strconv.Atoi(list[i].Name()); err == nil {
+			if _, err := strconv.Atoi(list[j].Name()); err == nil {
+				return list[i].Name() > list[j].Name()
+			}
+			return list[i].Name() < list[j].Name()
+		}
+		return list[i].Name() < list[j].Name()
+	})
+	// // tri des fichiers sur le nom
+	// sort.Slice(list, func(i, j int) bool {
+	// 	return list[i].Name() < list[j].Name()
+	// })
+	// Rangement des répertoires au début
+	for _, file := range list {
+		if file.IsDir() {
+			var pi HugoPathInfo
+			pi.Path = dirname + "/" + file.Name()
+			pi.Info = file
+			*info = append(*info, pi)
+		}
+	}
+	// Rangement des fichiers à la fin
+	for _, file := range list {
+		if !file.IsDir() {
+			var pi HugoPathInfo
+			pi.Path = dirname + "/" + file.Name()
+			pi.Info = file
+			*info = append(*info, pi)
+		}
+	}
+	return
 }

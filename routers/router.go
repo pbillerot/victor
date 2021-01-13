@@ -6,10 +6,10 @@ import (
 )
 
 func init() {
-	beego.Router("/", &controllers.MainController{})
+	beego.Router("/", &controllers.MainController{}, "get:Main")
 
-	beego.Router("list", &controllers.MainController{}, "get:List;post:List")
-	beego.Router("/document:key", &controllers.MainController{}, "get:Document;post:Document")
+	beego.Router("/folder/*.*", &controllers.MainController{}, "get:Folder")
+	beego.Router("/document/:key", &controllers.MainController{}, "get:Document;post:Document")
 	beego.Router("/image/:key", &controllers.MainController{}, "get:Image;post:Image")
 	beego.Router("/pdf/:key", &controllers.MainController{}, "get:Pdf")
 	beego.Router("/directory/:key", &controllers.MainController{}, "get:Directory")
