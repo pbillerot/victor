@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -16,46 +17,45 @@ import (
 
 // Main as get and Post
 func (c *MainController) Main() {
-	// Chargement de hugoFiles et des meta du répertoire courant
+	// Chargement de hugoFiles et des meta du dossier courant
 	hugoFiles, _ := models.GetFilesFolder("/")
+	pathFile := c.Ctx.Input.Cookie("victor-file")
 
 	c.Data["Records"] = hugoFiles
 	c.Data["Folder"] = "/"
+	c.Data["File"] = pathFile
+	c.Data["Ext"] = filepath.Ext(pathFile)
 
+	c.Ctx.Output.Cookie("victor-folder", "/")
 	c.TplName = "index.html"
 }
 
-// Folder Demande de lister le répertoire
+// Folder Demande de lister le dossier
 func (c *MainController) Folder() {
-	path := "/" + c.Ctx.Input.Param(":path")
-	// Chargement de hugoFiles et des meta du répertoire courant
-	hugoFiles, _ := models.GetFilesFolder(path)
+	pathFolder := "/" + c.Ctx.Input.Param(":path")
+	// Chargement de hugoFiles et des meta du dossier courant
+	hugoFiles, _ := models.GetFilesFolder(pathFolder)
+
+	pathFile := c.Ctx.Input.Cookie("victor-file")
 
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = path
+	c.Data["Folder"] = pathFolder
+	c.Data["File"] = pathFile
+	c.Data["Ext"] = filepath.Ext(pathFile)
 
+	c.Ctx.Output.Cookie("victor-folder", pathFolder)
 	c.TplName = "index.html"
 }
 
 // Image Visualiser Modifier une image
 func (c *MainController) Image() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
+	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	// Chargement de hugoFiles et des meta du dossier courant
+	pathFolder := c.Ctx.Input.Cookie("victor-folder")
+	hugoFiles, _ := models.GetFilesFolder(pathFolder)
+
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
-		flash.Store(&c.Controller)
-	}
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DE L'IMAGE
@@ -64,38 +64,33 @@ func (c *MainController) Image() {
 		unbased, err := base64.StdEncoding.DecodeString(b64data)
 		// img, _, err := image.Decode(bytes.NewReader([]byte(element.SQLout)))
 		if err != nil {
-			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
+			msg := fmt.Sprintf("HugoImage %s : %s", pathFile, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			c.Ctx.Redirect(302, "/")
 			return
 		}
-
-		err = ioutil.WriteFile(record.PathAbsolu, unbased, 0644)
-		// outputFile, err := os.Create(record.PathAbsolu)
+		pathAbsolu := models.Config.HugoRacine + "/content" + pathFile
+		err = ioutil.WriteFile(pathAbsolu, unbased, 0644)
 		if err != nil {
-			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
+			msg := fmt.Sprintf("HugoImage %s : %s", pathAbsolu, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			c.Ctx.Redirect(302, "/")
 			return
 		}
-		// defer outputFile.Close()
-
-		// outputFile.Write(unbased)
-		// Fermeture de la fenêtre
-		c.TplName = "bee_close.html"
-		return
 	}
 
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = record
-	c.Data["KeyID"] = keyid
-	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/image/%s", appid))
-	c.TplName = "hugo_image.html"
+	c.Data["Records"] = hugoFiles
+	c.Data["Folder"] = pathFolder
+	c.Data["File"] = pathFile
+	c.Data["Ext"] = filepath.Ext(pathFile)
+
+	c.Ctx.Output.Cookie("victor-file", pathFile)
+	c.TplName = "index.html"
 }
 
 // Pdf Visualiser Modifier une image
@@ -221,7 +216,7 @@ func (c *MainController) File() {
 	c.TplName = "hugo_file.html"
 }
 
-// Directory Gestion du répertoire
+// Directory Gestion du dossier
 func (c *MainController) Directory() {
 	appid := c.Ctx.Input.Param(":app")
 	keyid := c.Ctx.Input.Param(":key")
@@ -314,7 +309,7 @@ func (c *MainController) FileMv() {
 		}
 	}
 
-	// Le cookie ancrage est déplacé sur le répertoire root
+	// Le cookie ancrage est déplacé sur le dossier root
 	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 	// Demande d'actualisation de l'arborescence
 	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
@@ -327,7 +322,7 @@ func (c *MainController) FileMv() {
 
 }
 
-// FileCp Recopier le fichier ou répertoire
+// FileCp Recopier le fichier ou dossier
 func (c *MainController) FileCp() {
 	appid := c.Ctx.Input.Param(":app")
 	keyid := c.Ctx.Input.Param(":key")
@@ -427,7 +422,7 @@ func (c *MainController) FileNew() {
 	return
 }
 
-// FileRm Supprimer le fichier ou répertoire
+// FileRm Supprimer le fichier ou dossier
 func (c *MainController) FileRm() {
 	appid := c.Ctx.Input.Param(":app")
 	keyid := c.Ctx.Input.Param(":key")
@@ -457,7 +452,7 @@ func (c *MainController) FileRm() {
 		return
 	}
 
-	// Le cookie ancrage est déplacé sur le répertoire root
+	// Le cookie ancrage est déplacé sur le dossier root
 	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 
 	// Vidage de Hugo pour reconstruction
@@ -519,7 +514,7 @@ func (c *MainController) FileUpload() {
 		return
 	}
 
-	// Le cookie ancrage est déplacé sur le répertoire root
+	// Le cookie ancrage est déplacé sur le dossier root
 	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 
 	// Vidage de Hugo pour reconstruction
@@ -532,7 +527,7 @@ func (c *MainController) FileUpload() {
 	return
 }
 
-// FileMkdir Créer un répertoire
+// FileMkdir Créer un dossier
 func (c *MainController) FileMkdir() {
 	appid := c.Ctx.Input.Param(":app")
 	keyid := c.Ctx.Input.Param(":key")
@@ -566,7 +561,7 @@ func (c *MainController) FileMkdir() {
 	// Vidage de Hugo pour reconstruction
 	// hugoFiles = nil
 
-	// Le cookie ancrage est déplacé sur le répertoire root
+	// Le cookie ancrage est déplacé sur le dossier root
 	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 
 	// Demande d'actualisation de l'arborescence
@@ -594,6 +589,30 @@ func (c *MainController) Action() {
 	// Fermeture de la fenêtre
 	c.TplName = "bee_close.html"
 	return
+}
+
+// APIFolders as /api/folders
+func (c *MainController) APIFolders() {
+	type myList struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	}
+	type myStruct struct {
+		Success bool     `json:"success"`
+		Message string   `json:"message"`
+		Results []myList `json:"results"`
+	}
+	var jlist []myList
+	for _, folder := range models.ListFolders() {
+		jlist = append(jlist, myList{Name: folder, Value: folder})
+	}
+	var resp myStruct
+	resp.Success = true
+	resp.Message = "ok coral"
+	resp.Results = jlist
+
+	c.Data["json"] = &resp
+	c.ServeJSON()
 }
 
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement

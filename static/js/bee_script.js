@@ -3,16 +3,95 @@
  */
 $(document).ready(function () {
 
-    // Changement de répertoire
-    $('.victor-folder-submit').on('click', function (event) {
-        $('#victor-folder').val($(this).data('path'));
-        $('#victor-action').val($(this).data('action'));
-        $('form', document).submit();
+    // Sélection d'un dossier ou fichier
+    $('.bee-click').on('click', function (event) {
+        if ($(this).hasClass('bee-selected')) {
+            $('.bee-hidden').hide();
+            $(this).removeClass('bee-selected');
+            $('#bee-path').val('')
+            $('#bee-base').val('')
+        } else {
+            $(this).parent().find('.bee-selected').removeClass('bee-selected');
+            $(this).addClass("bee-selected");
+            $('.bee-hidden').show();
+            $('#bee-path').val($(this).data('path'))
+            $('#bee-base').val($(this).data('base'))
+        }
+        event.preventDefault();
+    });
+    // Ouverture d'un dossier ou fichier
+    $('.bee-dblclick').on('dblclick', function (event) {
+        window.location = $(this).data('path');
+        event.preventDefault();
+    });
+    $('.bee-submit').on('click', function (event) {
+        $('#bee-submit').attr('action', $(this).data('action'))
+        // $('#bee-submit', document).submit();
         event.preventDefault();
     });
 
-
-    var isUsed = false;
+    // ACTION RENAME
+    $('.bee-modal-rename').on('click', function (event) {
+        $('#bee-modal-rename').find('form').attr('action', $(this).data('action'));
+        $('#bee-modal-rename').find('.header').html($(this).attr('title'));
+        $('#bee-modal-rename').find("[name='new-name']").val($('#bee-base').val());
+        $('#bee-modal-rename')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $('form', document).submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+    // ACTION CONFIRMATION
+    $('.bee-modal-confirm').on('click', function (event) {
+        $('#bee-modal-confirm').find('form').attr('action', $(this).data('action'));
+        $('#bee-modal-confirm').find('.header').html($(this).attr('title'));
+        $('#bee-modal-confirm').find('.message>.header').html($('#bee-path').val());
+        $('#bee-modal-confirm')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $('form', document).submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+    // ACTION DEPLACER
+    $('.bee-modal-move').on('click', function (event) {
+        $('#bee-modal-move').find('form').attr('action', $(this).data('action'));
+        $('#bee-modal-move').find('.header').html($(this).attr('title'));
+        $('#bee-modal-move').find('.message>.header').html($('#bee-path').val());
+        $('#bee-ajax-folders').dropdown({
+            apiSettings: {
+                url: '/api/folders',
+                cache: false,
+                onResponse: (response) => {
+                    // console.log(response);
+                    return response
+                }
+            },
+            saveRemoteData: false
+        });
+        $('#bee-modal-move')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $('form', document).submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
 
     // CLIC IMAGE POPUP
     var $hugo_view = $('#hugo_view').val();
@@ -226,8 +305,8 @@ $(document).ready(function () {
     // IHM SEMANTIC
     $('.ui.checkbox').checkbox();
     $('.ui.radio.checkbox').checkbox();
-    $('.ui.dropdown').dropdown();
-    $('select.dropdown').dropdown();
+    // $('.ui.dropdown').dropdown();
+    // $('select.dropdown').dropdown();
     $('.message .close')
         .on('click', function () {
             $(this)
@@ -347,46 +426,23 @@ $(document).ready(function () {
         var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
         if (window.opener == null) {
             window.open($(this).data('url')
-            , target
-            , computeWindow(posx, posy, width, height, false));
+                , target
+                , computeWindow(posx, posy, width, height, false));
         } else {
             window.opener.open($(this).data('url')
-            , target
-            , computeWindow(posx, posy, width, height, false));
+                , target
+                , computeWindow(posx, posy, width, height, false));
         }
         event.preventDefault();
     });
 
-    // ACTION DEMANDE CONFIRMATION
-    $('.hugo-jquery-action').on('click', function (event) {
-        var $url = $(this).data('url');
-        if ($(this).data('confirm') == true) {
-            $('#crud-action').html($(this).html());
-            $('#crud-modal-confirm')
-                .modal({
-                    closable: false,
-                    onDeny: function () {
-                        return true;
-                    },
-                    onApprove: function () {
-                        $('form').attr('action', $url);
-                        $('form', document).submit();
-                    }
-                }).modal('show');
-        } else {
-            // Sans demande de confirmation
-            $('form').attr('action', $url);
-            $('form', document).submit()
-        }
-        event.preventDefault();
-    });
 
     /**
      * Fermeture de la fenêtre popup
      */
     $(document).on('click', '.crud-jquery-close', function (event) {
-        if ($('#button_validate').length >0 
-            && $('#button_validate').attr('disabled') !="disabled") {
+        if ($('#button_validate').length > 0
+            && $('#button_validate').attr('disabled') != "disabled") {
             $('#crud-action').html("Abandonner les modifications ?");
             $('#crud-modal-confirm')
                 .modal({
@@ -448,7 +504,7 @@ function computeWindow(posx, posy, pwidth, pheight, full_screen) {
  * @param {object event} event 
  */
 function blockCR(event) {
-    if (event.keyCode == 13 ) {
+    if (event.keyCode == 13) {
         event.preventDefault();
     }
 }

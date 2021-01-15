@@ -18,7 +18,7 @@ import (
 // Config de config.yaml
 var Config AppConfig
 
-// HugoFile propriétés d'un fichier dans le répertoire hugoDir
+// HugoFile propriétés d'un fichier dans le dossier hugoDir
 type HugoFile struct {
 	Key         string
 	Root        string
@@ -226,18 +226,18 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 
 // readDir retourne la liste des fichiers dans HugoPathInfo
 func readDir(dirname string, info *[]HugoPathInfo) (err error) {
-	// ouverture du répertoire
+	// ouverture du dossier
 	f, err := os.Open(dirname)
 	if err != nil {
 		return
 	}
-	// lecture ds fichiers et répertoires du répertoire courant
+	// lecture ds fichiers et dossiers du dossier courant
 	list, err := f.Readdir(-1)
 	f.Close()
 	if err != nil {
 		return
 	}
-	// tri des répertoires sur le nom inversé si numérique
+	// tri des dossiers sur le nom inversé si numérique
 	sort.Slice(list, func(i, j int) bool {
 		if _, err := strconv.Atoi(list[i].Name()); err == nil {
 			if _, err := strconv.Atoi(list[j].Name()); err == nil {
@@ -251,7 +251,7 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 	// sort.Slice(list, func(i, j int) bool {
 	// 	return list[i].Name() < list[j].Name()
 	// })
-	// Rangement des répertoires au début
+	// Rangement des dossiers au début
 	for _, file := range list {
 		if file.IsDir() {
 			var pi HugoPathInfo
@@ -269,5 +269,22 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 			*info = append(*info, pi)
 		}
 	}
+	return
+}
+
+// ListFolders as
+func ListFolders() (list []string) {
+
+	err := filepath.Walk(Config.HugoRacine+"/content",
+		func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() {
+				list = append(list, path[len(Config.HugoRacine+"/content"):])
+			}
+			return nil
+		})
+	if err != nil {
+		fmt.Printf("walk error [%v]\n", err)
+	}
+
 	return
 }

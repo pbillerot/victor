@@ -60,7 +60,7 @@
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/mv/{{$keyid}}">
                 <i class="file icon"></i>
-                Renommer le répertoire en...
+                Renommer le dossier en...
               </button>
               <input class="hugo-action" type="text" name="new_name" id="new_name" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}" onkeydown="blockCR(event)">
@@ -82,7 +82,7 @@
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/cp/{{$keyid}}">
                 <i class="clone outline icon"></i>
-                Recopier le répertoire dans...
+                Recopier le dossier dans...
               </button>
               <input class="hugo-action" type="text" name="copy_file" id="copy_file" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}" onkeydown="blockCR(event)">
@@ -93,7 +93,7 @@
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/rm/{{$keyid}}">
                 <i class="trash alternate outline icon"></i>
-                Supprimer le répertoire...
+                Supprimer le dossier...
               </button>
               <input class="hugo-action" disabled="disabled" type="text" name="del_file" id="del_file"
                 placeholder="{{$record.Path}}" value="{{$record.Path}}" onkeydown="blockCR(event)">
@@ -104,7 +104,7 @@
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/mkdir/{{$keyid}}">
                 <i class="folder outline icon"></i>
-                Créer le répertoire...
+                Créer le dossier...
               </button>
               <input class="hugo-action" type="text" name="new_dir" id="new_dir" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}" onkeydown="blockCR(event)">

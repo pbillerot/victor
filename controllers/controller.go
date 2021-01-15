@@ -29,9 +29,6 @@ func (c *MainController) Prepare() {
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	// Sera ajouté derrière les urls pour ne pas utiliser le cache des images dynamiques
 	c.Data["Composter"] = time.Now().Unix()
-	// Contexte de navigation
-	c.Data["VictorFolder"] = c.Ctx.Input.Cookie("victor-folder")
-	c.Data["VictorFile"] = c.Ctx.Input.Cookie("victor-file")
 
 }
 
