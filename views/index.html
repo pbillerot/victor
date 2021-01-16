@@ -17,22 +17,46 @@
   <main>
     <!-- <div class="ui container"> -->
     <div class="ui two column stackable grid">
-      <div class="ui vertical divider"><i class="arrows alternate horizontal icon"></i></div>
+      <div class="ui vertical divider"><i class="arrows alternate horizontal small icon"></i></div>
       <div class="row">
-        <!-- FOLDER AND FILES -->
-        {{template "_folder.html" .}}
-        <!-- DOCUMENT -->
-        {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
-        {{template "_image.html" .}}
-        {{ else if (eq .Ext ".pdf")}}
-        {{template "_pdf.html" .}}
-        {{ else if (eq .Ext ".yaml")}}
-        {{template "_document.html" .}}
-        {{ else if (eq .Ext ".md")}}
-        {{template "_document.html" .}}
-        {{ else }}
-        {{template "_document.html" .}}
-        {{ end }}
+        <div class="column">
+          <!-- FOLDER AND FILES -->
+          {{template "_folder.html" .}}
+        </div>
+        <div class="column">
+          <div class="ui pointing secondary menu">
+            <div class="item" data-tab="one">Document <i class="times icon"></i></div>
+            <div class="active item" data-tab="two">Image <i class="thumbtack small icon"></i></div>
+          </div>
+          <div class="ui tab segment" data-tab="one">
+            <!-- DOCUMENT -->
+            {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
+            {{template "_image.html" .}}
+            {{ else if (eq .Ext ".pdf")}}
+            {{template "_pdf.html" .}}
+            {{ else if (eq .Ext ".yaml")}}
+            {{template "_document.html" .}}
+            {{ else if (eq .Ext ".md")}}
+            {{template "_document.html" .}}
+            {{ else }}
+            {{template "_document.html" .}}
+            {{ end }}
+          </div>
+          <div class="ui active tab segment" data-tab="two">
+            <!-- DOCUMENT -->
+            {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
+            {{template "_image.html" .}}
+            {{ else if (eq .Ext ".pdf")}}
+            {{template "_pdf.html" .}}
+            {{ else if (eq .Ext ".yaml")}}
+            {{template "_document.html" .}}
+            {{ else if (eq .Ext ".md")}}
+            {{template "_document.html" .}}
+            {{ else }}
+            {{template "_document.html" .}}
+            {{ end }}
+          </div>
+        </div>
       </div>
     </div>
     <!-- </div> -->
@@ -88,7 +112,7 @@
         </div>
         <div class="required field">
           <label>Vers</label>
-           <select id="bee-ajax-folders" name="new-name" class="ui selection dropdown">
+          <select id="bee-ajax-folders" name="new-name" class="ui selection dropdown">
           </select>
         </div>
       </form>
@@ -113,7 +137,7 @@
   <script>
     $(document).ready(function () {
       // ace.config.set("basePath", "./files/ace");
-      var editor = ace.edit("ace_editor");
+      var editor = ace.edit("ace-editor");
       // aff de l'éditeur
       editor.container.style.opacity = "";
       // def du language
@@ -123,7 +147,7 @@
       editor.setOption("maxLines", 100);
       editor.setOption("theme", 'ace/theme/eclipse');
       // taille font
-      document.getElementById('ace_editor').style.fontSize = '13px';
+      document.getElementById('ace-editor').style.fontSize = '13px';
       editor.session.setUseWrapMode(true);
       editor.session.setTabSize(2);
       editor.setShowPrintMargin(false);

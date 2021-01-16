@@ -18,7 +18,7 @@ import (
 // Main as get and Post
 func (c *MainController) Main() {
 	// Chargement de hugoFiles et des meta du dossier courant
-	hugoFiles, _ := models.GetFilesFolder("/")
+	hugoFiles := models.HugoGetFolder("/")
 	pathFile := c.Ctx.Input.Cookie("victor-file")
 
 	c.Data["Records"] = hugoFiles
@@ -27,7 +27,8 @@ func (c *MainController) Main() {
 	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-folder", "/")
-	c.TplName = "index.html"
+	// c.TplName = "index.html"
+	c.TplName = "maquette.html"
 }
 
 // Folder Demande de lister le dossier
@@ -51,11 +52,15 @@ func (c *MainController) Folder() {
 func (c *MainController) Image() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 
-	// Chargement de hugoFiles et des meta du dossier courant
-	pathFolder := c.Ctx.Input.Cookie("victor-folder")
-	hugoFiles, _ := models.GetFilesFolder(pathFolder)
+	// Recherche du record
+	record := models.HugoGetRecord(pathFile)
 
 	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Path == "" {
+		logs.Error("Fichier non trouvé", pathFile)
+		flash.Error("Fichier non trouvé : %s", pathFile)
+		flash.Store(&c.Controller)
+	}
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DE L'IMAGE
@@ -84,60 +89,46 @@ func (c *MainController) Image() {
 	}
 
 	// Remplissage du contexte pour le template
-	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = pathFolder
+	c.Data["Record"] = record
 	c.Data["File"] = pathFile
-	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-file", pathFile)
-	c.TplName = "index.html"
+	c.TplName = "image.html"
 }
 
 // Pdf Visualiser Modifier une image
 func (c *MainController) Pdf() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
+	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 
 	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	record := models.HugoGetRecord(pathFile)
+
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
+	if record.Path == "" {
+		logs.Error("Fichier non trouvé", pathFile)
+		flash.Error("Fichier non trouvé : %s", pathFile)
 		flash.Store(&c.Controller)
 	}
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
-	c.Data["KeyID"] = keyid
-	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/image/%s", appid))
-	c.TplName = "hugo_pdf.html"
+	c.Data["File"] = pathFile
+
+	c.Ctx.Output.Cookie("victor-file", pathFile)
+	c.TplName = "pdf.html"
 }
 
 // Document Visualiser Modifier un document
 func (c *MainController) Document() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
+	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 
 	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	record := models.HugoGetRecord(pathFile)
+
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
+	if record.Path == "" {
+		logs.Error("Fichier non trouvé", pathFile)
+		flash.Error("Fichier non trouvé : %s", pathFile)
 		flash.Store(&c.Controller)
 	}
 
@@ -177,71 +168,16 @@ func (c *MainController) Document() {
 		// 	}
 		// }
 		// Demande d'actualisation de l'arborescence
-		c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
+		c.Ctx.Output.Cookie("hugo-refresh", "true")
 	}
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
-	c.Data["KeyID"] = keyid
-	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/document/%s", appid))
-	c.TplName = "hugo_document.html"
-}
+	c.Data["File"] = pathFile
 
-// File Gestion du fichier
-func (c *MainController) File() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
+	c.Ctx.Output.Cookie("victor-file", pathFile)
+	c.TplName = "document.html"
 
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
-	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
-		flash.Store(&c.Controller)
-	}
-
-	// Remplissage du contexte pour le template
-	c.Data["Record"] = record
-	c.Data["KeyID"] = keyid
-
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/file/%s/%s", appid, keyid))
-	c.TplName = "hugo_file.html"
-}
-
-// Directory Gestion du dossier
-func (c *MainController) Directory() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
-
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
-	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
-		flash.Store(&c.Controller)
-	}
-
-	// Remplissage du contexte pour le template
-	c.Data["Record"] = record
-	c.Data["KeyID"] = keyid
-
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/directory/%s/%s", appid, keyid))
-	c.TplName = "hugo_directory.html"
 }
 
 // FileMv Renommer le fichier
@@ -258,7 +194,7 @@ func (c *MainController) FileMv() {
 	// 	}
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
+	if record.Path == "" {
 		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
@@ -309,10 +245,8 @@ func (c *MainController) FileMv() {
 		}
 	}
 
-	// Le cookie ancrage est déplacé sur le dossier root
-	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
+	c.Ctx.Output.Cookie("hugo-refresh", "true")
 	// Vidage de Hugo pour reconstruction
 	// hugoFiles = nil
 
@@ -336,7 +270,7 @@ func (c *MainController) FileCp() {
 	// 	}
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
+	if record.Path == "" {
 		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
@@ -386,7 +320,7 @@ func (c *MainController) FileNew() {
 	// 	}
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
+	if record.Path == "" {
 		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
@@ -436,7 +370,7 @@ func (c *MainController) FileRm() {
 	// 	}
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
+	if record.Path == "" {
 		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
@@ -451,9 +385,6 @@ func (c *MainController) FileRm() {
 		c.Ctx.Redirect(302, "/")
 		return
 	}
-
-	// Le cookie ancrage est déplacé sur le dossier root
-	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 
 	// Vidage de Hugo pour reconstruction
 	// hugoFiles = nil
@@ -479,7 +410,7 @@ func (c *MainController) FileUpload() {
 	// 	}
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
+	if record.Path == "" {
 		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
@@ -514,9 +445,6 @@ func (c *MainController) FileUpload() {
 		return
 	}
 
-	// Le cookie ancrage est déplacé sur le dossier root
-	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
-
 	// Vidage de Hugo pour reconstruction
 	// hugoFiles = nil
 
@@ -541,7 +469,7 @@ func (c *MainController) FileMkdir() {
 	// 	}
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Key == "" {
+	if record.Path == "" {
 		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
@@ -560,9 +488,6 @@ func (c *MainController) FileMkdir() {
 
 	// Vidage de Hugo pour reconstruction
 	// hugoFiles = nil
-
-	// Le cookie ancrage est déplacé sur le dossier root
-	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 
 	// Demande d'actualisation de l'arborescence
 	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
@@ -603,8 +528,8 @@ func (c *MainController) APIFolders() {
 		Results []myList `json:"results"`
 	}
 	var jlist []myList
-	for _, folder := range models.ListFolders() {
-		jlist = append(jlist, myList{Name: folder, Value: folder})
+	for _, record := range models.HugoGetFolders() {
+		jlist = append(jlist, myList{Name: record.Path, Value: record.Path})
 	}
 	var resp myStruct
 	resp.Success = true

@@ -18,10 +18,11 @@ import (
 // Config de config.yaml
 var Config AppConfig
 
+// La liste des répertoires et fichiers du contenu du site Hugo
+var hugo []HugoFile
+
 // HugoFile propriétés d'un fichier dans le dossier hugoDir
 type HugoFile struct {
-	Key         string
-	Root        string
 	Path        string
 	Prefix      string
 	PathAbsolu  string
@@ -30,7 +31,6 @@ type HugoFile struct {
 	Dir         string
 	Ext         string
 	IsDir       int
-	Level       int
 	Title       string
 	Draft       string
 	Date        string
@@ -109,6 +109,7 @@ func init() {
 		Config.Icon = val
 	}
 	logs.Info("Config", Config)
+	loadHugo()
 }
 
 // GetFilesFolder retourne la liste des fichiers du <folder>
@@ -152,13 +153,6 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	} else {
 		record.IsDir = 0
 	}
-	islash := strings.Index(record.Dir[1:], "/")
-	if islash > 0 {
-		record.Root = record.Dir[1 : islash+1]
-	} else {
-		record.Root = record.Dir[1:]
-	}
-	record.Level = strings.Count(record.Dir, "/")
 	record.Ext = filepath.Ext(path)
 	record.SRC = fmt.Sprintf("%s/content%s", Config.HugoURL, record.Path)
 	// record.URL = fmt.Sprintf("%s/%d", Config.HugoURL) TODO
@@ -269,22 +263,80 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 			*info = append(*info, pi)
 		}
 	}
+	// réentrance sur les sous-répertoires
+	for _, file := range list {
+		if file.IsDir() {
+			var pi HugoPathInfo
+			pi.Path = dirname + "/" + file.Name()
+			pi.Info = file
+			// *info = append(*info, pi)
+			// appel récursif des répertoires
+			readDir(dirname+"/"+file.Name(), info)
+		}
+	}
 	return
 }
 
-// ListFolders as
-func ListFolders() (list []string) {
-
-	err := filepath.Walk(Config.HugoRacine+"/content",
-		func(path string, info os.FileInfo, err error) error {
-			if info.IsDir() {
-				list = append(list, path[len(Config.HugoRacine+"/content"):])
-			}
-			return nil
-		})
+// loadHugo retourne la liste des HugoFile
+func loadHugo() {
+	hugoFolder := Config.HugoRacine + "/content"
+	var pis []HugoPathInfo
+	err := readDir(hugoFolder, &pis)
 	if err != nil {
-		fmt.Printf("walk error [%v]\n", err)
+		return
 	}
-
+	for _, pi := range pis {
+		record := fileRecord(hugoFolder, pi.Path, pi.Info)
+		// ajout dans hugo
+		hugo = append(hugo, record)
+	}
+	logs.Info("Hugo", Config.HugoRacine, "rechargé")
 	return
+}
+
+// HugoGetFolder return les HugoFile correspondant au folder
+func HugoGetFolder(folder string) (hugoFiles []HugoFile) {
+	if hugo == nil {
+		loadHugo()
+	}
+	for _, record := range hugo {
+		if record.IsDir == 1 {
+			if (folder == "/" && strings.Count(record.Path, "/") == 1) || record.Path == folder {
+				hugoFiles = append(hugoFiles, record)
+			}
+		}
+	}
+	return
+}
+
+// HugoGetRecord return le HugoFile correspondant au path
+func HugoGetRecord(path string) (hugoFile HugoFile) {
+	if hugo == nil {
+		loadHugo()
+	}
+	for _, record := range hugo {
+		if record.Path == path {
+			hugoFile = record
+		}
+	}
+	return
+}
+
+// HugoGetFolders return seulement les répertoires de Hugo
+func HugoGetFolders() (hugoFiles []HugoFile) {
+	if hugo == nil {
+		loadHugo()
+	}
+	for _, record := range hugo {
+		if record.IsDir == 1 {
+			hugoFiles = append(hugoFiles, record)
+		}
+	}
+	return
+}
+
+// reloadHugo demande de rechargement de hugo
+func reloadHugo() {
+	hugo = nil
+	loadHugo()
 }

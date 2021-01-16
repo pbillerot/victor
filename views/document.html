@@ -1,125 +1,20 @@
-<!-- vusers.html -->
-{{$session := .Session}}
-{{$app := .Application}}
-{{$composter := .Composter}}
-{{$search := .Search}}
-{{$record := .Record}}
-{{$keyid := .KeyID}}
-{{$from := .From}}
-{{$methodurl := .URL}}
 <!DOCTYPE html>
 <html>
 {{template "_head.html" .}}
 
 <body>
-  <!-- NAVBAR -->
-  <div class="ui container">
-    <div class="ui large fixed secondary menu navbar bee-bar-light">
-      <div class="item">
-        <button class="ui labeled icon button crud-jquery-close">
-          <i class="left arrow icon"></i>
-          Fermer
-        </button>
-      </div>
-      <!-- RIGHT MENU -->
-      <div class="right menu">
-        <div class="item">
-          <div class="ui basic buttons">
-            <div class="ui icon button hugo-window-open" data-url="{{.HugoUrl}}{{$record.HugoPath}}"
-              data-posx="left" data-width="1200" data-posy="150" target="hugo-test"
-              title="Voir la page sur le site de test">
-              <i class="eye icon"></i>
-            </div>
-            <div class="ui icon button crud-jquery-url"
-              data-url="{{BeeReplace $methodurl `document` `file`}}" title="Gérer le fichier...">
-              <i class="folder outline icon"></i>
-            </div>
-            <div class="ui icon button  hugo-window-open"
-              data-url="{{.HugoUrl}}/site/help/{{if eq $record.Ext `.yaml`}}config{{else}}document{{end}}"
-              data-posx="left" data-width="1200" data-posy="5" target="hugo-test" title="Aide...">
-              <i class="help icon"></i>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <button id="button_validate" class="ui icon red button crud-jquery-submit" disabled="disabled"
-            data-from="{{$from}}" title="Enregistrer">
-            <i class="save icon"></i>
-          </button>
-        </div>
-        <!-- end dropdown MENU à droite -->
-      </div>
-      <!-- end right menu -->
-    </div>
+<h1>DOCUMENT</h1>
+  <!-- CONTEXTE PAGE -->
+  <div>
+    <!-- action update by .bee-submit-->
+    <input type="hidden" id="victor-folder" name="victor-folder" value="{{.Folder}}">
+    <input type="hidden" id="victor-file" name="victor-file" value="{{.File}}">
+    <!-- update by bee-click -->
+    <input type="hidden" id="bee-path" name="bee-path" value>
+    <input type="hidden" id="bee-base" name="bee-base" value>
   </div>
-  <!-- MAIN -->
-  <main>
-    <div class="ui container">
-      {{template "_flash.html" .}}
-      <!-- FORMULAIRE -->
-      <div class="ui attached icon message">
-        <i class="file alternate outline icon"></i>
-        <div class="header">
-          <h2>{{$record.Path}}</h2>
-        </div>
-      </div>
-      <!-- Formulaire d'Edition -->
-      <form class="ui form attached segment" id="beeForm" method="POST" action="{{$methodurl}}">
-        {{ .xsrfdata }}
-        <div class="ui form">
-          <section>
-            <div class="field">
-              <textarea id="codemirror-markdown" name="document" id="document">{{$record.Content}}</textarea>
-            </div>
-          </section>
-          {{ if $record.Action }}
-          <div class="field">
-            <div class="ui action input">
-              <button class="ui red button hugo-jquery-action" data-confirm="true"
-                data-url="/action/{{$record.Action}}">
-                <i class="play circle outline icon"></i>
-                {{$record.Action}}
-              </button>
-            </div>
-          </div>
-          {{end}}
-        </div>
-      </form>
-    </div>
-    </div> <!-- /container -->
-  </main>
-  <!-- Demande de confirmation de l'action' -->
-  <div id="crud-modal-confirm" class="ui modal">
-    <div class="header" id="crud-action">Texte à venir</div>
-    <div class="content">
-      <p>Veuillez le confirmer</p>
-    </div>
-    <div class="actions">
-      <div class="ui cancel button">Annuler</div>
-      <div class="ui approve button">Je confirme</div>
-    </div>
-  </div> <!-- end modal confirm -->
-
-  <!-- CONTEXTE -->
-  <input type="hidden" id="hugo_refresh" value="hugo-refresh">
 
   {{template "_foot.html" .}}
-  <script>
-    $(document).ready(function () {
-      // CTRL+S
-      $(window).bind('keydown', function (event) {
-        if (event.ctrlKey || event.metaKey) {
-          switch (String.fromCharCode(event.which).toLowerCase()) {
-            case 's':
-              event.preventDefault();
-              $("#button_validate").trigger('click');
-              break;
-          }
-        }
-      });
-      $("#codemirror-markdown").focus();
-    });
-  </script>
 </body>
 
 </html>
