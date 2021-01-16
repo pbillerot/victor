@@ -93,64 +93,65 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-        // IHM SEMANTIC
-        $('.menu .item').tab();
-        $('.ui.checkbox').checkbox();
-        $('.ui.radio.checkbox').checkbox();
-        // $('.ui.dropdown').dropdown();
-        // $('select.dropdown').dropdown();
-        $('.message .close')
-            .on('click', function () {
-                $(this)
-                    .closest('.message')
-                    .transition('fade')
-                    ;
-            }
-            );
-        $('.hide')
-            .on('click', function () {
-                $(this)
-                    .closest('.message')
-                    .transition('fade')
-                    ;
-            }
-            );
-    
-        // Toaster
-        $('#toaster')
-            .toast({
-                class: $('#toaster').data('color'),
-                position: 'bottom right',
-                message: $('#toaster').val()
-            });
-        // Calendar
-        $('#standard_calendar')
-            .calendar({
-                ampm: false,
-                text: {
-                    days: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-                    months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
-                    monthsShort: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    today: 'Aujourd\'hui',
-                    now: 'Maintenant',
-                    am: 'AM',
-                    pm: 'PM'
-                },
-                // formatter: {
-                //     date: function (date, settings) {
-                //         if (!date) return '';
-                //         var day = date.getDate();
-                //         var month = date.getMonth() + 1;
-                //         var year = date.getFullYear();
-                //         return year + '-' + month + '-' + day;
-                //     }
-                // }
-            });
+    // IHM SEMANTIC
+    // $('.menu .item').tab();
+    // $('.ui.checkbox').checkbox();
+    // $('.ui.radio.checkbox').checkbox();
+    // $('.ui.dropdown').dropdown();
+    // $('select.dropdown').dropdown();
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+                ;
+        }
+        );
+    // $('.hide')
+    //     .on('click', function () {
+    //         $(this)
+    //             .closest('.message')
+    //             .transition('fade')
+    //             ;
+    //     }
+    //     );
+
+    // Toaster
+    $('#toaster')
+        .toast({
+            class: $('#toaster').data('color'),
+            position: 'bottom right',
+            message: $('#toaster').val()
+        });
 
     /**
      * OLD
-     */   
-                         
+     */
+
+    // Calendar
+    $('#standard_calendar')
+        .calendar({
+            ampm: false,
+            text: {
+                days: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+                monthsShort: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
+                today: 'Aujourd\'hui',
+                now: 'Maintenant',
+                am: 'AM',
+                pm: 'PM'
+            },
+            // formatter: {
+            //     date: function (date, settings) {
+            //         if (!date) return '';
+            //         var day = date.getDate();
+            //         var month = date.getMonth() + 1;
+            //         var year = date.getFullYear();
+            //         return year + '-' + month + '-' + day;
+            //     }
+            // }
+        });
+
     // CLIC IMAGE POPUP
     var $hugo_view = $('#hugo_view').val();
     var $hugo_refresh = $('#hugo_refresh').val();

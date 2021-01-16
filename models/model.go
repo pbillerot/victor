@@ -299,11 +299,15 @@ func HugoGetFolder(folder string) (hugoFiles []HugoFile) {
 	if hugo == nil {
 		loadHugo()
 	}
+	qSlashMax := strings.Count(folder, "/") + 1
 	for _, record := range hugo {
-		if record.IsDir == 1 {
-			if (folder == "/" && strings.Count(record.Path, "/") == 1) || record.Path == folder {
+		qSlash := strings.Count(record.Path, "/")
+		if folder == "/" {
+			if qSlash == 1 {
 				hugoFiles = append(hugoFiles, record)
 			}
+		} else if strings.HasPrefix(record.Dir, folder) && qSlash <= qSlashMax {
+			hugoFiles = append(hugoFiles, record)
 		}
 	}
 	return

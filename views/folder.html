@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+{{template "_head.html" .}}
+
+<body>
+  <section>
+    {{$folder := .Folder}}
+    {{ template "_navbar_folder.html" .}}
+    <div class="circular ui right floated basic icon button" data-action="/mkdir" title="Ajouter un dossier...">
+      <i class="icon folder plus"></i>
+    </div>
+    {{ $color := "yellow"}}
+    {{ $withFile := false}}
+    {{ range $irecord, $record := .Records }}
+    {{ $color = "green"}}
+    {{ if $record.Inline}}{{$color = "green"}}{{end}}
+    {{ if $record.Planified}}{{$color = "blue"}}{{end}}
+    {{ if $record.Expired}}{{$color = "warning"}}{{end}}
+    {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
+
+    {{ if eq $record.IsDir 1 }}
+    <!-- FOLDER -->
+    <div class="ui compact message bee-click bee-dblclick" data-path="/folder{{$record.Path}}"
+      data-base="{{$record.Base}}">
+      <i class="folder outline large icon"></i>{{$record.Base}}
+    </div>
+    {{else}}
+    {{ if eq $withFile false }}
+      {{ $withFile = true }}
+    <!-- not FOLDER -->
+    <div class="ui divider"></div>
+    <div class="circular ui right floated basic icon button " data-action="/upload" title="Importer...">
+      <i class="upload icon"></i>
+    </div>
+    <div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
+      <i class="icon file plus"></i>
+    </div>
+    {{end}}
+    {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
+    <!-- IMAGE -->
+    <div class="ui compact message bee-click bee-dblclick" data-path="/image{{$record.Path}}"
+      data-base="{{$record.Base}}">
+      <i class="image outline blue large icon"></i>{{$record.Base}}
+    </div>
+    {{ else if (eq $record.Ext ".pdf")}}
+    <!-- PDF -->
+    <div class="ui compact message bee-click bee-dblclick" data-path="/pdf{{$record.Path}}"
+      data-base="{{$record.Base}}">
+      <i class="file pdf outline red large icon"></i>{{$record.Base}}
+    </div>
+    {{ else if (eq $record.Ext ".yaml")}}
+    <!-- YAML -->
+    <div class="ui compact message bee-click bee-dblclick" data-path="/document{{$record.Path}}"
+      data-base="{{$record.Base}}">
+      <i class="file code outline brown large icon"></i>{{$record.Base}}
+    </div>
+    {{ else if (eq $record.Ext ".md")}}
+    <!-- MARKDOWN -->
+    <div class="ui {{$color}} compact message bee-click bee-dblclick" data-path="/document{{$record.Path}}"
+      data-base="{{$record.Base}}">
+      <i class="file alternate outline green large icon"></i>
+      <span class="ui blue medium text">
+        <b class="searchable">{{$record.Base}}</b>
+      </span>
+      <span class="ui purple text">[{{$record.Title}}]</span>
+      {{$arr := BeeSplit $record.Tags ","}}
+      {{range $i, $item := $arr}}
+      <div class="ui grey basic label"><b>#{{$item}}</b></div>
+      {{end}}
+      {{$arr := BeeSplit $record.Categories ","}}
+      {{range $i, $item := $arr}}
+      <div class="ui tag grey basic label"><b>{{$item}}</b></div>
+      {{end}}
+      {{if (eq $record.Draft "1") }}
+      <span class="ui red text" title="brouillon"><i class="firstdraft icon"></i></span>
+      {{end}}
+      {{if or $record.DatePublish $record.DateExpiry }}
+      <div class="ui yellow image label">
+        <i class="clock outline icon"></i>
+        {{if $record.DatePublish}}<span title="date publication">
+          {{if $record.Planified }}<span class="ui red text">{{$record.DatePublish}}</span>
+          {{else}}{{$record.DatePublish}}{{end}}
+        </span>{{end}}
+        {{if $record.DateExpiry}}
+        <div class="detail" title="date expiration">
+          {{if $record.Expired }}<span class="ui red text">{{$record.DateExpiry}}</span>
+          {{else}}{{$record.DateExpiry}}{{end}}
+        </div>
+        {{end}}
+      </div>
+      {{end}}
+      <!-- end $record.Date -->
+    </div>
+    {{ else }}
+    <!-- INCONNU -->
+    <div class="ui compact message bee-click" data-path="/document{{$record.Path}}" data-base="{{$record.Base}}">
+      <i class="file outline large icon"></i>{{$record.Base}}
+    </div>
+    {{end}}
+    <!-- end if not folder -->
+    {{end}}
+    <!-- end if folder -->
+    {{end}}
+    <!-- end range records -->
+    {{ if (eq $withFile false)}}
+    <div class="ui divider"></div>
+    <div class="circular ui right floated basic icon button " data-action="/upload" title="Importer un fichier...">
+      <i class="upload icon"></i>
+    </div>
+    <div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
+      <i class="icon file plus"></i>
+    </div>  
+    {{end}}
+</section>
+  <!-- Modal Nouveau Nom -->
+  <div id="bee-modal-rename" class="ui tiny modal">
+    <div class="header">à venir</div>
+    <div class="content">
+      <form class="ui form" methode="POST" action="a venir">
+        {{ .xsrfdata }}
+        <div class="required field">
+          <label>Nouveau nom</label>
+          <input type="text" id="new-name" name="new-name" placeholder="Nouveau nom" value="a venir">
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Valider</div>
+    </div>
+  </div>
+  <!-- Modal Confirmation Action -->
+  <div id="bee-modal-confirm" class="ui tiny modal">
+    <div class="header">à venir</div>
+    <div class="content">
+      <form class="ui form" methode="POST" action="a venir">
+        {{ .xsrfdata }}
+        <div class="ui message">
+          <div class="header">
+            à venir
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div>
+  <!-- Modal Déplacer -->
+  <div id="bee-modal-move" class="ui tiny modal">
+    <div class="header">à venir</div>
+    <div class="content">
+      <form class="ui form" methode="POST" action="a venir">
+        {{ .xsrfdata }}
+        <div class="field">
+          <label>De</label>
+          <div class="ui message">
+            <div class="header">
+              à venir
+            </div>
+          </div>
+        </div>
+        <div class="required field">
+          <label>Vers</label>
+          <select id="bee-ajax-folders" name="new-name" class="ui selection dropdown">
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div>
+
+  <!-- CONTEXTE PAGE -->
+  <div>
+    <!-- action update by .bee-submit-->
+    <input type="hidden" id="victor-folder" name="victor-folder" value="{{.Folder}}">
+    <input type="hidden" id="victor-file" name="victor-file" value="{{.File}}">
+    <!-- update by bee-click -->
+    <input type="hidden" id="bee-path" name="bee-path" value>
+    <input type="hidden" id="bee-base" name="bee-base" value>
+  </div>
+
+  {{template "_foot.html" .}}
+</body>
+
+</html>

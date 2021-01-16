@@ -27,15 +27,15 @@ func (c *MainController) Main() {
 	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-folder", "/")
-	// c.TplName = "index.html"
-	c.TplName = "maquette.html"
+	c.TplName = "index.html"
+	// c.TplName = "folder.html"
 }
 
 // Folder Demande de lister le dossier
 func (c *MainController) Folder() {
 	pathFolder := "/" + c.Ctx.Input.Param(":path")
 	// Chargement de hugoFiles et des meta du dossier courant
-	hugoFiles, _ := models.GetFilesFolder(pathFolder)
+	hugoFiles := models.HugoGetFolder(pathFolder)
 
 	pathFile := c.Ctx.Input.Cookie("victor-file")
 
@@ -45,7 +45,7 @@ func (c *MainController) Folder() {
 	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-folder", pathFolder)
-	c.TplName = "index.html"
+	c.TplName = "folder.html"
 }
 
 // Image Visualiser Modifier une image
