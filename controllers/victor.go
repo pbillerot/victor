@@ -45,7 +45,7 @@ func (c *MainController) Folder() {
 	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-folder", pathFolder)
-	c.TplName = "folder.html"
+	c.TplName = "index.html"
 }
 
 // Image Visualiser Modifier une image

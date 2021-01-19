@@ -93,6 +93,28 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
+    // ACE EDITOR
+    $(".ace_editor").each(function (index) {
+        // $(this)[0] pour récupérer le DOMElement
+        var editor = ace.edit($(this)[0]);
+        // aff de l'éditeur
+        editor.container.style.opacity = "";
+        // def du language
+        var mode = $(this).data("mode")
+        editor.session.setMode("ace/mode/" + mode);
+        // editor.setAutoScrollEditorIntoView(true);
+        // hauteur 
+        editor.setOption("maxLines", 100);
+        editor.setOption("theme", 'ace/theme/eclipse');
+        editor.session.setUseWrapMode(true);
+        editor.session.setTabSize(2);
+        editor.setShowPrintMargin(false);
+        editor.setReadOnly(false);
+        // taille font
+        $(this).css("fontSize", '13px');
+    });
+
+
     // IHM SEMANTIC
     // $('.menu .item').tab();
     // $('.ui.checkbox').checkbox();
