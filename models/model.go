@@ -306,7 +306,7 @@ func HugoGetFolder(folder string) (hugoFiles []HugoFile) {
 			if qSlash == 1 {
 				hugoFiles = append(hugoFiles, record)
 			}
-		} else if strings.HasPrefix(record.Dir, folder) && qSlash <= qSlashMax {
+		} else if strings.HasPrefix(record.Dir, folder) && record.Path != folder && qSlash <= qSlashMax {
 			hugoFiles = append(hugoFiles, record)
 		}
 	}

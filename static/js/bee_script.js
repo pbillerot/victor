@@ -5,25 +5,38 @@ $(document).ready(function () {
 
     // Sélection d'un dossier ou fichier
     $('.bee-click').on('click', function (event) {
+        var action = $(this).data('action')
+        var base = $(this).data('base')
         if ($(this).hasClass('bee-selected')) {
             $('.bee-hidden').hide();
             $(this).removeClass('bee-selected');
-            $('#bee-path').val('')
+            $('#bee-action').val('')
             $('#bee-base').val('')
         } else {
             $(this).parent().find('.bee-selected').removeClass('bee-selected');
             $(this).addClass("bee-selected");
             $('.bee-hidden').show();
-            $('#bee-path').val($(this).data('path'))
-            $('#bee-base').val($(this).data('base'))
+            $('#bee-action').val(action)
+            $('#bee-base').val(base)
+            // boutons edit si markdown et image
+            $('.bee-button-edit').hide();
+            if ($(this).hasClass('bee-dblclick')) {
+                $('.bee-button-edit').show();
+            }
         }
         event.preventDefault();
     });
     // Ouverture d'un dossier ou fichier
     $('.bee-dblclick').on('dblclick', function (event) {
-        window.location = $(this).data('path');
+        window.location = $(this).data('action');
         event.preventDefault();
     });
+    // Bouton Edit seulemnt sur markdown et image
+    $(".bee-button-edit").on('click', function (event) {
+        window.location = $('#bee-action').val();
+        event.preventDefault();
+    });
+
     $('.bee-submit').on('click', function (event) {
         $('#bee-submit').attr('action', $(this).data('action'))
         // $('#bee-submit', document).submit();
@@ -51,7 +64,7 @@ $(document).ready(function () {
     $('.bee-modal-confirm').on('click', function (event) {
         $('#bee-modal-confirm').find('form').attr('action', $(this).data('action'));
         $('#bee-modal-confirm').find('.header').html($(this).attr('title'));
-        $('#bee-modal-confirm').find('.message>.header').html($('#bee-path').val());
+        $('#bee-modal-confirm').find('.message>.header').html($('#bee-action').val());
         $('#bee-modal-confirm')
             .modal({
                 closable: false,
@@ -68,7 +81,7 @@ $(document).ready(function () {
     $('.bee-modal-move').on('click', function (event) {
         $('#bee-modal-move').find('form').attr('action', $(this).data('action'));
         $('#bee-modal-move').find('.header').html($(this).attr('title'));
-        $('#bee-modal-move').find('.message>.header').html($('#bee-path').val());
+        $('#bee-modal-move').find('.message>.header').html($('#bee-action').val());
         $('#bee-ajax-folders').dropdown({
             apiSettings: {
                 url: '/api/folders',

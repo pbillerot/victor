@@ -15,7 +15,7 @@
 {{ if eq $record.IsDir 1 }}
 {{ $withFolder = true}}
 <!-- FOLDER -->
-<div class="ui compact message bee-click bee-dblclick" data-path="/folder{{$record.Path}}" data-base="{{$record.Base}}">
+<div class="ui compact message bee-click bee-dblclick" data-action="/folder{{$record.Path}}" data-base="{{$record.Base}}">
 	<i class="folder outline large icon"></i>{{$record.Base}}
 </div>
 {{else}}
@@ -32,23 +32,25 @@
 {{end}}
 {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
 <!-- IMAGE -->
-<div class="ui compact message bee-click bee-dblclick" data-path="/image{{$record.Path}}" data-base="{{$record.Base}}">
+<div class="ui compact message bee-click bee-dblclick" 
+	data-action="/image{{$record.Path}}" data-base="{{$record.Base}}">
 	<i class="image outline blue large icon"></i>{{$record.Base}}
 </div>
 {{ else if (eq $record.Ext ".pdf")}}
 <!-- PDF -->
-<div class="ui compact message bee-click bee-dblclick" data-path="/pdf{{$record.Path}}" data-base="{{$record.Base}}">
+<div class="ui compact message bee-click bee-dblclick" 
+	data-action="/pdf{{$record.Path}}" data-base="{{$record.Base}}">
 	<i class="file pdf outline red large icon"></i>{{$record.Base}}
 </div>
 {{ else if (eq $record.Ext ".yaml")}}
 <!-- YAML -->
-<div class="ui compact message bee-click bee-dblclick" data-path="/document{{$record.Path}}"
+<div class="ui compact message bee-click bee-dblclick" data-action="/document{{$record.Path}}"
 	data-base="{{$record.Base}}">
 	<i class="file code outline brown large icon"></i>{{$record.Base}}
 </div>
 {{ else if (eq $record.Ext ".md")}}
 <!-- MARKDOWN -->
-<div class="ui {{$color}} compact message bee-click bee-dblclick" data-path="/document{{$record.Path}}"
+<div class="ui {{$color}} compact message bee-click bee-dblclick" data-action="/document{{$record.Path}}"
 	data-base="{{$record.Base}}">
 	<i class="file alternate outline green large icon"></i>
 	<span class="ui blue medium text">
@@ -85,7 +87,7 @@
 </div>
 {{ else }}
 <!-- INCONNU -->
-<div class="ui compact message bee-click" data-path="/document{{$record.Path}}" data-base="{{$record.Base}}">
+<div class="ui compact message bee-click" data-action="/document{{$record.Path}}" data-base="{{$record.Base}}">
 	<i class="file outline large icon"></i>{{$record.Base}}
 </div>
 {{end}}
