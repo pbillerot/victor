@@ -108,6 +108,10 @@ func (c *MainController) Image() {
 func (c *MainController) Pdf() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 
+	// Load Folder
+	pathFolder := c.Ctx.Input.Cookie("victor-folder")
+	hugoFiles := models.HugoGetFolder(pathFolder)
+
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
 
@@ -120,7 +124,11 @@ func (c *MainController) Pdf() {
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
+
+	c.Data["Records"] = hugoFiles
+	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-file")
 	c.Data["File"] = pathFile
+	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-file", pathFile)
 	c.TplName = "index.html"

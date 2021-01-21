@@ -1,34 +1,24 @@
-<div class="column">
-	{{ template "_navbar_file.html" .}}
-	<pre id="ace_editor" style="opacity:0">
-&lt;!DOCTYPE html>
-&lt;html lang="en">
-&lt;head>
-&lt;title>ACE in Action&lt;/title>
-&lt;style type="text/css" media="screen">
-#editor { 
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-&lt;/style>
-&lt;/head>
-&lt;body>
-
-&lt;div id="editor">function foo(items) {
-var x = "All this is syntax highlighted";
-return x;
-}
-&lt;/div>
-
-&lt;script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8">&lt;/script>
-&lt;script>
-var editor = ace.edit("editor");
-editor.setTheme("ace/theme/monokai");
-editor.session.setMode("ace/mode/javascript");
-&lt;/script>
-&lt;/body>
-&lt;/html></pre>
+<div class="ui secondary stackable menu">
+    <div class="item">
+        <div class="ui large breadcrumb">
+            <div class="section ">
+                <i class="ui large file pdf outline red icon"></i>
+            </div>
+            {{ $breadcrumbs := BeeSplitBreadcrumb .File}}
+            {{ range $breadcrumb := $breadcrumbs}}
+            <i class="right chevron icon divider"></i>
+            {{ if $breadcrumb.IsLast }}
+            <div class="section">{{$breadcrumb.Base}}</div>
+            {{else}}
+            <div class="section">{{$breadcrumb.Base}}</div>
+            {{end}}
+            {{end}}
+        </div>
+    </div>
 </div>
+<!-- iframe pdf -->
+<object data="/content{{.File}}?{{.Composter}}" type="application/pdf" 
+    style="display: block;width: 100%; height:100%; min-height: 650px;" typemustmatch allowfullscreen>
+    <p>Vous ne possédez pas de greffon PDF, mais vous pouvez <a href="/content{{.File}}?{{.Composter}}">télécharger le
+            fichier PDF.</a></p>
+</object>
