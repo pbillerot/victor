@@ -16,26 +16,28 @@
   <!-- MAIN -->
   <main>
     <div class="ui stackable grid">
-      <!-- FOLDER -->
-      <section class="six wide column">
-        {{template "_folder.html" .}}
-      </section>
-      <section class="ten wide column">
-        <div class="ui segment" style="margin: 1em;">
-          <!-- DOCUMENT -->
-          {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
-          {{template "_image.html" .}}
-          {{ else if (eq .Ext ".pdf")}}
-          {{template "_pdf.html" .}}
-          {{ else if (eq .Ext ".yaml")}}
-          {{template "_document.html" .}}
-          {{ else if (eq .Ext ".md")}}
-          {{template "_document.html" .}}
-          {{ else }}
-          {{template "_document.html" .}}
-          {{ end }}
-        </div>
-      </section>
+      <div class="row">
+        <!-- FOLDER -->
+        <section class="six wide column">
+            {{template "_folder.html" .}}
+        </section>
+        <section class="ten wide column">
+          <div class="ui segment" style="margin: 1em;">
+            <!-- DOCUMENT -->
+            {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
+            {{template "_image.html" .}}
+            {{ else if (eq .Ext ".pdf")}}
+            {{template "_pdf.html" .}}
+            {{ else if (eq .Ext ".yaml")}}
+            {{template "_document.html" .}}
+            {{ else if (eq .Ext ".md")}}
+            {{template "_document.html" .}}
+            {{ else }}
+            {{template "_document.html" .}}
+            {{ end }}
+          </div>
+        </section>
+      </div>
     </div>
   </main>
   <!-- Modal Nouveau Nom -->

@@ -96,7 +96,7 @@ func (c *MainController) Image() {
 	c.Data["Record"] = record
 
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-file")
+	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-folder")
 	c.Data["File"] = pathFile
 	c.Data["Ext"] = filepath.Ext(pathFile)
 
@@ -126,7 +126,7 @@ func (c *MainController) Pdf() {
 	c.Data["Record"] = record
 
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-file")
+	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-folder")
 	c.Data["File"] = pathFile
 	c.Data["Ext"] = filepath.Ext(pathFile)
 
@@ -140,6 +140,10 @@ func (c *MainController) Document() {
 
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
+
+	// Load Folder
+	pathFolder := c.Ctx.Input.Cookie("victor-folder")
+	hugoFiles := models.HugoGetFolder(pathFolder)
 
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
@@ -166,7 +170,7 @@ func (c *MainController) Document() {
 			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
 		}
 		if err != nil {
-			msg := fmt.Sprintf("hugoFileument %s : %s", record.PathAbsolu, err)
+			msg := fmt.Sprintf("hugoFile %s : %s", record.PathAbsolu, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -174,26 +178,21 @@ func (c *MainController) Document() {
 			return
 		}
 
-		// Vidage de Hugo puis reconstruction
-		// hugoFiles = nil
-		// // hugoDirectoryRecord(c)
-		// for _, rec := range hugoFiles {
-		// 	if rec.Key == keyid {
-		// 		record = rec
-		// 		break
-		// 	}
-		// }
-		// Demande d'actualisation de l'arborescence
-		c.Ctx.Output.Cookie("hugo-refresh", "true")
+		models.HugoReload()
+		c.Ctx.Redirect(302, "/document"+pathFile)
+		return
 	}
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
+
+	c.Data["Records"] = hugoFiles
+	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-folder")
 	c.Data["File"] = pathFile
+	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-file", pathFile)
 	c.TplName = "index.html"
-
 }
 
 // FileMv Renommer le fichier

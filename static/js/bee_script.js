@@ -39,6 +39,11 @@ $(document).ready(function () {
 
     $('.bee-submit').on('click', function (event) {
         var $form = $(this).closest('section').find('.form');
+        // particularité pour l'ace-editor
+        if (editor) {
+            var $input = $form.find("input[name='document']");
+            $input.val(editor.getValue());
+        }
         $form.submit();
         event.preventDefault();
     });
@@ -145,13 +150,24 @@ $(document).ready(function () {
     });
 
     // ACE EDITOR
-    $(".ace_editor").each(function (index) {
+    var editor = null;
+    $("#ace_editor").each(function (index) {
+        var $form = $(this).closest('section').find('.form');
+        var $input = $(this).closest('form').find("input[name='document']");
         // $(this)[0] pour récupérer le DOMElement
-        var editor = ace.edit($(this)[0]);
+        editor = ace.edit($(this)[0]);
         // aff de l'éditeur
         editor.container.style.opacity = "";
         // def du language
-        var mode = $(this).data("mode")
+        var ext = $(this).data("mode").replace('.','');
+        var mode = 'text';
+        switch (ext) {
+            case 'md':
+                mode = "markdown";
+                break;
+            default:
+                mode = ext
+        }
         editor.session.setMode("ace/mode/" + mode);
         // editor.setAutoScrollEditorIntoView(true);
         // hauteur 
@@ -161,8 +177,21 @@ $(document).ready(function () {
         editor.session.setTabSize(2);
         editor.setShowPrintMargin(false);
         editor.setReadOnly(false);
-        // taille font
         $(this).css("fontSize", '13px');
+        editor.commands.addCommand({
+            name: 'Save',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+            exec: function(editor) {
+                $input.val(editor.getValue());
+                $form.submit();
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        });
+        editor.session.on('change', function(delta) {
+            // delta.start, delta.end, delta.lines, delta.action
+            $(".bee-submit").removeClass('disabled');
+            // $input.val(editor.getValue());
+        });
     });
 
 
