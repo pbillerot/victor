@@ -52,6 +52,10 @@ func (c *MainController) Folder() {
 func (c *MainController) Image() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 
+	// Load Folder
+	pathFolder := c.Ctx.Input.Cookie("victor-folder")
+	hugoFiles := models.HugoGetFolder(pathFolder)
+
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
 
@@ -90,10 +94,14 @@ func (c *MainController) Image() {
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
+
+	c.Data["Records"] = hugoFiles
+	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-file")
 	c.Data["File"] = pathFile
+	c.Data["Ext"] = filepath.Ext(pathFile)
 
 	c.Ctx.Output.Cookie("victor-file", pathFile)
-	c.TplName = "image.html"
+	c.TplName = "index.html"
 }
 
 // Pdf Visualiser Modifier une image
@@ -115,7 +123,7 @@ func (c *MainController) Pdf() {
 	c.Data["File"] = pathFile
 
 	c.Ctx.Output.Cookie("victor-file", pathFile)
-	c.TplName = "pdf.html"
+	c.TplName = "index.html"
 }
 
 // Document Visualiser Modifier un document
@@ -176,7 +184,7 @@ func (c *MainController) Document() {
 	c.Data["File"] = pathFile
 
 	c.Ctx.Output.Cookie("victor-file", pathFile)
-	c.TplName = "document.html"
+	c.TplName = "index.html"
 
 }
 

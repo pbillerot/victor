@@ -38,8 +38,8 @@ $(document).ready(function () {
     });
 
     $('.bee-submit').on('click', function (event) {
-        $('#bee-submit').attr('action', $(this).data('action'))
-        // $('#bee-submit', document).submit();
+        var $form = $(this).closest('section').find('.form');
+        $form.submit();
         event.preventDefault();
     });
 
@@ -103,6 +103,44 @@ $(document).ready(function () {
                     $('form', document).submit();
                 }
             }).modal('show');
+        event.preventDefault();
+    });
+
+    // CLIC IMAGE EDITOR POPUP
+    $('.bee-popup-image-editor').on('click', function (event) {
+        var $url = $(this).data('src');
+        var $input = $(this).closest('form').find("input[name='image']");
+        var $image = $(this).closest('form').find('img');
+        const config = {
+            language: 'fr',
+            tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize', 'text'],
+            translations: {
+                fr: {
+                    'toolbar.download': 'Valider'
+                },
+            }
+        };
+        var mime = $url.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        // https://github.com/scaleflex/filerobot-image-editor
+        const ImageEditor = new FilerobotImageEditor(config, {
+            onBeforeComplete: (props) => {
+                console.log("onBeforeComplete", props);
+                console.log("canvas-id", props.canvas.id);
+                var canvas = document.getElementById(props.canvas.id);
+                var dataurl = canvas.toDataURL(mime, 1);
+                // update image du browser
+                $image.attr('src', dataurl);
+                // remplissage du imput pour le submit
+                $input.val(dataurl);
+                $(".bee-submit").removeClass('disabled');
+                return false;
+            },
+            onComplete: (props) => {
+                console.log("onComplete", props);
+                return true;
+            }
+        });
+        ImageEditor.open($url);
         event.preventDefault();
     });
 
@@ -343,41 +381,6 @@ $(document).ready(function () {
                     drawChart(canvasParent.children("canvas"));
                 }
             }).modal('show');
-        event.preventDefault();
-    });
-
-    // CLIC IMAGE EDITOR POPUP
-    $('.hugo-popup-image-editor').on('click', function (event) {
-        var $url = $(this).data('src');
-        var $key = $(this).data('key');
-        const config = {
-            language: 'fr',
-            tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize', 'text'],
-            translations: {
-                fr: {
-                    'toolbar.download': 'Valider'
-                },
-            }
-        };
-        var mime = $url.endsWith('.png') ? 'image/png' : 'image/jpeg';
-        // https://github.com/scaleflex/filerobot-image-editor
-        const ImageEditor = new FilerobotImageEditor(config, {
-            onBeforeComplete: (props) => {
-                console.log("onBeforeComplete", props);
-                console.log("canvas-id", props.canvas.id);
-                var canvas = document.getElementById(props.canvas.id);
-                var dataurl = canvas.toDataURL(mime, 1);
-                $("#image").val(dataurl);
-                $("#" + $key + "_img").attr('src', dataurl);
-                $("#button_validate").removeAttr('disabled');
-                return false;
-            },
-            onComplete: (props) => {
-                console.log("onComplete", props);
-                return true;
-            }
-        });
-        ImageEditor.open($url);
         event.preventDefault();
     });
 

@@ -12,6 +12,7 @@ import (
 
 	"github.com/astaxie/beego/logs"
 	"github.com/beego/beego/v2/core/config"
+	beego "github.com/beego/beego/v2/server/web"
 	"gopkg.in/yaml.v2"
 )
 
@@ -109,6 +110,8 @@ func init() {
 		Config.Icon = val
 	}
 	logs.Info("Config", Config)
+	// Enregistrement de content an tant que répertoire statis
+	beego.SetStaticPath("/content", Config.HugoRacine+"/content")
 	loadHugo()
 }
 
