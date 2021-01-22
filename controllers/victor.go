@@ -10,8 +10,10 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 
+	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
 	"github.com/pbillerot/victor/models"
+	"github.com/pbillerot/victor/shutil"
 )
 
 // Main as get and Post
@@ -23,6 +25,7 @@ func (c *MainController) Main() {
 
 	setSession(c, "Folder", "/")
 
+	web.ReadFromRequest(&c.Controller)
 	c.TplName = "index.html"
 }
 
@@ -31,6 +34,7 @@ func (c *MainController) Folder() {
 	pathFolder := "/" + c.Ctx.Input.Param(":path")
 	setSession(c, "Folder", pathFolder)
 
+	web.ReadFromRequest(&c.Controller)
 	// Chargement de hugoFiles et des meta du dossier courant
 	hugoFiles := models.HugoGetFolder(pathFolder)
 
@@ -49,8 +53,9 @@ func (c *MainController) Image() {
 
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", pathFile)
-		flash.Error("Fichier non trouvé : %s", pathFile)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
 
@@ -106,8 +111,9 @@ func (c *MainController) Pdf() {
 
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", pathFile)
-		flash.Error("Fichier non trouvé : %s", pathFile)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
 
@@ -128,8 +134,9 @@ func (c *MainController) Document() {
 
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", pathFile)
-		flash.Error("Fichier non trouvé : %s", pathFile)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
 
@@ -177,14 +184,14 @@ func (c *MainController) FileMv() {
 	if c.Ctx.Input.Param(":ext") != "" {
 		path += "." + c.Ctx.Input.Param(":ext")
 	}
-
+	pathFolder := c.GetSession("Folder").(string)
+	flash := beego.ReadFromRequest(&c.Controller)
 	// Recherche du record
 	record := models.HugoGetRecord(path)
-
-	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", path)
-		flash.Error("Fichier non trouvé : %s", path)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/")
 		return
@@ -195,9 +202,18 @@ func (c *MainController) FileMv() {
 		path := strings.Split(record.PathAbsolu, "/")
 		path[len(path)-1] = newName
 		newFile := strings.Join(path, "/")
+		if _, err := os.Stat(newFile); err == nil {
+			// path/to/whatever exists
+			msg := fmt.Sprintf("Renommer en [%s] : %s", newFile, "existe déjà")
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			return
+		}
 		err = os.Rename(record.PathAbsolu, newFile)
 		if err != nil {
-			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
+			msg := fmt.Sprintf("Renommer en [%s] : %s", record.Path, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -207,9 +223,19 @@ func (c *MainController) FileMv() {
 	} else {
 		// Copie du fichier sur la cible
 		newFile := models.Config.HugoRacine + "/content" + record.Dir + "/" + c.GetString("new_name")
+		if _, err := os.Stat(newFile); err == nil {
+			// path/to/whatever exists
+			msg := fmt.Sprintf("Renommer en [%s] : %s", newFile, "existe déjà")
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			return
+		}
+
 		data, err := ioutil.ReadFile(record.PathAbsolu)
 		if err != nil {
-			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
+			msg := fmt.Sprintf("Renommer en [%s] : %s", record.Path, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -218,7 +244,7 @@ func (c *MainController) FileMv() {
 		}
 		err = ioutil.WriteFile(newFile, data, 0644)
 		if err != nil {
-			msg := fmt.Sprintf("HugoFileCp %s : %s", newFile, err)
+			msg := fmt.Sprintf("Renommer en [%s] : %s", newFile, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -228,7 +254,7 @@ func (c *MainController) FileMv() {
 		// Suppression du fichier source
 		err = os.RemoveAll(record.PathAbsolu)
 		if err != nil {
-			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
+			msg := fmt.Sprintf("Renommer en [%s] : %s", record.Path, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -239,44 +265,22 @@ func (c *MainController) FileMv() {
 
 	// reLoad Folder
 	models.HugoReload()
-	pathFolder := c.GetSession("Folder").(string)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
 
 // FileCp Recopier le fichier ou dossier
 func (c *MainController) FileCp() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
-
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	path := "/" + c.Ctx.Input.Param(":path")
+	if c.Ctx.Input.Param(":ext") != "" {
+		path += "." + c.Ctx.Input.Param(":ext")
+	}
+	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
+	// Recherche du record
+	record := models.HugoGetRecord(path)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
-		flash.Store(&c.Controller)
-	}
-
-	newFile := c.GetString("copy_file")
-	data, err := ioutil.ReadFile(record.PathAbsolu)
-	if err != nil {
-		msg := fmt.Sprintf("HugoFileCp %s : %s", record.Path, err)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
-		return
-	}
-	err = ioutil.WriteFile(models.Config.HugoRacine+"/"+newFile, data, 0644)
-	if err != nil {
-		msg := fmt.Sprintf("HugoFileCp %s : %s", newFile, err)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
@@ -284,20 +288,62 @@ func (c *MainController) FileCp() {
 		return
 	}
 
-	// Vidage de Hugo pour reconstruction
-	// hugoFiles = nil
+	if record.IsDir == 1 {
+		newPath := models.Config.HugoRacine + "/content" + c.GetString("new_path") + "/" + record.Base
+		err = shutil.CopyTree(record.PathAbsolu, newPath, nil)
+		// err = os.Rename(record.PathAbsolu, newPath)
+		if err != nil {
+			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			models.HugoReload()
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			return
+		}
+	} else {
+		newPath := models.Config.HugoRacine + "/content" + c.GetString("new_path") + "/" + record.Base
+		if _, err := os.Stat(newPath); err == nil {
+			// path/to/whatever exists
+			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, "existe déjà")
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			models.HugoReload()
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			return
+		}
+		data, err := ioutil.ReadFile(record.PathAbsolu)
+		if err != nil {
+			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			models.HugoReload()
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			return
+		}
+		err = ioutil.WriteFile(newPath, data, 0644)
+		if err != nil {
+			msg := fmt.Sprintf("Copie vers [%s : %s", newPath, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			models.HugoReload()
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			return
+		}
+	}
 
-	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-	// Fermeture de la fenêtre
-	c.TplName = "bee_close.html"
+	// reLoad Folder
+	models.HugoReload()
+	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
 
 // FileNew Nouveau document à partir du modele.md
 func (c *MainController) FileNew() {
 	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
 
 	// Recherche du record
 	var record models.HugoFile
@@ -309,9 +355,12 @@ func (c *MainController) FileNew() {
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/")
+		return
 	}
 
 	newFile := c.GetString("new_file")
@@ -346,27 +395,16 @@ func (c *MainController) FileNew() {
 
 // FileRm Supprimer le fichier ou dossier
 func (c *MainController) FileRm() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
-
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
-	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Path == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
-		flash.Store(&c.Controller)
+	path := "/" + c.Ctx.Input.Param(":path")
+	if c.Ctx.Input.Param(":ext") != "" {
+		path += "." + c.Ctx.Input.Param(":ext")
 	}
-
-	err = os.RemoveAll(record.PathAbsolu)
-	if err != nil {
-		msg := fmt.Sprintf("HugoFileRm %s : %s", record.Path, err)
+	pathFolder := c.GetSession("Folder").(string)
+	flash := beego.ReadFromRequest(&c.Controller)
+	// Recherche du record
+	record := models.HugoGetRecord(path)
+	if record.Path == "" {
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
@@ -374,20 +412,25 @@ func (c *MainController) FileRm() {
 		return
 	}
 
-	// Vidage de Hugo pour reconstruction
-	// hugoFiles = nil
+	err = os.RemoveAll(record.PathAbsolu)
+	if err != nil {
+		msg := fmt.Sprintf("Suppression de [%s] : %s", record.Path, err)
+		logs.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/")
+		return
+	}
 
-	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-	// Fermeture de la fenêtre
-	c.TplName = "bee_close.html"
+	// reLoad Folder
+	models.HugoReload()
+	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
 
 // FileUpload Charger le fichier sur le serveur
 func (c *MainController) FileUpload() {
 	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
 
 	// Recherche du record
 	var record models.HugoFile
@@ -399,9 +442,12 @@ func (c *MainController) FileUpload() {
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/")
+		return
 	}
 
 	file, handler, err := c.Ctx.Request.FormFile("new_file")
@@ -446,7 +492,6 @@ func (c *MainController) FileUpload() {
 // FileMkdir Créer un dossier
 func (c *MainController) FileMkdir() {
 	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
 
 	// Recherche du record
 	var record models.HugoFile
@@ -458,9 +503,12 @@ func (c *MainController) FileMkdir() {
 	// }
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
+		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+		logs.Error(msg)
+		flash.Error(msg)
 		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/")
+		return
 	}
 
 	newDir := c.GetString("new_dir")

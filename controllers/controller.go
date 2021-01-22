@@ -33,11 +33,13 @@ func (c *MainController) Prepare() {
 		c.Data["Folder"] = c.GetSession("Folder").(string)
 	} else {
 		c.Data["Folder"] = "/"
+		c.SetSession("Folder", "/")
 	}
 	if c.GetSession("File") != nil {
 		c.Data["File"] = c.GetSession("File").(string)
 	} else {
 		c.Data["File"] = ""
+		c.SetSession("File", "")
 	}
 	c.Data["Ext"] = filepath.Ext(c.Data["File"].(string))
 

@@ -9,12 +9,15 @@
     <div class="ui container">
       <a href="/" class="header item">
         <img class="logo" src="{{.Config.Icon}}">
-          {{.Config.Title}}
+        {{.Config.Title}}
       </a>
     </div>
   </div>
   <!-- MAIN -->
   <main>
+    <div class="ui container">
+      {{template "_flash.html" .}}
+    </div>
     <div class="ui stackable grid">
       <div class="row">
         <!-- FOLDER -->
@@ -93,7 +96,7 @@
         </div>
         <div class="required field">
           <label>Vers</label>
-          <select id="bee-ajax-folders" name="new_name" class="ui selection dropdown">
+          <select id="bee-ajax-folders" name="new_path" class="ui selection dropdown">
           </select>
         </div>
       </form>

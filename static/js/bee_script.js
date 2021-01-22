@@ -72,9 +72,11 @@ $(document).ready(function () {
     });
     // ACTION CONFIRMATION
     $('.bee-modal-confirm').on('click', function (event) {
-        $('#bee-modal-confirm').find('form').attr('action', $(this).data('action'));
+        var $form = $('#bee-modal-confirm').find('form');
+        var $path = $('#bee-path').val();
+        $form.attr('action', $(this).data('action') + $path);
         $('#bee-modal-confirm').find('.header').html($(this).attr('title'));
-        $('#bee-modal-confirm').find('.message>.header').html($('#bee-action').val());
+        $('#bee-modal-confirm').find('.message>.header').html($path);
         $('#bee-modal-confirm')
             .modal({
                 closable: false,
@@ -89,9 +91,11 @@ $(document).ready(function () {
     });
     // ACTION DEPLACER
     $('.bee-modal-move').on('click', function (event) {
-        $('#bee-modal-move').find('form').attr('action', $(this).data('action'));
+        var $form = $('#bee-modal-move').find('form');
+        var $path = $('#bee-path').val();
+        $form.attr('action', $(this).data('action') + $path);
         $('#bee-modal-move').find('.header').html($(this).attr('title'));
-        $('#bee-modal-move').find('.message>.header').html($('#bee-action').val());
+        $('#bee-modal-move').find('.message>.header').html($path);
         $('#bee-ajax-folders').dropdown({
             apiSettings: {
                 url: '/api/folders',
@@ -110,7 +114,7 @@ $(document).ready(function () {
                     return true;
                 },
                 onApprove: function () {
-                    $('form', document).submit();
+                    $form.submit();
                 }
             }).modal('show');
         event.preventDefault();
