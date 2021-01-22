@@ -9,7 +9,7 @@
     <div class="ui container">
       <a href="/" class="header item">
         <img class="logo" src="{{.Config.Icon}}">
-        {{.Config.Title}}
+          {{.Config.Title}}
       </a>
     </div>
   </div>
@@ -19,9 +19,10 @@
       <div class="row">
         <!-- FOLDER -->
         <section class="six wide column">
-            {{template "_folder.html" .}}
+          {{template "_folder.html" .}}
         </section>
         <section class="ten wide column">
+          {{if .File }}
           <div class="ui segment" style="margin: 1em;">
             <!-- DOCUMENT -->
             {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
@@ -36,6 +37,7 @@
             {{template "_document.html" .}}
             {{ end }}
           </div>
+          {{end}}
         </section>
       </div>
     </div>
@@ -44,11 +46,11 @@
   <div id="bee-modal-rename" class="ui tiny modal">
     <div class="header">à venir</div>
     <div class="content">
-      <form class="ui form" methode="POST" action="a venir">
+      <form class="ui form" method="POST" action="a venir">
         {{ .xsrfdata }}
         <div class="required field">
           <label>Nouveau nom</label>
-          <input type="text" id="new-name" name="new-name" placeholder="Nouveau nom" value="a venir">
+          <input type="text" id="new_name" name="new_name" placeholder="Nouveau nom" value="a venir">
         </div>
       </form>
     </div>
@@ -61,7 +63,7 @@
   <div id="bee-modal-confirm" class="ui tiny modal">
     <div class="header">à venir</div>
     <div class="content">
-      <form class="ui form" methode="POST" action="a venir">
+      <form class="ui form" method="POST" action="a venir">
         {{ .xsrfdata }}
         <div class="ui message">
           <div class="header">
@@ -79,7 +81,7 @@
   <div id="bee-modal-move" class="ui tiny modal">
     <div class="header">à venir</div>
     <div class="content">
-      <form class="ui form" methode="POST" action="a venir">
+      <form class="ui form" method="POST" action="a venir">
         {{ .xsrfdata }}
         <div class="field">
           <label>De</label>
@@ -91,7 +93,7 @@
         </div>
         <div class="required field">
           <label>Vers</label>
-          <select id="bee-ajax-folders" name="new-name" class="ui selection dropdown">
+          <select id="bee-ajax-folders" name="new_name" class="ui selection dropdown">
           </select>
         </div>
       </form>
@@ -103,13 +105,11 @@
   </div>
 
   <!-- CONTEXTE PAGE -->
-  <div>
-    <!-- action update by .bee-submit-->
-    <input type="hidden" id="victor-folder" name="victor-folder" value="{{.Folder}}">
-    <input type="hidden" id="victor-file" name="victor-file" value="{{.File}}">
+  <div data-rem="CONTEXTE PAGE">
     <!-- update by bee-click -->
-    <input type="hidden" id="bee-action" name="bee-action" value>
-    <input type="hidden" id="bee-base" name="bee-base" value>
+    <input type="hidden" id="bee-action" value>
+    <input type="hidden" id="bee-path" value>
+    <input type="hidden" id="bee-base" value>
   </div>
 
   {{template "_foot.html" .}}

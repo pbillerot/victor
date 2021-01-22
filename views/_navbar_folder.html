@@ -18,19 +18,19 @@
 				<div class="ui icon button bee-button-edit" title="Éditer...">
 					<i class="edit outline icon"></i>
 				</div>
-				<div class="ui icon button bee-modal-rename" data-action="/mv" title="Renommer...">
+				<div class="ui icon button bee-modal-rename" data-action="/mv{{.File}}" title="Renommer...">
 					<i class="pencil alternate icon"></i>
 				</div>
-				<div class="ui icon button bee-modal-move" data-action="/cp" title="Copier...">
+				<div class="ui icon button bee-modal-move" data-action="/cp{{.File}}" title="Copier...">
 					<i class="copy outline icon"></i>
 				</div>
-				<div class="ui icon button bee-modal-move" data-action="/mv" title="Déplacer...">
+				<div class="ui icon button bee-modal-move" data-action="/mv{{.File}}" title="Déplacer...">
 					<i class="arrow right icon"></i>
 				</div>
-				<div class="ui icon button bee-modal-confirm" data-action="/del" title="Supprimer...">
+				<div class="ui icon button bee-modal-confirm" data-action="/del{{.File}}" title="Supprimer...">
 					<i class="trash alternate outline icon"></i>
 				</div>
-				<div class="ui icon button" data-action="/download" title="Télécharger...">
+				<div class="ui icon button" data-action="/download{{.Folder}}" title="Télécharger...">
 					<i class="download icon"></i>
 				</div>
 			</div>

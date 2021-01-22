@@ -5,8 +5,9 @@ $(document).ready(function () {
 
     // Sélection d'un dossier ou fichier
     $('.bee-click').on('click', function (event) {
-        var action = $(this).data('action')
-        var base = $(this).data('base')
+        var $action = $(this).data('action')
+        var $base = $(this).data('base')
+        var $path = $(this).data('path')
         if ($(this).hasClass('bee-selected')) {
             $('.bee-hidden').hide();
             $(this).removeClass('bee-selected');
@@ -16,8 +17,9 @@ $(document).ready(function () {
             $(this).parent().find('.bee-selected').removeClass('bee-selected');
             $(this).addClass("bee-selected");
             $('.bee-hidden').show();
-            $('#bee-action').val(action)
-            $('#bee-base').val(base)
+            $('#bee-action').val($action)
+            $('#bee-base').val($base)
+            $('#bee-path').val($path)
             // boutons edit si markdown et image
             $('.bee-button-edit').hide();
             if ($(this).hasClass('bee-dblclick')) {
@@ -50,9 +52,12 @@ $(document).ready(function () {
 
     // ACTION RENAME
     $('.bee-modal-rename').on('click', function (event) {
-        $('#bee-modal-rename').find('form').attr('action', $(this).data('action'));
+        var $form = $('#bee-modal-rename').find('form');
+        var $base = $('#bee-base').val();
+        var $path = $('#bee-path').val();
+        $form.attr('action', $(this).data('action') + $path);
         $('#bee-modal-rename').find('.header').html($(this).attr('title'));
-        $('#bee-modal-rename').find("[name='new-name']").val($('#bee-base').val());
+        $('#bee-modal-rename').find("input[name='new_name']").val($base);
         $('#bee-modal-rename')
             .modal({
                 closable: false,
@@ -60,7 +65,7 @@ $(document).ready(function () {
                     return true;
                 },
                 onApprove: function () {
-                    $('form', document).submit();
+                    $form.submit();
                 }
             }).modal('show');
         event.preventDefault();

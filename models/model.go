@@ -345,5 +345,5 @@ func HugoGetFolders() (hugoFiles []HugoFile) {
 // HugoReload demande de rechargement de hugo
 func HugoReload() {
 	hugo = nil
-	// loadHugo()
+	return
 }

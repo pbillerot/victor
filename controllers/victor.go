@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -19,42 +18,31 @@ import (
 func (c *MainController) Main() {
 	// Chargement de hugoFiles et des meta du dossier courant
 	hugoFiles := models.HugoGetFolder("/")
-	pathFile := c.Ctx.Input.Cookie("victor-file")
 
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = "/"
-	c.Data["File"] = pathFile
-	c.Data["Ext"] = filepath.Ext(pathFile)
 
-	c.Ctx.Output.Cookie("victor-folder", "/")
+	setSession(c, "Folder", "/")
+
 	c.TplName = "index.html"
-	// c.TplName = "folder.html"
 }
 
 // Folder Demande de lister le dossier
 func (c *MainController) Folder() {
 	pathFolder := "/" + c.Ctx.Input.Param(":path")
+	setSession(c, "Folder", pathFolder)
+
 	// Chargement de hugoFiles et des meta du dossier courant
 	hugoFiles := models.HugoGetFolder(pathFolder)
 
-	pathFile := c.Ctx.Input.Cookie("victor-file")
-
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = pathFolder
-	c.Data["File"] = pathFile
-	c.Data["Ext"] = filepath.Ext(pathFile)
 
-	c.Ctx.Output.Cookie("victor-folder", pathFolder)
 	c.TplName = "index.html"
 }
 
 // Image Visualiser Modifier une image
 func (c *MainController) Image() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
-
-	// Load Folder
-	pathFolder := c.Ctx.Input.Cookie("victor-folder")
-	hugoFiles := models.HugoGetFolder(pathFolder)
+	setSession(c, "File", pathFile)
 
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
@@ -90,26 +78,27 @@ func (c *MainController) Image() {
 			c.Ctx.Redirect(302, "/")
 			return
 		}
+		models.HugoReload()
 	}
+
+	// Load Folder
+	pathFolder := c.GetSession("Folder").(string)
+	hugoFiles := models.HugoGetFolder(pathFolder)
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
-
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-folder")
-	c.Data["File"] = pathFile
-	c.Data["Ext"] = filepath.Ext(pathFile)
 
-	c.Ctx.Output.Cookie("victor-file", pathFile)
 	c.TplName = "index.html"
 }
 
 // Pdf Visualiser Modifier une image
 func (c *MainController) Pdf() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
+	setSession(c, "File", pathFile)
 
 	// Load Folder
-	pathFolder := c.Ctx.Input.Cookie("victor-folder")
+	pathFolder := c.GetSession("Folder").(string)
 	hugoFiles := models.HugoGetFolder(pathFolder)
 
 	// Recherche du record
@@ -124,26 +113,18 @@ func (c *MainController) Pdf() {
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
-
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-folder")
-	c.Data["File"] = pathFile
-	c.Data["Ext"] = filepath.Ext(pathFile)
 
-	c.Ctx.Output.Cookie("victor-file", pathFile)
 	c.TplName = "index.html"
 }
 
 // Document Visualiser Modifier un document
 func (c *MainController) Document() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
+	setSession(c, "File", pathFile)
 
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
-
-	// Load Folder
-	pathFolder := c.Ctx.Input.Cookie("victor-folder")
-	hugoFiles := models.HugoGetFolder(pathFolder)
 
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
@@ -177,49 +158,44 @@ func (c *MainController) Document() {
 			c.Ctx.Redirect(302, "/")
 			return
 		}
-
 		models.HugoReload()
-		c.Ctx.Redirect(302, "/document"+pathFile)
-		return
 	}
+	// Load Folder
+	pathFolder := c.GetSession("Folder").(string)
+	hugoFiles := models.HugoGetFolder(pathFolder)
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = record
-
 	c.Data["Records"] = hugoFiles
-	c.Data["Folder"] = c.Ctx.Input.Cookie("victor-folder")
-	c.Data["File"] = pathFile
-	c.Data["Ext"] = filepath.Ext(pathFile)
 
-	c.Ctx.Output.Cookie("victor-file", pathFile)
 	c.TplName = "index.html"
 }
 
 // FileMv Renommer le fichier
 func (c *MainController) FileMv() {
-	appid := c.Ctx.Input.Param(":app")
-	keyid := c.Ctx.Input.Param(":key")
+	path := "/" + c.Ctx.Input.Param(":path")
+	if c.Ctx.Input.Param(":ext") != "" {
+		path += "." + c.Ctx.Input.Param(":ext")
+	}
 
 	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	record := models.HugoGetRecord(path)
+
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
-		logs.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
-		flash.Error("Fichier non trouvé : %s", keyid)
+		logs.Error("Fichier non trouvé", path)
+		flash.Error("Fichier non trouvé : %s", path)
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/")
 		return
 	}
 
-	newFile := c.GetString("new_name")
 	if record.IsDir == 1 {
-		err = os.Rename(record.PathAbsolu, models.Config.HugoRacine+newFile)
+		newName := c.GetString("new_name")
+		path := strings.Split(record.PathAbsolu, "/")
+		path[len(path)-1] = newName
+		newFile := strings.Join(path, "/")
+		err = os.Rename(record.PathAbsolu, newFile)
 		if err != nil {
 			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
 			logs.Error(msg)
@@ -230,6 +206,7 @@ func (c *MainController) FileMv() {
 		}
 	} else {
 		// Copie du fichier sur la cible
+		newFile := models.Config.HugoRacine + "/content" + record.Dir + "/" + c.GetString("new_name")
 		data, err := ioutil.ReadFile(record.PathAbsolu)
 		if err != nil {
 			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
@@ -239,7 +216,7 @@ func (c *MainController) FileMv() {
 			c.Ctx.Redirect(302, "/")
 			return
 		}
-		err = ioutil.WriteFile(models.Config.HugoRacine+newFile, data, 0644)
+		err = ioutil.WriteFile(newFile, data, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("HugoFileCp %s : %s", newFile, err)
 			logs.Error(msg)
@@ -260,15 +237,11 @@ func (c *MainController) FileMv() {
 		}
 	}
 
-	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh", "true")
-	// Vidage de Hugo pour reconstruction
-	// hugoFiles = nil
-
-	// Fermeture de la fenêtre
-	c.TplName = "bee_close.html"
+	// reLoad Folder
+	models.HugoReload()
+	pathFolder := c.GetSession("Folder").(string)
+	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
-
 }
 
 // FileCp Recopier le fichier ou dossier
