@@ -1,10 +1,12 @@
 {{$folder := .Folder}}
 {{ template "_navbar_folder.html" .}}
-<div class="circular ui right floated basic icon button" data-action="/mkdir" title="Créer un dossier...">
+<div class="circular ui right floated basic icon button bee-modal-new"
+	data-action="/mkdir" title="Créer un dossier...">
 	<i class="icon folder plus"></i>
 </div>
 {{ $color := "yellow"}}
 {{ $notHeadFile := true}}
+{{ $notFolder := true}}
 
 {{ range $irecord, $record := .Records }}
 
@@ -15,6 +17,7 @@
 {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
 
 {{ if eq $record.IsDir 1 }}
+{{$notFolder = false}}
 <!-- FOLDER -->
 <div class="ui compact message bee-click bee-dblclick" 
 	data-action="/folder{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
@@ -23,11 +26,14 @@
 {{else}}
 <!-- not FOLDER -->
 {{if $notHeadFile }}
+{{if $notFolder }}
+<h3>&nbsp;</h3>
+{{end}}
 <div class="ui clearing divider"></div>
 <div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
 	<i class="upload icon"></i>
 </div>
-<div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
+<div class="circular ui right floated basic icon button bee-modal-new" data-action="/new" title="Créer un fichier...">
 	<i class="icon file plus"></i>
 </div>
 {{ $notHeadFile = false}}
@@ -36,7 +42,8 @@
 <!-- IMAGE -->
 <div class="ui compact message bee-click bee-dblclick" 
 	data-action="/image{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<i class="image outline blue large icon"></i>{{$record.Base}}
+	<img class="ui middle aligned mini image" src="/content{{$record.Path}}">
+	<span>{{$record.Base}}</span>
 </div>
 {{ else if (eq $record.Ext ".pdf")}}
 <!-- PDF -->
@@ -101,6 +108,9 @@
 {{end}}
 <!-- end range records -->
 {{if $notHeadFile }}
+{{if $notFolder }}
+<h3>&nbsp;</h3>
+{{end}}
 <div class="ui divider"></div>
 <div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
 	<i class="upload icon"></i>

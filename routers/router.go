@@ -8,6 +8,7 @@ import (
 func init() {
 	beego.Router("/", &controllers.MainController{}, "get:Main")
 
+	beego.Router("/folder/", &controllers.MainController{}, "get:Folder")
 	beego.Router("/folder/*.*", &controllers.MainController{}, "get:Folder")
 	beego.Router("/document/*.*", &controllers.MainController{}, "get:Document;post:Document")
 	beego.Router("/image/*.*", &controllers.MainController{}, "get:Image;post:Image")
@@ -16,11 +17,11 @@ func init() {
 	// beego.Router("/file/*.*", &controllers.MainController{}, "get:File")
 	beego.Router("/rn/*.*", &controllers.MainController{}, "post:FileRename")
 	beego.Router("/mv/*.*", &controllers.MainController{}, "post:FileMove")
-	beego.Router("/new/*.*", &controllers.MainController{}, "post:FileNew")
+	beego.Router("/new", &controllers.MainController{}, "post:FileNew")
 	beego.Router("/cp/*.*", &controllers.MainController{}, "post:FileCp")
 	beego.Router("/rm/*.*", &controllers.MainController{}, "post:FileRm")
-	beego.Router("/mkdir/*.*", &controllers.MainController{}, "post:FileMkdir")
-	beego.Router("/upload/*.*", &controllers.MainController{}, "post:FileUpload")
+	beego.Router("/mkdir", &controllers.MainController{}, "post:FileMkdir")
+	beego.Router("/upload", &controllers.MainController{}, "post:FileUpload")
 	beego.Router("/action/:action", &controllers.MainController{}, "post:Action")
 
 	beego.Router("/api/folders", &controllers.MainController{}, "get:APIFolders")

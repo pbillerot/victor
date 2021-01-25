@@ -431,53 +431,38 @@ func (c *MainController) FileCp() {
 
 // FileNew Nouveau document à partir du modele.md
 func (c *MainController) FileNew() {
-	appid := c.Ctx.Input.Param(":app")
-
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	path := "/" + c.Ctx.Input.Param(":path")
+	if c.Ctx.Input.Param(":ext") != "" {
+		path += "." + c.Ctx.Input.Param(":ext")
+	}
+	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Path == "" {
-		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
-		return
-	}
 
-	newFile := c.GetString("new_file")
-	data, err := ioutil.ReadFile(models.Config.HugoRacine + "/site/modele.md")
+	newFile := models.Config.HugoRacine + "/content" + pathFolder + "/" + c.GetString("new_name")
+	modele := models.Config.HugoRacine + "/content/site/modele.md"
+	data, err := ioutil.ReadFile(modele)
 	if err != nil {
-		msg := fmt.Sprintf("HugoFileNew %s : %s", record.Path, err)
+		msg := fmt.Sprintf("Modèle fichier %s : %s", modele, err)
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
-	err = ioutil.WriteFile(models.Config.HugoRacine+"/"+newFile, data, 0644)
+
+	err = ioutil.WriteFile(newFile, data, 0644)
 	if err != nil {
-		msg := fmt.Sprintf("HugoFileNew %s : %s", newFile, err)
+		msg := fmt.Sprintf("Nouveau fichier %s : %s", newFile, err)
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
 
-	// Vidage de Hugo pour reconstruction
-	// hugoFiles = nil
-
-	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-	// Fermeture de la fenêtre
-	c.TplName = "bee_close.html"
+	// reLoad Folder
+	models.HugoReload()
+	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
 
@@ -520,22 +505,8 @@ func (c *MainController) FileRm() {
 
 // FileUpload Charger le fichier sur le serveur
 func (c *MainController) FileUpload() {
-	path := "/" + c.Ctx.Input.Param(":path")
-	if c.Ctx.Input.Param(":ext") != "" {
-		path += "." + c.Ctx.Input.Param(":ext")
-	}
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
-	// Recherche du record
-	record := models.HugoGetRecord(path)
-	if record.Path == "" {
-		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
-		return
-	}
 
 	files, err := c.GetFiles("files")
 	if err != nil {
@@ -557,7 +528,7 @@ func (c *MainController) FileUpload() {
 			c.Ctx.Redirect(302, "/folder"+pathFolder)
 		}
 		fileContents, err := ioutil.ReadAll(file)
-		err = ioutil.WriteFile(record.PathAbsolu+"/"+mfile.Filename, fileContents, 0644)
+		err = ioutil.WriteFile(models.Config.HugoRacine+"/content"+pathFolder+mfile.Filename, fileContents, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("Import : %s", err)
 			logs.Error(msg)
@@ -574,30 +545,18 @@ func (c *MainController) FileUpload() {
 
 // FileMkdir Créer un dossier
 func (c *MainController) FileMkdir() {
-	appid := c.Ctx.Input.Param(":app")
-
-	// Recherche du record
-	var record models.HugoFile
-	// for _, rec := range hugoFiles {
-	// 	if rec.Key == keyid {
-	// 		record = rec
-	// 		break
-	// 	}
-	// }
+	path := "/" + c.Ctx.Input.Param(":path")
+	if c.Ctx.Input.Param(":ext") != "" {
+		path += "." + c.Ctx.Input.Param(":ext")
+	}
+	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
-	if record.Path == "" {
-		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
-		return
-	}
 
-	newDir := c.GetString("new_dir")
-	err = os.MkdirAll(models.Config.HugoRacine+"/"+newDir, 0744)
+	newDir := models.Config.HugoRacine + "/content" + pathFolder + "/" + c.GetString("new_name")
+
+	err = os.MkdirAll(newDir, 0744)
 	if err != nil {
-		msg := fmt.Sprintf("HugoFileMkdir %s : %s", newDir, err)
+		msg := fmt.Sprintf("Nouveau dossier %s : %s", newDir, err)
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
@@ -605,13 +564,9 @@ func (c *MainController) FileMkdir() {
 		return
 	}
 
-	// Vidage de Hugo pour reconstruction
-	// hugoFiles = nil
-
-	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-	// Fermeture de la fenêtre
-	c.TplName = "bee_close.html"
+	// reLoad Folder
+	models.HugoReload()
+	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
 

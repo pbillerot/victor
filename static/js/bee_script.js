@@ -51,6 +51,24 @@ $(document).ready(function () {
     });
 
     // ACTION RENAME
+    $('.bee-modal-new').on('click', function (event) {
+        var $form = $('#bee-modal-rename').find('form');
+        $form.attr('action', $(this).data('action'));
+        $('#bee-modal-rename').find('.header').html($(this).attr('title'));
+        $('#bee-modal-rename').find("input[name='new_name']").val('');
+        $('#bee-modal-rename')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $form.submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+    // ACTION RENAME
     $('.bee-modal-rename').on('click', function (event) {
         var $form = $('#bee-modal-rename').find('form');
         var $base = $('#bee-base').val();
