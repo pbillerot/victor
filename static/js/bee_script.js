@@ -202,6 +202,7 @@ $(document).ready(function () {
 
     // ACE EDITOR
     var editor = null;
+    var modelist = ace.require("ace/ext/modelist")
     $("#ace_editor").each(function (index) {
         var $form = $(this).closest('section').find('.form');
         var $input = $(this).closest('form').find("input[name='document']");
@@ -210,16 +211,9 @@ $(document).ready(function () {
         // aff de l'éditeur
         editor.container.style.opacity = "";
         // def du language
-        var ext = $(this).data("mode").replace('.', '');
-        var mode = 'text';
-        switch (ext) {
-            case 'md':
-                mode = "markdown";
-                break;
-            default:
-                mode = ext
-        }
-        editor.session.setMode("ace/mode/" + mode);
+        var filePath = $(this).data("path");
+        var mode = modelist.getModeForPath(filePath);
+        editor.session.setMode(mode.mode);
         // editor.setAutoScrollEditorIntoView(true);
         // hauteur 
         editor.setOption("maxLines", 100);

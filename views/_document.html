@@ -27,6 +27,6 @@
 </div>
 <form class="ui form attached segment" style="padding: 0;" method="POST" action="/document{{.File}}">
     {{ .xsrfdata }}
-    <pre id="ace_editor" data-mode="{{.Record.Ext}}">{{.Record.Content}}</pre>
+    <pre id="ace_editor" data-path="{{.File}}">{{.Record.Content}}</pre>
     <input type="hidden" name="document" value="">
 </form>
