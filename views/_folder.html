@@ -1,11 +1,13 @@
 {{$folder := .Folder}}
 {{ template "_navbar_folder.html" .}}
-<div class="circular ui right floated basic icon button" data-action="/mkdir" title="Ajouter un dossier...">
+<div class="circular ui right floated basic icon button" data-action="/mkdir" title="Créer un dossier...">
 	<i class="icon folder plus"></i>
 </div>
 {{ $color := "yellow"}}
-{{ $withFolder := false}}
+{{ $notHeadFile := true}}
+
 {{ range $irecord, $record := .Records }}
+
 {{ $color = "green"}}
 {{ if $record.Inline}}{{$color = "green"}}{{end}}
 {{ if $record.Planified}}{{$color = "blue"}}{{end}}
@@ -13,7 +15,6 @@
 {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
 
 {{ if eq $record.IsDir 1 }}
-{{ $withFolder = true}}
 <!-- FOLDER -->
 <div class="ui compact message bee-click bee-dblclick" 
 	data-action="/folder{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
@@ -21,17 +22,17 @@
 </div>
 {{else}}
 <!-- not FOLDER -->
-{{if $withFolder }}
-<div class="ui divider"></div>
-<div class="circular ui right floated basic icon button " data-action="/upload" title="Importer...">
+{{if $notHeadFile }}
+<div class="ui clearing divider"></div>
+<div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
 	<i class="upload icon"></i>
 </div>
 <div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
 	<i class="icon file plus"></i>
 </div>
-{{ $withFolder = false}}
+{{ $notHeadFile = false}}
 {{end}}
-{{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
+{{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".jpeg") (eq $record.Ext ".svg")}}
 <!-- IMAGE -->
 <div class="ui compact message bee-click bee-dblclick" 
 	data-action="/image{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
@@ -96,5 +97,15 @@
 <!-- end if not folder -->
 {{end}}
 <!-- end if folder -->
+
 {{end}}
 <!-- end range records -->
+{{if $notHeadFile }}
+<div class="ui divider"></div>
+<div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
+	<i class="upload icon"></i>
+</div>
+<div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
+	<i class="icon file plus"></i>
+</div>
+{{end}}

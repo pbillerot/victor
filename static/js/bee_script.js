@@ -89,6 +89,30 @@ $(document).ready(function () {
             }).modal('show');
         event.preventDefault();
     });
+    // ACTION UPLOAD
+    $('.bee-modal-upload').on('click', function (event) {
+        var $form = $('#bee-modal-upload').find('form');
+        $('#bee-modal-upload')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $form.submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+    $('#bee-input-file').on('change', function () {
+        var $files = $(this).get(0).files;
+        var $html = "";
+        for (var i = 0; i < $files.length; i++) {
+            var $filename = $files[i].name.replace(/.*(\/|\\)/, '');
+            $html += '<div class="ui label">' + $filename + '</div>'
+        }
+        $('#bee-files-selected').html($html);
+    });
     // ACTION DEPLACER
     $('.bee-modal-move').on('click', function (event) {
         var $form = $('#bee-modal-move').find('form');
@@ -168,7 +192,7 @@ $(document).ready(function () {
         // aff de l'éditeur
         editor.container.style.opacity = "";
         // def du language
-        var ext = $(this).data("mode").replace('.','');
+        var ext = $(this).data("mode").replace('.', '');
         var mode = 'text';
         switch (ext) {
             case 'md':
@@ -189,20 +213,19 @@ $(document).ready(function () {
         $(this).css("fontSize", '13px');
         editor.commands.addCommand({
             name: 'Save',
-            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-            exec: function(editor) {
+            bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
+            exec: function (editor) {
                 $input.val(editor.getValue());
                 $form.submit();
             },
             readOnly: true // false if this command should not apply in readOnly mode
         });
-        editor.session.on('change', function(delta) {
+        editor.session.on('change', function (delta) {
             // delta.start, delta.end, delta.lines, delta.action
             $(".bee-submit").removeClass('disabled');
             // $input.val(editor.getValue());
         });
     });
-
 
     // IHM SEMANTIC
     // $('.menu .item').tab();

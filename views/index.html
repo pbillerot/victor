@@ -28,7 +28,7 @@
           {{if .File }}
           <div class="ui segment" style="margin: 1em;">
             <!-- DOCUMENT -->
-            {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".svg")}}
+            {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".jpeg") (eq .Ext ".svg")}}
             {{template "_image.html" .}}
             {{ else if (eq .Ext ".pdf")}}
             {{template "_pdf.html" .}}
@@ -104,6 +104,37 @@
     <div class="actions">
       <div class="ui cancel button">Annuler</div>
       <div class="ui approve button">Je confirme</div>
+    </div>
+  </div>
+  <!-- Modal Upload -->
+  <div id="bee-modal-upload" class="ui tiny modal">
+    <div class="header">Déposer des fichiers...</div>
+    <div class="content">
+      <form class="ui form" method="POST" action="/upload{{.Folder}}" enctype="multipart/form-data">
+        {{ .xsrfdata }}
+        <div class="field">
+          <label>Dans</label>
+          <div class="ui message">
+            <div class="header">
+              {{.Folder}}
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="bee-input-file" class="ui labeled icon button">
+            <i class="upload icon"></i>
+            Sélection de fichiers...
+          </label>
+          <input style="display: none" type="file" id="bee-input-file" name="files" multiple />
+        </div>
+        <!-- fichiers sur le départ -->
+        <div class="ui message" id="bee-files-selected">
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Envoyer sur le serveur</div>
     </div>
   </div>
 
