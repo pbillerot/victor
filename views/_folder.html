@@ -1,8 +1,7 @@
 {{$folder := .Folder}}
 {{ template "_navbar_folder.html" .}}
-<div class="circular ui right floated basic icon button bee-modal-new"
-	data-action="/mkdir" title="Créer un dossier...">
-	<i class="icon folder plus"></i>
+<div class="circular ui right floated basic icon button bee-modal-new" data-action="/mkdir" title="Créer un dossier...">
+    <i class="icon folder plus"></i>
 </div>
 {{ $color := "yellow"}}
 {{ $notHeadFile := true}}
@@ -19,103 +18,97 @@
 {{ if eq $record.IsDir 1 }}
 {{$notFolder = false}}
 <!-- FOLDER -->
-<div class="ui compact message bee-click bee-dblclick" 
-	data-action="/folder{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<i class="folder outline large icon"></i>{{$record.Base}}
+<div class="ui compact message bee-dblclick bee-click" data-action="/folder{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+    <i class="folder outline large icon"></i>{{$record.Base}}
 </div>
 {{else}}
-<!-- not FOLDER -->
-{{if $notHeadFile }}
-{{if $notFolder }}
-<h3>&nbsp;</h3>
-{{end}}
-<div class="ui clearing divider"></div>
-<div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
-	<i class="upload icon"></i>
-</div>
-<div class="circular ui right floated basic icon button bee-modal-new" data-action="/new" title="Créer un fichier...">
-	<i class="icon file plus"></i>
-</div>
-{{ $notHeadFile = false}}
-{{end}}
-{{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".jpeg") (eq $record.Ext ".svg")}}
-<!-- IMAGE -->
-<div class="ui compact message bee-click bee-dblclick" 
-	data-action="/image{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<img class="ui middle aligned mini image" src="/content{{$record.Path}}">
-	<span>{{$record.Base}}</span>
-</div>
-{{ else if (eq $record.Ext ".pdf")}}
-<!-- PDF -->
-<div class="ui compact message bee-click bee-dblclick" 
-	data-action="/pdf{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<i class="file pdf outline red large icon"></i>{{$record.Base}}
-</div>
-{{ else if (eq $record.Ext ".yaml")}}
-<!-- YAML -->
-<div class="ui compact message bee-click bee-dblclick" 
-	data-action="/document{{$record.Path}}"	data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<i class="file code outline brown large icon"></i>{{$record.Base}}
-</div>
-{{ else if (eq $record.Ext ".md")}}
-<!-- MARKDOWN -->
-<div class="ui {{$color}} compact message bee-click bee-dblclick" 
-	data-action="/document{{$record.Path}}"	data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<i class="file alternate outline green large icon"></i>
-	<span class="ui blue medium text">
-		<b class="searchable">{{$record.Base}}</b>
-	</span>
-	<span class="ui purple text">[{{$record.Title}}]</span>
-	{{$arr := BeeSplit $record.Tags ","}}
-	{{range $i, $item := $arr}}
-	<div class="ui grey basic label"><b>#{{$item}}</b></div>
-	{{end}}
-	{{$arr := BeeSplit $record.Categories ","}}
-	{{range $i, $item := $arr}}
-	<div class="ui tag grey basic label"><b>{{$item}}</b></div>
-	{{end}}
-	{{if (eq $record.Draft "1") }}
-	<span class="ui red text" title="brouillon"><i class="firstdraft icon"></i></span>
-	{{end}}
-	{{if or $record.DatePublish $record.DateExpiry }}
-	<div class="ui yellow image label">
-		<i class="clock outline icon"></i>
-		{{if $record.DatePublish}}<span title="date publication">
-			{{if $record.Planified }}<span class="ui red text">{{$record.DatePublish}}</span>
-			{{else}}{{$record.DatePublish}}{{end}}
-		</span>{{end}}
-		{{if $record.DateExpiry}}
-		<div class="detail" title="date expiration">
-			{{if $record.Expired }}<span class="ui red text">{{$record.DateExpiry}}</span>
-			{{else}}{{$record.DateExpiry}}{{end}}
-		</div>
-		{{end}}
-	</div>
-	{{end}}
-	<!-- end $record.Date -->
-</div>
-{{ else }}
-<!-- INCONNU -->
-<div class="ui compact message bee-click" 
-	data-action="/document{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
-	<i class="file outline large icon"></i>{{$record.Base}}
-</div>
-{{end}}
-<!-- end if not folder -->
-{{end}}
-<!-- end if folder -->
+    <!-- not FOLDER -->
+    {{if $notHeadFile }}
+    {{if $notFolder }}
+    <h3>&nbsp;</h3>
+    {{end}}
+    <div class="ui clearing divider"></div>
+    <div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
+        <i class="upload icon"></i>
+    </div>
+    <div class="circular ui right floated basic icon button bee-modal-new" data-action="/new" title="Créer un fichier...">
+        <i class="icon file plus"></i>
+    </div>
+    {{ $notHeadFile = false}}
+    {{end}}
+    {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".jpeg") (eq $record.Ext ".svg")}}
+    <!-- IMAGE -->
+    <div class="ui compact message bee-click bee-dblclick" data-action="/image{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+        <img class="ui middle aligned mini image" src="/content{{$record.Path}}">
+        <span>{{$record.Base}}</span>
+    </div>
+    {{ else if (eq $record.Ext ".pdf")}}
+    <!-- PDF -->
+    <div class="ui compact message bee-dblclick bee-click" data-action="/pdf{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+        <i class="file pdf outline red large icon"></i>{{$record.Base}}
+    </div>
+    {{ else if (eq $record.Ext ".yaml")}}
+    <!-- YAML -->
+    <div class="ui compact message bee-dblclick bee-click" data-action="/document{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+        <i class="file code outline brown large icon"></i>{{$record.Base}}
+    </div>
+    {{ else if (eq $record.Ext ".md")}}
+    <!-- MARKDOWN -->
+    <div class="ui {{$color}} compact message bee-dblclick bee-click" data-action="/document{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+        <i class="file alternate outline green large icon"></i>
+        <span class="ui blue medium text">
+            <b class="searchable">{{$record.Base}}</b>
+        </span>
+        <span class="ui purple text">[{{$record.Title}}]</span>
+        {{$arr := BeeSplit $record.Tags ","}}
+        {{range $i, $item := $arr}}
+        <div class="ui grey basic label"><b>#{{$item}}</b></div>
+        {{end}}
+        {{$arr := BeeSplit $record.Categories ","}}
+        {{range $i, $item := $arr}}
+        <div class="ui tag grey basic label"><b>{{$item}}</b></div>
+        {{end}}
+        {{if (eq $record.Draft "1") }}
+        <span class="ui red text" title="brouillon"><i class="firstdraft icon"></i></span>
+        {{end}}
+        {{if or $record.DatePublish $record.DateExpiry }}
+        <div class="ui yellow image label">
+            <i class="clock outline icon"></i>
+            {{if $record.DatePublish}}<span title="date publication">
+                {{if $record.Planified }}<span class="ui red text">{{$record.DatePublish}}</span>
+                {{else}}{{$record.DatePublish}}{{end}}
+            </span>{{end}}
+            {{if $record.DateExpiry}}
+            <div class="detail" title="date expiration">
+                {{if $record.Expired }}<span class="ui red text">{{$record.DateExpiry}}</span>
+                {{else}}{{$record.DateExpiry}}{{end}}
+            </div>
+            {{end}}
+        </div>
+        {{end}}
+        <!-- end $record.Date -->
+    </div>
+    {{ else }}
+    <!-- INCONNU -->
+    <div class="ui compact message bee-click" data-action="/document{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+        <i class="file outline large icon"></i>{{$record.Base}}
+    </div>
+    {{end}}
+    <!-- end if not folder -->
+    {{end}}
+    <!-- end if folder -->
 
-{{end}}
-<!-- end range records -->
-{{if $notHeadFile }}
-{{if $notFolder }}
-<h3>&nbsp;</h3>
-{{end}}
-<div class="ui divider"></div>
-<div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
-	<i class="upload icon"></i>
-</div>
-<div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
-	<i class="icon file plus"></i>
-</div>
-{{end}}
+    {{end}}
+    <!-- end range records -->
+    {{if $notHeadFile }}
+    {{if $notFolder }}
+    <h3>&nbsp;</h3>
+    {{end}}
+    <div class="ui divider"></div>
+    <div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
+        <i class="upload icon"></i>
+    </div>
+    <div class="circular ui right floated basic icon button" data-action="/new" title="Créer un fichier...">
+        <i class="icon file plus"></i>
+    </div>
+    {{end}}

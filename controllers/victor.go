@@ -57,6 +57,7 @@ func (c *MainController) Image() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
+	c.SetSession("Folder", record.Dir)
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DE L'IMAGE
@@ -72,7 +73,7 @@ func (c *MainController) Image() {
 			c.Ctx.Redirect(302, "/")
 			return
 		}
-		pathAbsolu := models.Config.HugoRacine + "/content" + pathFile
+		pathAbsolu := models.Config.HugoContent + pathFile
 		err = ioutil.WriteFile(pathAbsolu, unbased, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", pathAbsolu, err)
@@ -88,6 +89,8 @@ func (c *MainController) Image() {
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Folder"] = c.GetSession("Folder").(string)
+	c.Data["File"] = c.GetSession("File").(string)
 	c.TplName = "index.html"
 }
 
@@ -105,10 +108,13 @@ func (c *MainController) Pdf() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
+	c.SetSession("Folder", record.Dir)
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Folder"] = c.GetSession("Folder").(string)
+	c.Data["File"] = c.GetSession("File").(string)
 	c.TplName = "index.html"
 }
 
@@ -126,6 +132,7 @@ func (c *MainController) Document() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
+	c.SetSession("Folder", record.Dir)
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
@@ -157,6 +164,8 @@ func (c *MainController) Document() {
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Folder"] = c.GetSession("Folder").(string)
+	c.Data["File"] = c.GetSession("File").(string)
 	c.TplName = "index.html"
 }
 
@@ -204,7 +213,7 @@ func (c *MainController) FileRename() {
 		}
 	} else {
 		// Copie du fichier sur la cible
-		newFile := models.Config.HugoRacine + "/content" + record.Dir + "/" + c.GetString("new_name")
+		newFile := models.Config.HugoContent + record.Dir + "/" + c.GetString("new_name")
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Renommer en [%s] : %s", newFile, "existe déjà")
@@ -273,7 +282,7 @@ func (c *MainController) FileMove() {
 	}
 
 	if record.IsDir == 1 {
-		newFile := models.Config.HugoRacine + "/content" + c.GetString("new_path") + "/" + record.Base
+		newFile := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, "existe déjà")
@@ -294,7 +303,7 @@ func (c *MainController) FileMove() {
 		}
 	} else {
 		// Copie du fichier sur la cible
-		newFile := models.Config.HugoRacine + "/content" + c.GetString("new_path") + "/" + record.Base
+		newFile := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, "existe déjà")
@@ -363,7 +372,7 @@ func (c *MainController) FileCp() {
 	}
 
 	if record.IsDir == 1 {
-		newPath := models.Config.HugoRacine + "/content" + c.GetString("new_path") + "/" + record.Base
+		newPath := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
 		err = shutil.CopyTree(record.PathAbsolu, newPath, nil)
 		// err = os.Rename(record.PathAbsolu, newPath)
 		if err != nil {
@@ -376,7 +385,7 @@ func (c *MainController) FileCp() {
 			return
 		}
 	} else {
-		newPath := models.Config.HugoRacine + "/content" + c.GetString("new_path") + "/" + record.Base
+		newPath := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newPath); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, "existe déjà")
@@ -424,7 +433,7 @@ func (c *MainController) FileNew() {
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	newFile := models.Config.HugoRacine + "/content" + pathFolder + "/" + c.GetString("new_name")
+	newFile := models.Config.HugoContent + pathFolder + "/" + c.GetString("new_name")
 	modele := models.Config.HugoRacine + "/content/site/modele.md"
 	data, err := ioutil.ReadFile(modele)
 	if err != nil {
@@ -514,7 +523,8 @@ func (c *MainController) FileUpload() {
 			c.Ctx.Redirect(302, "/folder"+pathFolder)
 		}
 		fileContents, err := ioutil.ReadAll(file)
-		err = ioutil.WriteFile(models.Config.HugoRacine+"/content"+pathFolder+mfile.Filename, fileContents, 0644)
+		path := models.Config.HugoContent + pathFolder + "/" + mfile.Filename
+		err = ioutil.WriteFile(path, fileContents, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("Import : %s", err)
 			logs.Error(msg)
@@ -538,7 +548,7 @@ func (c *MainController) FileMkdir() {
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	newDir := models.Config.HugoRacine + "/content" + pathFolder + "/" + c.GetString("new_name")
+	newDir := models.Config.HugoContent + pathFolder + "/" + c.GetString("new_name")
 
 	err = os.MkdirAll(newDir, 0744)
 	if err != nil {
@@ -553,26 +563,6 @@ func (c *MainController) FileMkdir() {
 	// reLoad Folder
 	models.HugoReload()
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
-	return
-}
-
-// Action Action
-func (c *MainController) Action() {
-	appid := c.Ctx.Input.Param(":app")
-	action := c.Ctx.Input.Param(":action")
-
-	switch action {
-	case "refreshHugo":
-		refreshHugo(c)
-	case "publishDev":
-		publishDev(c)
-	case "pushProd":
-		pushProd(c)
-	}
-	// Demande d'actualisation de l'arborescence
-	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-	// Fermeture de la fenêtre
-	c.TplName = "bee_close.html"
 	return
 }
 
@@ -600,6 +590,24 @@ func (c *MainController) APIFolders() {
 	c.ServeJSON()
 }
 
+// Action Action
+func (c *MainController) Action() {
+	action := c.Ctx.Input.Param(":action")
+
+	switch action {
+	case "publishDev":
+		publishDev(c)
+	case "pushProd":
+		pushProd(c)
+	}
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Folder"] = c.GetSession("Folder").(string)
+	c.Data["File"] = c.GetSession("File").(string)
+	c.TplName = "index.html"
+}
+
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *MainController) {
 	logs.Info("publishDev", c.Data["HugoDev"].(string))
@@ -616,14 +624,15 @@ func publishDev(c *MainController) {
 	logs.Info("publishDev", string(out))
 }
 
-// pushProd : Exécution du moteur Hugo pour mettre à jour le site de développement
+// pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
+// git-push.sh est localisé sur le site de production
 func pushProd(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 	logs.Info("pushProd", c.Data["HugoProd"].(string))
 
 	// Hugo Git push
 	cmd := exec.Command("sh", "-c", "./project/git-push.sh")
-	cmd.Dir = c.Data["HugoDir"].(string)
+	cmd.Dir = models.Config.HugoDeploy
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Error("pushProd", err)
@@ -631,10 +640,4 @@ func pushProd(c *MainController) {
 		flash.Store(&c.Controller)
 	}
 	logs.Info("pushProd", string(out))
-}
-
-// refreshHugo : Exécution du moteur Hugo pour mettre à jour le site de développement
-func refreshHugo(c *MainController) {
-	logs.Info("refreshHugo")
-	// hugoFiles = nil
 }

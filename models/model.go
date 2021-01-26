@@ -75,6 +75,7 @@ type AppConfig struct {
 	Favicon     string
 	Icon        string
 	HugoRacine  string
+	HugoContent string
 	HugoURL     string
 	HugoDeploy  string
 }
@@ -90,6 +91,7 @@ func init() {
 	// Initialisation de models.Config
 	if val, ok := config.String("hugo_racine"); ok == nil {
 		Config.HugoRacine = val
+		Config.HugoContent = val + "/content"
 	}
 	if val, ok := config.String("hugo_url"); ok == nil {
 		Config.HugoURL = val
@@ -111,14 +113,14 @@ func init() {
 	}
 	logs.Info("Config", Config)
 	// Enregistrement de content an tant que répertoire statis
-	beego.SetStaticPath("/content", Config.HugoRacine+"/content")
+	beego.SetStaticPath("/content", Config.HugoContent)
 	loadHugo()
 }
 
 // GetFilesFolder retourne la liste des fichiers du <folder>
 func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
 	// suppression du / à la fin
-	hugoFolder := strings.TrimSuffix(Config.HugoRacine+"/content"+folder, "/")
+	hugoFolder := strings.TrimSuffix(Config.HugoContent+folder, "/")
 	var pis []HugoPathInfo
 	err = readDir(hugoFolder, &pis)
 	if err != nil {
@@ -136,7 +138,7 @@ func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
 func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record HugoFile) {
 
 	// On elève le chemin absolu du path
-	lenPrefixe := len(Config.HugoRacine + "/content")
+	lenPrefixe := len(Config.HugoContent)
 	path := pathAbsolu[lenPrefixe:]
 	if path == "" {
 		return
@@ -282,7 +284,7 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 
 // loadHugo retourne la liste des HugoFile
 func loadHugo() {
-	hugoFolder := Config.HugoRacine + "/content"
+	hugoFolder := Config.HugoContent
 	var pis []HugoPathInfo
 	err := readDir(hugoFolder, &pis)
 	if err != nil {

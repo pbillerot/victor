@@ -3,6 +3,11 @@
  */
 $(document).ready(function() {
 
+    // Ouverture d'un dossier ou fichier
+    $('.bee-dblclick').on('dblclick', function(event) {
+        window.location = $(this).data('action');
+        event.preventDefault();
+    });
     // Sélection d'un dossier ou fichier
     $('.bee-click').on('click', function(event) {
         var $action = $(this).data('action')
@@ -28,11 +33,6 @@ $(document).ready(function() {
         }
         event.preventDefault();
     });
-    // Ouverture d'un dossier ou fichier
-    $('.bee-dblclick').on('dblclick', function(event) {
-        window.location = $(this).data('action');
-        event.preventDefault();
-    });
     // Bouton Edit seulemnt sur markdown et image
     $(".bee-button-edit").on('click', function(event) {
         window.location = $('#bee-action').val();
@@ -45,13 +45,13 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
-    // ACTION RENAME
+    // ACTION NEW
     $('.bee-modal-new').on('click', function(event) {
-        var $form = $('#bee-modal-rename').find('form');
+        var $form = $('#bee-modal-new').find('form');
         $form.attr('action', $(this).data('action'));
-        $('#bee-modal-rename').find('.header').html($(this).attr('title'));
-        $('#bee-modal-rename').find("input[name='new_name']").val('');
-        $('#bee-modal-rename')
+        $('#bee-modal-new').find('.header').html($(this).attr('title'));
+        $('#bee-modal-new').find("input[name='new_name']").val('');
+        $('#bee-modal-new')
             .modal({
                 closable: false,
                 onDeny: function() {
@@ -65,13 +65,13 @@ $(document).ready(function() {
     });
     // ACTION RENAME
     $('.bee-modal-rename').on('click', function(event) {
-        var $form = $('#bee-modal-rename').find('form');
+        var $form = $('#bee-modal-new').find('form');
         var $base = $('#bee-base').val();
         var $path = $('#bee-path').val();
         $form.attr('action', $(this).data('action') + $path);
-        $('#bee-modal-rename').find('.header').html($(this).attr('title'));
-        $('#bee-modal-rename').find("input[name='new_name']").val($base);
-        $('#bee-modal-rename')
+        $('#bee-modal-new').find('.header').html($(this).attr('title'));
+        $('#bee-modal-new').find("input[name='new_name']").val($base);
+        $('#bee-modal-new')
             .modal({
                 closable: false,
                 onDeny: function() {
@@ -510,13 +510,6 @@ $(document).ready(function() {
      * TODO voir si accepter par les browsers
      */
     $(document).on('click', '.hugo-window-open', function(event) {
-        // Mémo du contexte dans un cookie
-        if ($hugo_view && $hugo_view.length > 0) {
-            var $anchor = $(this).closest('.message');
-            Cookies.set($hugo_view, $anchor.attr('id'))
-            $(this).closest('main').find('.crud-list-selected').removeClass('crud-list-selected');
-            $anchor.addClass("crud-list-selected");
-        }
         // Préparation window.open
         var height = $(this).data("height") ? $(this).data("height") : 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
