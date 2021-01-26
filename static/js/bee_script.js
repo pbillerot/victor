@@ -41,11 +41,6 @@ $(document).ready(function () {
 
     $('.bee-submit').on('click', function (event) {
         var $form = $(this).closest('section').find('.form');
-        // particularité pour l'ace-editor
-        if (editor) {
-            var $input = $form.find("input[name='document']");
-            $input.val(editor.getValue());
-        }
         $form.submit();
         event.preventDefault();
     });
@@ -200,44 +195,35 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-    // ACE EDITOR
-    var editor = null;
-    var modelist = ace.require("ace/ext/modelist")
-    $("#ace_editor").each(function (index) {
-        var $form = $(this).closest('section').find('.form');
-        var $input = $(this).closest('form').find("input[name='document']");
-        // $(this)[0] pour récupérer le DOMElement
-        editor = ace.edit($(this)[0]);
-        // aff de l'éditeur
-        editor.container.style.opacity = "";
-        // def du language
-        var filePath = $(this).data("path");
-        var mode = modelist.getModeForPath(filePath);
-        editor.session.setMode(mode.mode);
-        // editor.setAutoScrollEditorIntoView(true);
-        // hauteur 
-        editor.setOption("maxLines", 100);
-        editor.setOption("theme", 'ace/theme/eclipse');
-        editor.session.setUseWrapMode(true);
-        editor.session.setTabSize(2);
-        editor.setShowPrintMargin(false);
-        editor.setReadOnly(false);
-        $(this).css("fontSize", '13px');
-        editor.commands.addCommand({
-            name: 'Save',
-            bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
-            exec: function (editor) {
-                $input.val(editor.getValue());
-                $form.submit();
-            },
-            readOnly: true // false if this command should not apply in readOnly mode
-        });
-        editor.session.on('change', function (delta) {
-            // delta.start, delta.end, delta.lines, delta.action
+    // Coloriage syntaxique CODEMIRROR
+    if ($("#bee-editor").length != 0) {
+        var myCodeMirror = CodeMirror.fromTextArea(
+            document.getElementById('bee-editor')
+            , {
+                lineNumbers: true,
+                lineWrapping: true,
+                mode: 'yaml-frontmatter',
+                readOnly: false,
+                theme: 'eclipse',
+                viewportMargin: 20
+            }
+        );
+        myCodeMirror.on("change", function (cm) {
             $(".bee-submit").removeClass('disabled');
-            // $input.val(editor.getValue());
+        })
+        // CTRL+S
+        $(window).bind('keydown', function (event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch (String.fromCharCode(event.which).toLowerCase()) {
+                    case 's':
+                        event.preventDefault();
+                        $(".bee-submit").trigger('click');
+                        break;
+                }
+            }
         });
-    });
+        $("#bee-editor").focus();
+    }
 
     // IHM SEMANTIC
     // $('.menu .item').tab();

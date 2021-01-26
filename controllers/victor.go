@@ -18,14 +18,14 @@ import (
 
 // Main as get and Post
 func (c *MainController) Main() {
-	// Chargement de hugoFiles et des meta du dossier courant
-	hugoFiles := models.HugoGetFolder("/")
-
-	c.Data["Records"] = hugoFiles
-
 	setSession(c, "Folder", "/")
 
 	web.ReadFromRequest(&c.Controller)
+
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+
 	c.TplName = "index.html"
 }
 
@@ -35,10 +35,10 @@ func (c *MainController) Folder() {
 	setSession(c, "Folder", pathFolder)
 
 	web.ReadFromRequest(&c.Controller)
-	// Chargement de hugoFiles et des meta du dossier courant
-	hugoFiles := models.HugoGetFolder(pathFolder)
 
-	c.Data["Records"] = hugoFiles
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 
 	c.TplName = "index.html"
 }
@@ -47,11 +47,10 @@ func (c *MainController) Folder() {
 func (c *MainController) Image() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 	setSession(c, "File", pathFile)
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
-
-	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -86,14 +85,9 @@ func (c *MainController) Image() {
 		models.HugoReload()
 	}
 
-	// Load Folder
-	pathFolder := c.GetSession("Folder").(string)
-	hugoFiles := models.HugoGetFolder(pathFolder)
-
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = record
-	c.Data["Records"] = hugoFiles
-
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.TplName = "index.html"
 }
 
@@ -101,15 +95,10 @@ func (c *MainController) Image() {
 func (c *MainController) Pdf() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 	setSession(c, "File", pathFile)
-
-	// Load Folder
-	pathFolder := c.GetSession("Folder").(string)
-	hugoFiles := models.HugoGetFolder(pathFolder)
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
-
-	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -118,9 +107,8 @@ func (c *MainController) Pdf() {
 	}
 
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = record
-	c.Data["Records"] = hugoFiles
-
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.TplName = "index.html"
 }
 
@@ -128,11 +116,10 @@ func (c *MainController) Pdf() {
 func (c *MainController) Document() {
 	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
 	setSession(c, "File", pathFile)
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Recherche du record
 	record := models.HugoGetRecord(pathFile)
-
-	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -167,14 +154,9 @@ func (c *MainController) Document() {
 		}
 		models.HugoReload()
 	}
-	// Load Folder
-	pathFolder := c.GetSession("Folder").(string)
-	hugoFiles := models.HugoGetFolder(pathFolder)
-
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = record
-	c.Data["Records"] = hugoFiles
-
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.TplName = "index.html"
 }
 
@@ -217,7 +199,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 	} else {
@@ -239,7 +221,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 		err = ioutil.WriteFile(newFile, data, 0644)
@@ -248,7 +230,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 		// Suppression du fichier source
@@ -258,11 +240,13 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 	}
-
+	if path == c.GetSession("File").(string) {
+		c.SetSession("File", "")
+	}
 	// reLoad Folder
 	models.HugoReload()
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
@@ -284,7 +268,7 @@ func (c *MainController) FileMove() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
 
@@ -305,7 +289,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 	} else {
@@ -327,7 +311,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 		err = ioutil.WriteFile(newFile, data, 0644)
@@ -336,7 +320,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 		// Suppression du fichier source
@@ -346,11 +330,13 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
 	}
-
+	if path == c.GetSession("File").(string) {
+		c.SetSession("File", "")
+	}
 	// reLoad Folder
 	models.HugoReload()
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
@@ -372,7 +358,7 @@ func (c *MainController) FileCp() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
 
@@ -481,7 +467,7 @@ func (c *MainController) FileRm() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
 
@@ -491,7 +477,7 @@ func (c *MainController) FileRm() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
 	if path == c.GetSession("File").(string) {
@@ -560,7 +546,7 @@ func (c *MainController) FileMkdir() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/folder"+pathFolder)
 		return
 	}
 
