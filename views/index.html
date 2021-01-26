@@ -26,7 +26,7 @@
                 </section>
                 <section class="ten wide column">
                     {{if .File }}
-                    <div class="ui segment" style="padding: 0">
+                    <div class="ui segment" style="padding: 0;background-color: #f9fafb; max-width: 900px">
                         <!-- DOCUMENT -->
                         {{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".jpeg") (eq .Ext ".svg")}}
                         {{template "_image.html" .}}
