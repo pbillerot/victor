@@ -3,7 +3,12 @@
 /*******************************
              Global
 *******************************/
-
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: whitesmoke;
+}
 /* TOP MENU */
 .ui.menu .item img.logo {
     margin-right: 1.5em;
@@ -12,10 +17,12 @@
 /* MAIN */
 main {
     flex: 1;
-    margin-top: 5.5em;
+    margin-top: 7em;
     margin-bottom: 1em;
 }
-
+.ui.fixed.menu {
+    background-color: #f9fafb;
+}
 .ui.grid>.row {
     padding-left: 1em;
     padding-right: 1em;
@@ -40,7 +47,6 @@ main {
 .bee-dblclick {
     cursor: pointer;
 }
-
 .ui.label {
     margin-top: .3em;
 }

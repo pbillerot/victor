@@ -1,23 +1,22 @@
-<div class="ui secondary stackable menu">
-    <div class="item">
-        <div class="ui large breadcrumb">
-            <div class="section ">
-                <i class="ui large file pdf outline red icon"></i>
-            </div>
-            {{ $breadcrumbs := BeeSplitBreadcrumb .File}}
-            {{ range $breadcrumb := $breadcrumbs}}
-            <i class="right chevron icon divider"></i>
-            {{ if $breadcrumb.IsLast }}
-            <div class="section"><span class="ui large text">{{$breadcrumb.Base}}</span></div>
-            {{else}}
-                <div class="section">{{$breadcrumb.Base}}</div>
-                {{end}}
-                {{end}}
+<!-- ENTETE -->
+<div class="ui attached message">
+    <div class="ui large breadcrumb">
+        <div class="section ">
+            <i class="ui large file pdf red icon"></i>
         </div>
+        {{ $breadcrumbs := BeeSplitBreadcrumb .File}}
+        {{ range $breadcrumb := $breadcrumbs}}
+        <i class="right chevron icon divider"></i>
+        {{ if $breadcrumb.IsLast }}
+        <div class="section"><span class="ui large text">{{$breadcrumb.Base}}</span></div>
+        {{else}}
+        <div class="section">{{$breadcrumb.Base}}</div>
+        {{end}}
+        {{end}}
     </div>
 </div>
 <!-- iframe pdf -->
-<object data="/content{{.File}}?{{.Composter}}" type="application/pdf" style="display: block;width: 100%; height:700px; min-height: 700px;" typemustmatch allowfullscreen>
+<object data="/content{{.File}}?{{.Composter}}" type="application/pdf" width="100%" height="100%" typemustmatch>
     <p>Vous ne possédez pas de greffon PDF, mais vous pouvez <a href="/content{{.File}}?{{.Composter}}">télécharger le
             fichier PDF.</a></p>
 </object>

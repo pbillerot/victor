@@ -91,7 +91,7 @@ func (c *MainController) Image() {
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
-	c.TplName = "index.html"
+	c.TplName = "file.html"
 }
 
 // Pdf Visualiser Modifier une image
@@ -115,7 +115,7 @@ func (c *MainController) Pdf() {
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
-	c.TplName = "index.html"
+	c.TplName = "file.html"
 }
 
 // Document Visualiser Modifier un document
@@ -166,7 +166,7 @@ func (c *MainController) Document() {
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
-	c.TplName = "index.html"
+	c.TplName = "file.html"
 }
 
 // FileRename Renommer le fichier

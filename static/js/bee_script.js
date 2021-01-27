@@ -5,7 +5,10 @@ $(document).ready(function () {
 
     // Ouverture d'un dossier ou fichier
     $('.bee-dblclick').on('dblclick', function (event) {
-        window.location = $(this).data('action');
+        var $action = $(this).data('action')
+        $('#bee-action').val($action)
+        $('.bee-window-open-file').trigger('click');
+        // window.location = $(this).data('action');
         event.preventDefault();
     });
     // Sélection d'un dossier ou fichier
@@ -33,14 +36,14 @@ $(document).ready(function () {
         }
         event.preventDefault();
     });
-    // Bouton Edit seulemnt sur markdown et image
+    // Bouton Edit seulement sur markdown et image
     $(".bee-button-edit").on('click', function (event) {
         window.location = $('#bee-action').val();
         event.preventDefault();
     });
 
     $('.bee-submit').on('click', function (event) {
-        var $form = $(this).closest('section').find('.form');
+        var $form = $('form');
         $form.submit();
         event.preventDefault();
     });
@@ -512,10 +515,28 @@ $(document).ready(function () {
     }
 
     /**
-     * Ouverture d'une fenêtre en popup
-     * TODO voir si accepter par les browsers
+     * Ouverture d'une fenêtre pour voir éditer un fichier
      */
-    $(document).on('click', '.hugo-window-open', function (event) {
+    $(document).on('click', '.bee-window-open-file', function (event) {
+        // Préparation window.open
+        var $height = $(this).data("height") ? $(this).data("height") : 'max';
+        var $width = $(this).data("width") ? $(this).data("width") : 'large';
+        var $posx = $(this).data("posx") ? $(this).data("posx") : 'left';
+        var $posy = $(this).data("posy") ? $(this).data("posy") : '3';
+        var $target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
+        var $url = $('#bee-action').val();
+        if (window.opener == null) {
+            window.open($url, $target, computeWindow($posx, $posy, $width, $height, false));
+        } else {
+            window.opener.open($url, $target, computeWindow($posx, $posy, $width, $height, false));
+        }
+        event.preventDefault();
+    });
+
+    /**
+     * Ouverture d'une fenêtre en popup
+     */
+    $(document).on('click', '.bee-window-open', function (event) {
         // Préparation window.open
         var height = $(this).data("height") ? $(this).data("height") : 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
@@ -530,15 +551,13 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-
     /**
      * Fermeture de la fenêtre popup
      */
-    $(document).on('click', '.crud-jquery-close', function (event) {
+    $(document).on('click', '.bee-confirm-close', function (event) {
         if ($('#button_validate').length > 0 &&
-            $('#button_validate').attr('disabled') != "disabled") {
-            $('#crud-action').html("Abandonner les modifications ?");
-            $('#crud-modal-confirm')
+            $('#button_validate').hasClass('disabled') == false) {
+            $('#bee-modal-confirm')
                 .modal({
                     closable: false,
                     onDeny: function () {

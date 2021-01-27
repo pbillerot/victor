@@ -1,35 +1,18 @@
-<div class="ui secondary stackable menu">
-    <div class="item">
-        <div class="ui large breadcrumb">
-            <div class="section">
-                <i class="file image outline blue large icon"></i>
-            </div>
-            {{ $breadcrumbs := BeeSplitBreadcrumb .File}}
-            {{ range $breadcrumb := $breadcrumbs}}
-            <i class="right chevron icon divider"></i>
-            {{ if $breadcrumb.IsLast }}
-            <div class="section"><span class="ui large text">{{$breadcrumb.Base}}</span></div>
-            {{else}}
-                <div class="section">{{$breadcrumb.Base}}</div>
-                {{end}}
-                {{end}}
+<!-- ENTETE -->
+<div class="ui attached message">
+    <div class="ui large breadcrumb">
+        <div class="section ">
+            <i class="ui large picture blue icon "></i>
         </div>
-    </div>
-    <div class="right menu">
-        <div class="item">
-            <div class="ui basic small buttons">
-                <div class="ui icon button bee-popup-image-editor" data-src="/content{{.File}}" title="Modifier l'image">
-                    <i class="edit icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ui basic small buttons">
-                <div class="ui icon button bee-submit disabled" title="Enregistrer">
-                    <i class="save icon"></i>
-                </div>
-            </div>
-        </div>
+        {{ $breadcrumbs := BeeSplitBreadcrumb .File}}
+        {{ range $breadcrumb := $breadcrumbs}}
+        <i class="right chevron icon divider"></i>
+        {{ if $breadcrumb.IsLast }}
+        <div class="section"><span class="ui large text">{{$breadcrumb.Base}}</span></div>
+        {{else}}
+        <div class="section">{{$breadcrumb.Base}}</div>
+        {{end}}
+        {{end}}
     </div>
 </div>
 <!-- Formulaire d'Edition -->
