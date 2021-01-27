@@ -1,15 +1,15 @@
 /**
  * Script.js
  */
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Ouverture d'un dossier ou fichier
-    $('.bee-dblclick').on('dblclick', function(event) {
+    $('.bee-dblclick').on('dblclick', function (event) {
         window.location = $(this).data('action');
         event.preventDefault();
     });
     // Sélection d'un dossier ou fichier
-    $('.bee-click').on('click', function(event) {
+    $('.bee-click').on('click', function (event) {
         var $action = $(this).data('action')
         var $base = $(this).data('base')
         var $path = $(this).data('path')
@@ -34,19 +34,19 @@ $(document).ready(function() {
         event.preventDefault();
     });
     // Bouton Edit seulemnt sur markdown et image
-    $(".bee-button-edit").on('click', function(event) {
+    $(".bee-button-edit").on('click', function (event) {
         window.location = $('#bee-action').val();
         event.preventDefault();
     });
 
-    $('.bee-submit').on('click', function(event) {
+    $('.bee-submit').on('click', function (event) {
         var $form = $(this).closest('section').find('.form');
         $form.submit();
         event.preventDefault();
     });
 
     // ACTION NEW
-    $('.bee-modal-new').on('click', function(event) {
+    $('.bee-modal-new').on('click', function (event) {
         var $form = $('#bee-modal-new').find('form');
         $form.attr('action', $(this).data('action'));
         $('#bee-modal-new').find('.header').html($(this).attr('title'));
@@ -54,17 +54,17 @@ $(document).ready(function() {
         $('#bee-modal-new')
             .modal({
                 closable: false,
-                onDeny: function() {
+                onDeny: function () {
                     return true;
                 },
-                onApprove: function() {
+                onApprove: function () {
                     $form.submit();
                 }
             }).modal('show');
         event.preventDefault();
     });
     // ACTION RENAME
-    $('.bee-modal-rename').on('click', function(event) {
+    $('.bee-modal-rename').on('click', function (event) {
         var $form = $('#bee-modal-new').find('form');
         var $base = $('#bee-base').val();
         var $path = $('#bee-path').val();
@@ -74,50 +74,56 @@ $(document).ready(function() {
         $('#bee-modal-new')
             .modal({
                 closable: false,
-                onDeny: function() {
+                onDeny: function () {
                     return true;
                 },
-                onApprove: function() {
+                onApprove: function () {
                     $form.submit();
                 }
             }).modal('show');
         event.preventDefault();
     });
     // ACTION CONFIRMATION
-    $('.bee-modal-confirm').on('click', function(event) {
+    $('.bee-modal-confirm').on('click', function (event) {
         var $form = $('#bee-modal-confirm').find('form');
-        var $path = $('#bee-path').val();
-        $form.attr('action', $(this).data('action') + $path);
         $('#bee-modal-confirm').find('.header').html($(this).attr('title'));
-        $('#bee-modal-confirm').find('.message>.header').html($path);
+        if ($(this).data('message').length > 0) {
+            // cas submit action
+            $form.attr('action', $(this).data('action'));
+            $('#bee-modal-confirm').find('.message>.header').html($(this).data('message'));
+        } else {
+            var $path = $('#bee-path').val();
+            $form.attr('action', $(this).data('action') + $path);
+            $('#bee-modal-confirm').find('.message>.header').html($path);
+        }
         $('#bee-modal-confirm')
             .modal({
                 closable: false,
-                onDeny: function() {
+                onDeny: function () {
                     return true;
                 },
-                onApprove: function() {
+                onApprove: function () {
                     $('form', document).submit();
                 }
             }).modal('show');
         event.preventDefault();
     });
     // ACTION UPLOAD
-    $('.bee-modal-upload').on('click', function(event) {
+    $('.bee-modal-upload').on('click', function (event) {
         var $form = $('#bee-modal-upload').find('form');
         $('#bee-modal-upload')
             .modal({
                 closable: false,
-                onDeny: function() {
+                onDeny: function () {
                     return true;
                 },
-                onApprove: function() {
+                onApprove: function () {
                     $form.submit();
                 }
             }).modal('show');
         event.preventDefault();
     });
-    $('#bee-input-file').on('change', function() {
+    $('#bee-input-file').on('change', function () {
         var $files = $(this).get(0).files;
         var $html = "";
         for (var i = 0; i < $files.length; i++) {
@@ -127,7 +133,7 @@ $(document).ready(function() {
         $('#bee-files-selected').html($html);
     });
     // ACTION DEPLACER
-    $('.bee-modal-move').on('click', function(event) {
+    $('.bee-modal-move').on('click', function (event) {
         var $form = $('#bee-modal-move').find('form');
         var $path = $('#bee-path').val();
         $form.attr('action', $(this).data('action') + $path);
@@ -147,10 +153,10 @@ $(document).ready(function() {
         $('#bee-modal-move')
             .modal({
                 closable: false,
-                onDeny: function() {
+                onDeny: function () {
                     return true;
                 },
-                onApprove: function() {
+                onApprove: function () {
                     $form.submit();
                 }
             }).modal('show');
@@ -158,7 +164,7 @@ $(document).ready(function() {
     });
 
     // CLIC IMAGE EDITOR POPUP
-    $('.bee-popup-image-editor').on('click', function(event) {
+    $('.bee-popup-image-editor').on('click', function (event) {
         var $url = $(this).data('src');
         var $form = $(this).closest('section').find('.form');
         var $input = $form.find("input[name='image']");
@@ -200,19 +206,19 @@ $(document).ready(function() {
     if ($("#bee-editor").length != 0) {
         var myCodeMirror = CodeMirror.fromTextArea(
             document.getElementById('bee-editor'), {
-                lineNumbers: true,
-                lineWrapping: true,
-                mode: 'yaml-frontmatter',
-                readOnly: false,
-                theme: 'eclipse',
-                viewportMargin: 20
-            }
+            lineNumbers: true,
+            lineWrapping: true,
+            mode: 'yaml-frontmatter',
+            readOnly: false,
+            theme: 'eclipse',
+            viewportMargin: 20
+        }
         );
-        myCodeMirror.on("change", function(cm) {
+        myCodeMirror.on("change", function (cm) {
             $(".bee-submit").removeClass('disabled');
         })
         // CTRL+S
-        $(window).bind('keydown', function(event) {
+        $(window).bind('keydown', function (event) {
             if (event.ctrlKey || event.metaKey) {
                 switch (String.fromCharCode(event.which).toLowerCase()) {
                     case 's':
@@ -232,7 +238,7 @@ $(document).ready(function() {
     // $('.ui.dropdown').dropdown();
     // $('select.dropdown').dropdown();
     $('.message .close')
-        .on('click', function() {
+        .on('click', function () {
             $(this)
                 .closest('.message')
                 .transition('fade');
@@ -285,13 +291,13 @@ $(document).ready(function() {
     // CLIC IMAGE POPUP
     var $hugo_view = $('#hugo_view').val();
     var $hugo_refresh = $('#hugo_refresh').val();
-    $('.hugo-modal-image').on('click', function(event) {
+    $('.hugo-modal-image').on('click', function (event) {
         var $src = $(this).data('src');
         $('#hugo-image').attr('src', $src)
         $('#hugo-modal-image')
             .modal({
                 closable: true,
-                onHide: function() {
+                onHide: function () {
                     isUsed = false;
                     return true;
                 }
@@ -304,21 +310,21 @@ $(document).ready(function() {
     if ($("#codemirror-markdown").length != 0) {
         var myCodeMirror = CodeMirror.fromTextArea(
             document.getElementById('codemirror-markdown'), {
-                lineNumbers: false,
-                lineWrapping: true,
-                mode: 'yaml-frontmatter',
-                readOnly: false,
-                theme: 'eclipse',
-                viewportMargin: 20
-            }
+            lineNumbers: false,
+            lineWrapping: true,
+            mode: 'yaml-frontmatter',
+            readOnly: false,
+            theme: 'eclipse',
+            viewportMargin: 20
+        }
         );
-        myCodeMirror.on("change", function(cm) {
+        myCodeMirror.on("change", function (cm) {
             $('#button_validate').removeAttr('disabled');
         })
     }
 
     // Collapse
-    $('.crud-collapse').on('click', function(event) {
+    $('.crud-collapse').on('click', function (event) {
         var portlet = $(this).closest('div');
         if ($(this).hasClass('open')) {
             portlet.find('.icon').removeClass("open");
@@ -332,7 +338,7 @@ $(document).ready(function() {
     });
 
     // CLIC URL
-    $('.crud-jquery-url').on('click', function(event) {
+    $('.crud-jquery-url').on('click', function (event) {
         if (isUsed) {
             event.preventDefault();
             return
@@ -355,7 +361,7 @@ $(document).ready(function() {
     });
 
     // CLIC BUTTON URL
-    $('.crud-jquery-button').on('click', function(event) {
+    $('.crud-jquery-button').on('click', function (event) {
         var $target = $(this).data('target');
         if (!$target || $target == '') {
             window.location = $(this).data('url');
@@ -366,17 +372,17 @@ $(document).ready(function() {
     });
 
     // ACTION DEMANDE CONFIRMATION
-    $('.crud-jquery-action').on('click', function(event) {
+    $('.crud-jquery-action').on('click', function (event) {
         var $url = $(this).data('url');
         if ($(this).data('confirm') == true) {
             $('#crud-action').html($(this).html());
             $('#crud-modal-confirm')
                 .modal({
                     closable: false,
-                    onDeny: function() {
+                    onDeny: function () {
                         return true;
                     },
-                    onApprove: function() {
+                    onApprove: function () {
                         $('form').attr('action', $url);
                         $('form', document).submit();
                     }
@@ -390,7 +396,7 @@ $(document).ready(function() {
     });
 
     // CLIC IMAGE POPUP
-    $('.crud-popup-image').on('click', function(event) {
+    $('.crud-popup-image').on('click', function (event) {
         isUsed = true;
         // Mémo du contexte dans un cookie
         if ($crud_view && $crud_view.length > 0) {
@@ -405,7 +411,7 @@ $(document).ready(function() {
         $('#crud-modal-image')
             .modal({
                 closable: true,
-                onHide: function() {
+                onHide: function () {
                     isUsed = false;
                     return true;
                 }
@@ -413,7 +419,7 @@ $(document).ready(function() {
         event.preventDefault();
     });
     // CLIC IMAGE POPUP
-    $('.crud-popup-chart').on('click', function(event) {
+    $('.crud-popup-chart').on('click', function (event) {
         isUsed = true;
         // Mémo du contexte dans un cookie
         if ($crud_view && $crud_view.length > 0) {
@@ -429,11 +435,11 @@ $(document).ready(function() {
         $('#crud-modal-chart')
             .modal({
                 closable: true,
-                onHide: function() {
+                onHide: function () {
                     isUsed = false;
                     return true;
                 },
-                onVisible: function() {
+                onVisible: function () {
                     drawChart(canvasParent.children("canvas"));
                 }
             }).modal('show');
@@ -441,14 +447,14 @@ $(document).ready(function() {
     });
 
     // SUPPRESSION D'UN ENREGISTREMENT
-    $('.crud-jquery-delete').on('click', function(event) {
+    $('.crud-jquery-delete').on('click', function (event) {
         $('#crud-modal-confirm')
             .modal({
                 closable: false,
-                onDeny: function() {
+                onDeny: function () {
                     return true;
                 },
-                onApprove: function() {
+                onApprove: function () {
                     $('form', document).submit();
                 }
             }).modal('show');
@@ -509,7 +515,7 @@ $(document).ready(function() {
      * Ouverture d'une fenêtre en popup
      * TODO voir si accepter par les browsers
      */
-    $(document).on('click', '.hugo-window-open', function(event) {
+    $(document).on('click', '.hugo-window-open', function (event) {
         // Préparation window.open
         var height = $(this).data("height") ? $(this).data("height") : 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
@@ -528,17 +534,17 @@ $(document).ready(function() {
     /**
      * Fermeture de la fenêtre popup
      */
-    $(document).on('click', '.crud-jquery-close', function(event) {
+    $(document).on('click', '.crud-jquery-close', function (event) {
         if ($('#button_validate').length > 0 &&
             $('#button_validate').attr('disabled') != "disabled") {
             $('#crud-action').html("Abandonner les modifications ?");
             $('#crud-modal-confirm')
                 .modal({
                     closable: false,
-                    onDeny: function() {
+                    onDeny: function () {
                         return true;
                     },
-                    onApprove: function() {
+                    onApprove: function () {
                         window.close();
                     }
                 }).modal('show');

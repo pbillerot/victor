@@ -628,7 +628,7 @@ func publishDev(c *MainController) {
 // git-push.sh est localisé sur le site de production
 func pushProd(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
-	logs.Info("pushProd", c.Data["HugoProd"].(string))
+	logs.Info("pushProd", models.Config.HugoDeploy)
 
 	// Hugo Git push
 	cmd := exec.Command("sh", "-c", "./project/git-push.sh")
@@ -636,8 +636,11 @@ func pushProd(c *MainController) {
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Error("pushProd", err)
-		flash.Error("ERREUR: pushProd : %v", err)
+		flash.Error("pushProd : %v", err)
+		flash.Error(string(out))
 		flash.Store(&c.Controller)
+		return
 	}
+	flash.Success(string(out))
 	logs.Info("pushProd", string(out))
 }

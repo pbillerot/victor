@@ -38,7 +38,9 @@
     {{ if .Record.Action }}
     <div class="field">
         <div class="ui action input">
-            <button class="ui red button bee-modal-confirm" data-action="/action/{{.Record.Action}}" title="{{.Record.Action}}">
+            <button class="ui red button bee-modal-confirm" 
+            data-action="/action/{{.Record.Action}}" title="{{.Record.Action}}"
+            data-message="Veuillez confirmer le démarrage de l'action">
                 <i class="play circle outline icon"></i>
                 {{.Record.Action}}
             </button>
