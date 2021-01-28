@@ -8,5 +8,5 @@ require (
 	github.com/astaxie/beego v1.12.3
 	github.com/kennygrant/sanitize v1.2.4
 	github.com/smartystreets/goconvey v1.6.4
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v2 v2.4.0
 )
