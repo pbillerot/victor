@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/kennygrant/sanitize"
 
 	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
@@ -191,7 +191,7 @@ func (c *MainController) FileRename() {
 	}
 
 	if record.IsDir == 1 {
-		newName := c.GetString("new_name")
+		newName := sanitize.Name(c.GetString("new_name"))
 		path := strings.Split(record.PathAbsolu, "/")
 		path[len(path)-1] = newName
 		newFile := strings.Join(path, "/")
@@ -436,7 +436,8 @@ func (c *MainController) FileNew() {
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	newFile := models.Config.HugoContent + pathFolder + "/" + c.GetString("new_name")
+	newName := sanitize.Name(c.GetString("new_name"))
+	newFile := models.Config.HugoContent + pathFolder + "/" + newName
 	modele := models.Config.HugoRacine + "/content/site/modele.md"
 	data, err := ioutil.ReadFile(modele)
 	if err != nil {
@@ -551,7 +552,8 @@ func (c *MainController) FileMkdir() {
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	newDir := models.Config.HugoContent + pathFolder + "/" + c.GetString("new_name")
+	newName := sanitize.Name(c.GetString("new_name"))
+	newDir := models.Config.HugoContent + pathFolder + "/" + newName
 
 	err = os.MkdirAll(newDir, 0744)
 	if err != nil {
@@ -592,59 +594,4 @@ func (c *MainController) APIFolders() {
 
 	c.Data["json"] = &resp
 	c.ServeJSON()
-}
-
-// Action Action
-func (c *MainController) Action() {
-	action := c.Ctx.Input.Param(":action")
-
-	switch action {
-	case "publishDev":
-		publishDev(c)
-	case "pushProd":
-		pushProd(c)
-	}
-	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
-	c.Data["Folder"] = c.GetSession("Folder").(string)
-	c.Data["File"] = c.GetSession("File").(string)
-	c.TplName = "index.html"
-}
-
-// publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
-func publishDev(c *MainController) {
-	logs.Info("publishDev", c.Data["HugoDev"].(string))
-	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string),
-		"--environment", "DEV", "--cleanDestinationDir")
-	cmd.Dir = c.Data["HugoDir"].(string)
-	out, err := cmd.CombinedOutput()
-	flash := beego.ReadFromRequest(&c.Controller)
-	if err != nil {
-		logs.Error("publishDev", err)
-		flash.Error("ERREURG Génération des pages : %v", err)
-		flash.Store(&c.Controller)
-	}
-	logs.Info("publishDev", string(out))
-}
-
-// pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
-// git-push.sh est localisé sur le site de production
-func pushProd(c *MainController) {
-	flash := beego.ReadFromRequest(&c.Controller)
-	logs.Info("pushProd", models.Config.HugoDeploy)
-
-	// Hugo Git push
-	cmd := exec.Command("sh", "-c", "./project/git-push.sh")
-	cmd.Dir = models.Config.HugoDeploy
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		logs.Error("pushProd", err)
-		flash.Error("pushProd : %v", err)
-		flash.Error(string(out))
-		flash.Store(&c.Controller)
-		return
-	}
-	flash.Success(string(out))
-	logs.Info("pushProd", string(out))
 }

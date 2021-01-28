@@ -39,7 +39,6 @@ type HugoFile struct {
 	Title       string
 	Draft       string
 	Date        string
-	Action      string
 	DatePublish string
 	DateExpiry  string
 	Inline      bool // page en ligne et visible
@@ -58,7 +57,6 @@ type HugoFileMeta struct {
 	Title       string   `yaml:"title"`
 	Draft       bool     `yaml:"draft"`
 	Date        string   `yaml:"date"`
-	Action      string   `yaml:"action"`
 	DatePublish string   `yaml:"publishDate"`
 	DateExpiry  string   `yaml:"expiryDate"`
 	Tags        []string `yaml:"tags"`
@@ -99,9 +97,6 @@ func init() {
 	}
 	if val, ok := config.String("hugo_url"); ok == nil {
 		Config.HugoURL = val
-	}
-	if val, ok := config.String("hugo_deploy"); ok == nil {
-		Config.HugoDeploy = val
 	}
 	if val, ok := config.String("title"); ok == nil {
 		Config.Title = val
@@ -207,7 +202,6 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		}
 		record.Title = meta.Title
 		record.Date = meta.Date
-		record.Action = meta.Action
 		record.DatePublish = meta.DatePublish
 		record.DateExpiry = meta.DateExpiry
 		record.Inline = true

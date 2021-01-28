@@ -18,15 +18,4 @@
 <form class="ui form attached segment" style="padding: 0;" method="POST" action="/document{{.File}}">
     {{ .xsrfdata }}
     <textarea id="bee-editor" name="document" id="document">{{.Record.Content}}</textarea>
-    {{ if .Record.Action }}
-    <div class="field">
-        <div class="ui action input">
-            <button class="ui red button bee-modal-confirm" data-action="/action/{{.Record.Action}}"
-                title="{{.Record.Action}}" data-message="Veuillez confirmer le démarrage de l'action">
-                <i class="play circle outline icon"></i>
-                {{.Record.Action}}
-            </button>
-        </div>
-    </div>
-    {{end}}
 </form>
