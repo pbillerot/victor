@@ -26,10 +26,12 @@
 				</div>
 				<div class="item">
 					<div class="ui buttons">
+						{{ if .Record.IsImage }}
 						<div class="ui icon green button bee-popup-image-editor" data-src="/content{{.File}}"
 							title="Modifier l'image">
 							<i class="edit icon"></i>
 						</div>
+						{{end}}
 						<div id="button_validate" class="ui icon red button bee-submit disabled" title="Enregistrer">
 							<i class="save icon"></i>
 						</div>
@@ -44,13 +46,11 @@
 		<div class="ui container" style="height:90%">
 			{{template "_flash.html" .}}
 			<!-- DOCUMENT -->
-			{{ if or (eq .Ext ".png") (eq .Ext ".jpg") (eq .Ext ".jpeg") (eq .Ext ".svg")}}
+			{{ if .Record.IsImage }}
 			{{template "_image.html" .}}
-			{{ else if (eq .Ext ".pdf")}}
+			{{ else if .Record.IsPdf }}
 			{{template "_pdf.html" .}}
-			{{ else if (eq .Ext ".yaml")}}
-			{{template "_document.html" .}}
-			{{ else if (eq .Ext ".md")}}
+			{{ else if .Record.IsText }}
 			{{template "_document.html" .}}
 			{{ else }}
 			{{template "_document.html" .}}

@@ -390,13 +390,14 @@ func (c *MainController) FileCp() {
 		newPath := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newPath); err == nil {
 			// path/to/whatever exists
-			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, "existe déjà")
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			models.HugoReload()
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
-			return
+			newPath = models.Config.HugoContent + c.GetString("new_path") + "/" + "Copy " + record.Base
+			// msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, "existe déjà")
+			// logs.Error(msg)
+			// flash.Error(msg)
+			// flash.Store(&c.Controller)
+			// models.HugoReload()
+			// c.Ctx.Redirect(302, "/folder"+pathFolder)
+			// return
 		}
 		data, err := ioutil.ReadFile(record.PathAbsolu)
 		if err != nil {
@@ -579,14 +580,15 @@ func (c *MainController) APIFolders() {
 		Message string   `json:"message"`
 		Results []myList `json:"results"`
 	}
-	var jlist []myList
+	var list []myList
 	for _, record := range models.HugoGetFolders() {
-		jlist = append(jlist, myList{Name: record.Path, Value: record.Path})
+		list = append(list, myList{Name: record.Path, Value: record.Path})
 	}
+
 	var resp myStruct
 	resp.Success = true
 	resp.Message = "ok coral"
-	resp.Results = jlist
+	resp.Results = list
 
 	c.Data["json"] = &resp
 	c.ServeJSON()

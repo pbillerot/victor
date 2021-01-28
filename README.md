@@ -7,5 +7,6 @@ Outils utilisés
 - Framework WEB MVC https://beego.me/
 - Feuille de style Semantic UI https://fomantic-ui.com/
 - Codemirror https://codemirror.net/doc/manual.html
+- Jquery Finger https://github.com/ngryman/jquery.finger 
 - Filerobot Image Editor https://github.com/scaleflex/filerobot-image-editor
 

@@ -31,6 +31,10 @@ type HugoFile struct {
 	Base        string
 	Dir         string
 	Ext         string
+	IsImage     bool
+	IsText      bool
+	IsPdf       bool
+	Order       int
 	IsDir       int
 	Title       string
 	Draft       string
@@ -159,6 +163,23 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.IsDir = 0
 	}
 	record.Ext = filepath.Ext(path)
+	record.Order = 9
+	if record.IsDir == 1 {
+		record.Order = 0
+	}
+	if contains([]string{".md", ".yaml", ".conf", ".txt"}, record.Ext) {
+		record.IsText = true
+		record.Order = 1
+	}
+	if contains([]string{".jpeg", ".jpg", ".png", ".svg"}, record.Ext) {
+		record.IsImage = true
+		record.Order = 2
+	}
+	if contains([]string{".pdf"}, record.Ext) {
+		record.IsPdf = true
+		record.Order = 3
+	}
+
 	record.SRC = fmt.Sprintf("%s/content%s", Config.HugoURL, record.Path)
 	// record.URL = fmt.Sprintf("%s/%d", Config.HugoURL) TODO
 
@@ -315,6 +336,11 @@ func HugoGetFolder(folder string) (hugoFiles []HugoFile) {
 			hugoFiles = append(hugoFiles, record)
 		}
 	}
+	// tri des fichiers text,image,et le reste
+	sort.SliceStable(hugoFiles, func(i, j int) bool {
+		return hugoFiles[i].Order < hugoFiles[j].Order
+	})
+
 	return
 }
 
@@ -341,6 +367,11 @@ func HugoGetFolders() (hugoFiles []HugoFile) {
 			hugoFiles = append(hugoFiles, record)
 		}
 	}
+	// tri des dossiers
+	sort.SliceStable(hugoFiles, func(i, j int) bool {
+		return hugoFiles[i].Path < hugoFiles[j].Path
+	})
+
 	return
 }
 
@@ -349,4 +380,15 @@ func HugoReload() {
 	hugo = nil
 	loadHugo()
 	return
+}
+
+// contains checks if a string is present in a slice
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
 }

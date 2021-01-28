@@ -6,11 +6,20 @@ $(document).ready(function () {
     // Ouverture d'un dossier ou fichier
     $('.bee-tap').on('tap', function (event) {
         var $action = $(this).data('action')
-        $('#bee-action').val($action)
         if ($action.indexOf('/folder') != -1) {
-            window.location = $(this).data('action');
+            window.location = $action;
         } else {
-            $('.bee-window-open-file').trigger('click');
+            // Préparation window.open
+            var $height = 'max';
+            var $width = 'large';
+            var $posx = 'right';
+            var $posy = '5';
+            var $target = 'hugo-file';
+            if (window.opener == null) {
+                window.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+            } else {
+                window.opener.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+            }
         }
         event.preventDefault();
     });
@@ -93,7 +102,7 @@ $(document).ready(function () {
     $('.bee-modal-confirm').on('click', function (event) {
         var $form = $('#bee-modal-confirm').find('form');
         $('#bee-modal-confirm').find('.header').html($(this).attr('title'));
-        if ($(this).data('message').length > 0) {
+        if ($(this).data('message')) {
             // cas submit action
             $form.attr('action', $(this).data('action'));
             $('#bee-modal-confirm').find('.message>.header').html($(this).data('message'));
@@ -172,7 +181,7 @@ $(document).ready(function () {
     // CLIC IMAGE EDITOR POPUP
     $('.bee-popup-image-editor').on('click', function (event) {
         var $url = $(this).data('src');
-        var $form = $(this).closest('section').find('.form');
+        var $form = $(this).closest('body').find('.form');
         var $input = $form.find("input[name='image']");
         var $image = $form.find('img');
         const config = {
@@ -516,25 +525,6 @@ $(document).ready(function () {
             }
         }
     }
-
-    /**
-     * Ouverture d'une fenêtre pour voir éditer un fichier
-     */
-    $(document).on('click', '.bee-window-open-file', function (event) {
-        // Préparation window.open
-        var $height = $(this).data("height") ? $(this).data("height") : 'max';
-        var $width = $(this).data("width") ? $(this).data("width") : 'large';
-        var $posx = $(this).data("posx") ? $(this).data("posx") : 'left';
-        var $posy = $(this).data("posy") ? $(this).data("posy") : '3';
-        var $target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
-        var $url = $('#bee-action').val();
-        if (window.opener == null) {
-            window.open($url, $target, computeWindow($posx, $posy, $width, $height, false));
-        } else {
-            window.opener.open($url, $target, computeWindow($posx, $posy, $width, $height, false));
-        }
-        event.preventDefault();
-    });
 
     /**
      * Ouverture d'une fenêtre en popup
