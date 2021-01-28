@@ -4,15 +4,18 @@
 $(document).ready(function () {
 
     // Ouverture d'un dossier ou fichier
-    $('.bee-dblclick').on('dblclick', function (event) {
+    $('.bee-tap').on('tap', function (event) {
         var $action = $(this).data('action')
         $('#bee-action').val($action)
-        $('.bee-window-open-file').trigger('click');
-        // window.location = $(this).data('action');
+        if ($action.indexOf('/folder') != -1) {
+            window.location = $(this).data('action');
+        } else {
+            $('.bee-window-open-file').trigger('click');
+        }
         event.preventDefault();
     });
     // Sélection d'un dossier ou fichier
-    $('.bee-click').on('click', function (event) {
+    $('.bee-press').on('press', function (event) {
         var $action = $(this).data('action')
         var $base = $(this).data('base')
         var $path = $(this).data('path')
@@ -30,7 +33,7 @@ $(document).ready(function () {
             $('#bee-path').val($path)
             // boutons edit si markdown et image
             $('.bee-button-edit').hide();
-            if ($(this).hasClass('bee-dblclick')) {
+            if ($(this).hasClass('bee-tap')) {
                 $('.bee-button-edit').show();
             }
         }

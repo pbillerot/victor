@@ -50,7 +50,7 @@ func (c *MainController) Prepare() {
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	// Sera ajouté derrière les urls pour ne pas utiliser le cache des images dynamiques
 	c.Data["Composter"] = time.Now().Unix()
-
+	c.Data["Refresh"] = false
 }
 
 // int contains in slice

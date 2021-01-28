@@ -84,6 +84,7 @@ func (c *MainController) Image() {
 			return
 		}
 		models.HugoReload()
+		c.Data["Refresh"] = true
 	}
 
 	// Remplissage du contexte pour le template
@@ -160,6 +161,7 @@ func (c *MainController) Document() {
 			return
 		}
 		models.HugoReload()
+		c.Data["Refresh"] = true
 	}
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))

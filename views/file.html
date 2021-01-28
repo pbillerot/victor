@@ -59,7 +59,7 @@
 	</main>
 	<!-- CONTEXTE PAGE -->
 	<div data-rem="CONTEXTE PAGE">
-		<!-- update by bee-click -->
+		<!-- update by bee-press -->
 		<input type="hidden" id="bee-action" value>
 		<input type="hidden" id="bee-path" value>
 		<input type="hidden" id="bee-base" value>
@@ -76,6 +76,11 @@
 		</div>
 	</div> <!-- end modal confirm -->
 	{{template "_foot.html" .}}
+	{{if .Refresh}}
+	<script>
+		window.opener.location.reload();
+	</script>
+	{{end}}
 </body>
 
 </html>

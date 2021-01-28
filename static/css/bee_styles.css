@@ -17,7 +17,7 @@ body {
 /* MAIN */
 main {
     flex: 1;
-    margin-top: 7em;
+    margin-top: 6em;
     margin-bottom: 1em;
 }
 .ui.fixed.menu {
@@ -43,8 +43,8 @@ main {
     display: none;
 }
 
-.bee-click,
-.bee-dblclick {
+bee-press,
+.bee-tap {
     cursor: pointer;
 }
 .ui.label {
