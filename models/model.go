@@ -11,8 +11,6 @@ import (
 	"time"
 
 	"github.com/astaxie/beego/logs"
-	"github.com/beego/beego/v2/core/config"
-	beego "github.com/beego/beego/v2/server/web"
 	"gopkg.in/yaml.v2"
 )
 
@@ -79,7 +77,8 @@ type AppConfig struct {
 	HugoRacine  string
 	HugoContent string
 	HugoURL     string
-	HugoDeploy  string
+	PubDir      string
+	PubURL      string
 }
 
 // Breadcrumb as
@@ -87,33 +86,6 @@ type Breadcrumb struct {
 	Base   string
 	Path   string
 	IsLast bool
-}
-
-func init() {
-	// Initialisation de models.Config
-	if val, ok := config.String("hugo_racine"); ok == nil {
-		Config.HugoRacine = val
-		Config.HugoContent = val + "/content"
-	}
-	if val, ok := config.String("hugo_url"); ok == nil {
-		Config.HugoURL = val
-	}
-	if val, ok := config.String("title"); ok == nil {
-		Config.Title = val
-	}
-	if val, ok := config.String("description"); ok == nil {
-		Config.Description = val
-	}
-	if val, ok := config.String("favicon"); ok == nil {
-		Config.Favicon = val
-	}
-	if val, ok := config.String("icon"); ok == nil {
-		Config.Icon = val
-	}
-	logs.Info("Config", Config)
-	// Enregistrement de content an tant que répertoire statis
-	beego.SetStaticPath("/content", Config.HugoContent)
-	loadHugo()
 }
 
 // GetFilesFolder retourne la liste des fichiers du <folder>
