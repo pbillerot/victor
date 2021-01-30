@@ -69,16 +69,17 @@ type HugoPathInfo struct {
 
 // AppConfig structure du fichier de configuration de l'application app.conf
 type AppConfig struct {
-	Title       string
-	Description string
-	Version     string
-	Favicon     string
-	Icon        string
-	HugoRacine  string
-	HugoContent string
-	HugoURL     string
-	PubDir      string
-	PubURL      string
+	Title          string
+	Description    string
+	Version        string
+	Favicon        string
+	Icon           string
+	HugoRacine     string
+	HugoContent    string
+	HugoPrivate    string
+	HugoPublic     string
+	HugoPrivateURL string
+	HugoPublicURL  string
 }
 
 // Breadcrumb as
@@ -147,7 +148,7 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.Order = 3
 	}
 
-	record.SRC = fmt.Sprintf("%s/content%s", Config.HugoURL, record.Path)
+	record.SRC = fmt.Sprintf("%s/content%s", Config.HugoPublicURL, record.Path)
 	// record.URL = fmt.Sprintf("%s/%d", Config.HugoURL) TODO
 
 	ext := filepath.Ext(path)

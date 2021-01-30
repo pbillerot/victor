@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -84,6 +85,7 @@ func (c *MainController) Image() {
 			return
 		}
 		models.HugoReload()
+		publishDev(c)
 		c.Data["Refresh"] = true
 	}
 
@@ -161,6 +163,7 @@ func (c *MainController) Document() {
 			return
 		}
 		models.HugoReload()
+		publishDev(c)
 		c.Data["Refresh"] = true
 	}
 	// Remplissage du contexte pour le template
@@ -260,6 +263,7 @@ func (c *MainController) FileRename() {
 	}
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -350,6 +354,7 @@ func (c *MainController) FileMove() {
 	}
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -383,6 +388,7 @@ func (c *MainController) FileCp() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			models.HugoReload()
+			publishDev(c)
 			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
@@ -391,13 +397,6 @@ func (c *MainController) FileCp() {
 		if _, err := os.Stat(newPath); err == nil {
 			// path/to/whatever exists
 			newPath = models.Config.HugoContent + c.GetString("new_path") + "/" + "Copy " + record.Base
-			// msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, "existe déjà")
-			// logs.Error(msg)
-			// flash.Error(msg)
-			// flash.Store(&c.Controller)
-			// models.HugoReload()
-			// c.Ctx.Redirect(302, "/folder"+pathFolder)
-			// return
 		}
 		data, err := ioutil.ReadFile(record.PathAbsolu)
 		if err != nil {
@@ -406,6 +405,7 @@ func (c *MainController) FileCp() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			models.HugoReload()
+			publishDev(c)
 			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
@@ -416,6 +416,7 @@ func (c *MainController) FileCp() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			models.HugoReload()
+			publishDev(c)
 			c.Ctx.Redirect(302, "/folder"+pathFolder)
 			return
 		}
@@ -423,6 +424,7 @@ func (c *MainController) FileCp() {
 
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -461,6 +463,7 @@ func (c *MainController) FileNew() {
 
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -498,6 +501,7 @@ func (c *MainController) FileRm() {
 	}
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -539,6 +543,7 @@ func (c *MainController) FileUpload() {
 	}
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -567,6 +572,7 @@ func (c *MainController) FileMkdir() {
 
 	// reLoad Folder
 	models.HugoReload()
+	publishDev(c)
 	c.Ctx.Redirect(302, "/folder"+pathFolder)
 	return
 }
@@ -594,4 +600,57 @@ func (c *MainController) APIFolders() {
 
 	c.Data["json"] = &resp
 	c.ServeJSON()
+}
+
+// Action Action
+func (c *MainController) Action() {
+	action := c.Ctx.Input.Param(":action")
+
+	switch action {
+	case "publishDev":
+		publishDev(c)
+	case "pushProd":
+		pushProd(c)
+	}
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Folder"] = c.GetSession("Folder").(string)
+	c.Data["File"] = c.GetSession("File").(string)
+	c.TplName = "index.html"
+}
+
+// publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
+func publishDev(c *MainController) {
+	logs.Info("publishDev", models.Config.HugoPrivate)
+	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivate,
+		"--environment", "DEV", "--cleanDestinationDir")
+	cmd.Dir = models.Config.HugoRacine
+	out, err := cmd.CombinedOutput()
+	flash := beego.ReadFromRequest(&c.Controller)
+	if err != nil {
+		logs.Error("publishDev", err)
+		flash.Error("ERREURG Génération des pages : %v", err)
+		flash.Store(&c.Controller)
+	}
+	logs.Info("publishDev", string(out))
+}
+
+// pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
+func pushProd(c *MainController) {
+	logs.Info("pushProd", models.Config.HugoPublic)
+	cmd := exec.Command("hugo", "-d", models.Config.HugoPublic,
+		"--environment", "PRODUCTION", "--cleanDestinationDir")
+	cmd.Dir = models.Config.HugoRacine
+	out, err := cmd.CombinedOutput()
+	flash := beego.ReadFromRequest(&c.Controller)
+	if err != nil {
+		logs.Error("pushProd", err)
+		flash.Error("pushProd : %v", err)
+		flash.Error(string(out))
+		flash.Store(&c.Controller)
+		return
+	}
+	flash.Success(string(out))
+	logs.Info("pushProd", string(out))
 }

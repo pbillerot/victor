@@ -17,15 +17,14 @@ func init() {
 	if val, ok := config.String("hugo_dir"); ok == nil {
 		models.Config.HugoRacine = val
 		models.Config.HugoContent = val + "/content"
+		models.Config.HugoPrivate = val + "/private"
+		models.Config.HugoPublic = val + "/public"
 	}
-	if val, ok := config.String("hugo_url"); ok == nil {
-		models.Config.HugoURL = val
-	}
-	if val, ok := config.String("pub_dir"); ok == nil {
-		models.Config.PubDir = val
+	if val, ok := config.String("test_url"); ok == nil {
+		models.Config.HugoPrivateURL = val
 	}
 	if val, ok := config.String("pub_url"); ok == nil {
-		models.Config.PubURL = val
+		models.Config.HugoPublicURL = val
 	}
 	if val, ok := config.String("title"); ok == nil {
 		models.Config.Title = val
@@ -44,6 +43,9 @@ func init() {
 	// Enregistrement de content an tant que répertoire static
 	beego.SetStaticPath("/content", models.Config.HugoContent)
 
+	// Enregistrement du site de test
+	beego.SetStaticPath("/private", models.Config.HugoPrivate)
+
 	// Enregistrement du site de publication
-	beego.SetStaticPath(models.Config.PubURL, models.Config.PubDir)
+	beego.SetStaticPath("/public", models.Config.HugoPublic)
 }
