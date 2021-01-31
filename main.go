@@ -43,9 +43,4 @@ func init() {
 	// Enregistrement de content an tant que répertoire static
 	beego.SetStaticPath("/content", models.Config.HugoContent)
 
-	// Enregistrement du site de test
-	beego.SetStaticPath("/private", models.Config.HugoPrivate)
-
-	// Enregistrement du site de publication
-	beego.SetStaticPath("/public", models.Config.HugoPublic)
 }
