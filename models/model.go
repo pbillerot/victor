@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -47,7 +46,6 @@ type HugoFile struct {
 	Content     string
 	HugoPath    string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
 	URL         string
-	SRC         string
 }
 
 // HugoFileMeta meta données
@@ -69,17 +67,19 @@ type HugoPathInfo struct {
 
 // AppConfig structure du fichier de configuration de l'application app.conf
 type AppConfig struct {
-	Title          string
-	Description    string
-	Version        string
-	Favicon        string
-	Icon           string
-	HugoRacine     string
-	HugoContent    string
-	HugoPrivate    string
-	HugoPublic     string
-	HugoPrivateURL string
-	HugoPublicURL  string
+	Title           string
+	Description     string
+	Version         string
+	Favicon         string
+	Icon            string
+	HugoRacine      string // /volshare/foirexpo
+	HugoContentDir  string // /volshare/foirexpo/content
+	HugoPrivateDir  string // /volshare/foirexpo/private
+	HugoPublicDir   string // /volshare/foirexpo/public
+	HugoPrivatePath string // foired
+	HugoPublicPath  string // foirep
+	HugoPrivateURL  string // https://host/foired
+	HugoPublicURL   string // https://host/foirep
 }
 
 // Breadcrumb as
@@ -92,7 +92,7 @@ type Breadcrumb struct {
 // GetFilesFolder retourne la liste des fichiers du <folder>
 func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
 	// suppression du / à la fin
-	hugoFolder := strings.TrimSuffix(Config.HugoContent+folder, "/")
+	hugoFolder := strings.TrimSuffix(Config.HugoContentDir+folder, "/")
 	var pis []HugoPathInfo
 	err = readDir(hugoFolder, &pis)
 	if err != nil {
@@ -110,7 +110,7 @@ func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
 func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record HugoFile) {
 
 	// On elève le chemin absolu du path
-	lenPrefixe := len(Config.HugoContent)
+	lenPrefixe := len(Config.HugoContentDir)
 	path := pathAbsolu[lenPrefixe:]
 	if path == "" {
 		return
@@ -147,9 +147,6 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.IsPdf = true
 		record.Order = 3
 	}
-
-	record.SRC = fmt.Sprintf("%s/content%s", Config.HugoPublicURL, record.Path)
-	// record.URL = fmt.Sprintf("%s/%d", Config.HugoURL) TODO
 
 	ext := filepath.Ext(path)
 	if record.Base == "config.yaml" {
@@ -272,7 +269,7 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 
 // loadHugo retourne la liste des HugoFile
 func loadHugo() {
-	hugoFolder := Config.HugoContent
+	hugoFolder := Config.HugoContentDir
 	var pis []HugoPathInfo
 	err := readDir(hugoFolder, &pis)
 	if err != nil {

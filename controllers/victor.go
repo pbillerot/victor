@@ -74,7 +74,7 @@ func (c *MainController) Image() {
 			c.Ctx.Redirect(302, "/")
 			return
 		}
-		pathAbsolu := models.Config.HugoContent + pathFile
+		pathAbsolu := models.Config.HugoContentDir + pathFile
 		err = ioutil.WriteFile(pathAbsolu, unbased, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", pathAbsolu, err)
@@ -218,7 +218,7 @@ func (c *MainController) FileRename() {
 		}
 	} else {
 		// Copie du fichier sur la cible
-		newFile := models.Config.HugoContent + record.Dir + "/" + c.GetString("new_name")
+		newFile := models.Config.HugoContentDir + record.Dir + "/" + c.GetString("new_name")
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Renommer en [%s] : %s", newFile, "existe déjà")
@@ -288,7 +288,7 @@ func (c *MainController) FileMove() {
 	}
 
 	if record.IsDir == 1 {
-		newFile := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
+		newFile := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, "existe déjà")
@@ -309,7 +309,7 @@ func (c *MainController) FileMove() {
 		}
 	} else {
 		// Copie du fichier sur la cible
-		newFile := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
+		newFile := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, "existe déjà")
@@ -379,7 +379,7 @@ func (c *MainController) FileCp() {
 	}
 
 	if record.IsDir == 1 {
-		newPath := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
+		newPath := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
 		err = shutil.CopyTree(record.PathAbsolu, newPath, nil)
 		// err = os.Rename(record.PathAbsolu, newPath)
 		if err != nil {
@@ -393,10 +393,10 @@ func (c *MainController) FileCp() {
 			return
 		}
 	} else {
-		newPath := models.Config.HugoContent + c.GetString("new_path") + "/" + record.Base
+		newPath := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
 		if _, err := os.Stat(newPath); err == nil {
 			// path/to/whatever exists
-			newPath = models.Config.HugoContent + c.GetString("new_path") + "/" + "Copy " + record.Base
+			newPath = models.Config.HugoContentDir + c.GetString("new_path") + "/" + "Copy " + record.Base
 		}
 		data, err := ioutil.ReadFile(record.PathAbsolu)
 		if err != nil {
@@ -439,7 +439,7 @@ func (c *MainController) FileNew() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	newName := sanitize.Name(c.GetString("new_name"))
-	newFile := models.Config.HugoContent + pathFolder + "/" + newName
+	newFile := models.Config.HugoContentDir + pathFolder + "/" + newName
 	modele := models.Config.HugoRacine + "/content/site/modele.md"
 	data, err := ioutil.ReadFile(modele)
 	if err != nil {
@@ -531,7 +531,7 @@ func (c *MainController) FileUpload() {
 			c.Ctx.Redirect(302, "/folder"+pathFolder)
 		}
 		fileContents, err := ioutil.ReadAll(file)
-		path := models.Config.HugoContent + pathFolder + "/" + mfile.Filename
+		path := models.Config.HugoContentDir + pathFolder + "/" + mfile.Filename
 		err = ioutil.WriteFile(path, fileContents, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("Import : %s", err)
@@ -558,7 +558,7 @@ func (c *MainController) FileMkdir() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	newName := sanitize.Name(c.GetString("new_name"))
-	newDir := models.Config.HugoContent + pathFolder + "/" + newName
+	newDir := models.Config.HugoContentDir + pathFolder + "/" + newName
 
 	err = os.MkdirAll(newDir, 0744)
 	if err != nil {
@@ -622,9 +622,9 @@ func (c *MainController) Action() {
 
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *MainController) {
-	logs.Info("publishDev", models.Config.HugoPrivate)
-	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivate,
-		"--environment", "DEV", "--cleanDestinationDir")
+	logs.Info("publishDev", models.Config.HugoPrivateDir)
+	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivateDir,
+		"--environment", models.Config.HugoPrivatePath, "--cleanDestinationDir")
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)
@@ -638,9 +638,9 @@ func publishDev(c *MainController) {
 
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
 func pushProd(c *MainController) {
-	logs.Info("pushProd", models.Config.HugoPublic)
-	cmd := exec.Command("hugo", "-d", models.Config.HugoPublic,
-		"--environment", "PRODUCTION", "--cleanDestinationDir")
+	logs.Info("pushProd", models.Config.HugoPublicDir)
+	cmd := exec.Command("hugo", "-d", models.Config.HugoPublicDir,
+		"--environment", models.Config.HugoPublicPath, "--cleanDestinationDir")
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)

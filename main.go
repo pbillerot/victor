@@ -16,14 +16,20 @@ func init() {
 	// Initialisation de models.Config
 	if val, ok := config.String("hugo_dir"); ok == nil {
 		models.Config.HugoRacine = val
-		models.Config.HugoContent = val + "/content"
-		models.Config.HugoPrivate = val + "/private"
-		models.Config.HugoPublic = val + "/public"
+		models.Config.HugoContentDir = val + "/content"
+		models.Config.HugoPrivateDir = val + "/private"
+		models.Config.HugoPublicDir = val + "/public"
 	}
-	if val, ok := config.String("test_url"); ok == nil {
+	if val, ok := config.String("private_path"); ok == nil {
+		models.Config.HugoPrivatePath = val
+	}
+	if val, ok := config.String("public_path"); ok == nil {
+		models.Config.HugoPublicPath = val
+	}
+	if val, ok := config.String("private_url"); ok == nil {
 		models.Config.HugoPrivateURL = val
 	}
-	if val, ok := config.String("pub_url"); ok == nil {
+	if val, ok := config.String("public_url"); ok == nil {
 		models.Config.HugoPublicURL = val
 	}
 	if val, ok := config.String("title"); ok == nil {
@@ -40,7 +46,9 @@ func init() {
 	}
 	logs.Info("Config", models.Config)
 
-	// Enregistrement de content an tant que répertoire static
-	beego.SetStaticPath("/content", models.Config.HugoContent)
+	// Enregistrement en tant que répertoire static
+	beego.SetStaticPath("/content", models.Config.HugoContentDir)
+	beego.SetStaticPath("/private", models.Config.HugoPrivateDir)
+	beego.SetStaticPath("/public", models.Config.HugoPublicDir)
 
 }
