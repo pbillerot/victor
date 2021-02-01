@@ -250,7 +250,7 @@ $(document).ready(function () {
     // $('.menu .item').tab();
     // $('.ui.checkbox').checkbox();
     // $('.ui.radio.checkbox').checkbox();
-    $('.ui.dropdown').dropdown();
+    $('.ui.dropdown.item').dropdown();
     // $('select.dropdown').dropdown();
     $('.message .close')
         .on('click', function () {
