@@ -20,6 +20,7 @@ func init() {
 	web.Router("/victor/rm/*.*", &controllers.MainController{}, "post:FileRm")
 	web.Router("/victor/mkdir", &controllers.MainController{}, "post:FileMkdir")
 	web.Router("/victor/upload", &controllers.MainController{}, "post:FileUpload")
+	web.Router("/victor/action/:action", &controllers.MainController{}, "post:Action")
 	web.Router("/victor/api/folders", &controllers.MainController{}, "get:APIFolders")
 
 }

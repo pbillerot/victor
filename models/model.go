@@ -21,6 +21,7 @@ var hugo []HugoFile
 
 // HugoFile propriétés d'un fichier dans le dossier hugoDir
 type HugoFile struct {
+	Action      string
 	Path        string
 	Prefix      string
 	PathAbsolu  string

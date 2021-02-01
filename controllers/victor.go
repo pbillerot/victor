@@ -638,12 +638,12 @@ func publishDev(c *MainController) {
 
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
 func pushProd(c *MainController) {
-	cmd := exec.Command("hugo", "-d", models.Config.HugoPublicDir,
-		"--environment", "production", "--cleanDestinationDir")
+	flash := beego.ReadFromRequest(&c.Controller)
+
+	cmd := exec.Command("sh", "-C", "./git-push.sh")
 	logs.Info("pushProd", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
-	flash := beego.ReadFromRequest(&c.Controller)
 	if err != nil {
 		logs.Error("pushProd", err)
 		flash.Error("pushProd : %v", err)
@@ -651,6 +651,7 @@ func pushProd(c *MainController) {
 		flash.Store(&c.Controller)
 		return
 	}
+
 	flash.Success(string(out))
 	logs.Info("pushProd", string(out))
 }
