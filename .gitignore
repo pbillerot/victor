@@ -1,7 +1,4 @@
 # Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
 *.so
 *.dylib
 
@@ -21,4 +18,5 @@ cpu*
 mem*
 # bee
 *.tmp
-
+victor
+conf/custom.conf
