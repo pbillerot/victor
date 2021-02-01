@@ -20,4 +20,5 @@ vendor
 cpu*
 mem*
 # bee
-lastupdate.tmp
+*.tmp
+

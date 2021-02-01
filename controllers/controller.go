@@ -32,7 +32,7 @@ func (c *MainController) Prepare() {
 	if c.GetSession("Folder") != nil {
 		c.Data["Folder"] = c.GetSession("Folder").(string)
 	} else {
-		c.Data["Folder"] = "/"
+		c.Data["Folder"] = "/victor"
 		c.SetSession("Folder", "/")
 	}
 	if c.GetSession("File") != nil {

@@ -58,7 +58,7 @@ func (c *MainController) Image() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
-	c.SetSession("Folder", record.Dir)
+	// c.SetSession("Folder", record.Dir)
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DE L'IMAGE
@@ -71,7 +71,7 @@ func (c *MainController) Image() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 			return
 		}
 		pathAbsolu := models.Config.HugoContentDir + pathFile
@@ -81,7 +81,7 @@ func (c *MainController) Image() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 			return
 		}
 		models.HugoReload()
@@ -111,7 +111,7 @@ func (c *MainController) Pdf() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
-	c.SetSession("Folder", record.Dir)
+	// c.SetSession("Folder", record.Dir)
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
@@ -135,7 +135,7 @@ func (c *MainController) Document() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 	}
-	c.SetSession("Folder", record.Dir)
+	// c.SetSession("Folder", record.Dir)
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
@@ -147,7 +147,7 @@ func (c *MainController) Document() {
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				c.Ctx.Redirect(302, "/")
+				c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 				return
 			}
 			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
@@ -159,7 +159,7 @@ func (c *MainController) Document() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/")
+			c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 			return
 		}
 		models.HugoReload()
@@ -189,7 +189,7 @@ func (c *MainController) FileRename() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/")
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
@@ -204,7 +204,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		err = os.Rename(record.PathAbsolu, newFile)
@@ -213,7 +213,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 	} else {
@@ -225,7 +225,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 
@@ -235,7 +235,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		err = ioutil.WriteFile(newFile, data, 0644)
@@ -244,7 +244,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		// Suppression du fichier source
@@ -254,7 +254,7 @@ func (c *MainController) FileRename() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 	}
@@ -264,7 +264,7 @@ func (c *MainController) FileRename() {
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -283,7 +283,7 @@ func (c *MainController) FileMove() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
@@ -295,7 +295,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		err = os.Rename(record.PathAbsolu, newFile)
@@ -304,7 +304,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 	} else {
@@ -316,7 +316,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 
@@ -326,7 +326,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		err = ioutil.WriteFile(newFile, data, 0644)
@@ -335,7 +335,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		// Suppression du fichier source
@@ -345,7 +345,7 @@ func (c *MainController) FileMove() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 	}
@@ -355,7 +355,7 @@ func (c *MainController) FileMove() {
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -374,7 +374,7 @@ func (c *MainController) FileCp() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
@@ -389,7 +389,7 @@ func (c *MainController) FileCp() {
 			flash.Store(&c.Controller)
 			models.HugoReload()
 			publishDev(c)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 	} else {
@@ -406,7 +406,7 @@ func (c *MainController) FileCp() {
 			flash.Store(&c.Controller)
 			models.HugoReload()
 			publishDev(c)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 		err = ioutil.WriteFile(newPath, data, 0644)
@@ -417,7 +417,7 @@ func (c *MainController) FileCp() {
 			flash.Store(&c.Controller)
 			models.HugoReload()
 			publishDev(c)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
 	}
@@ -425,7 +425,7 @@ func (c *MainController) FileCp() {
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -447,7 +447,7 @@ func (c *MainController) FileNew() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
@@ -457,14 +457,14 @@ func (c *MainController) FileNew() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -483,7 +483,7 @@ func (c *MainController) FileRm() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
@@ -493,7 +493,7 @@ func (c *MainController) FileRm() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 	if path == c.GetSession("File").(string) {
@@ -502,7 +502,7 @@ func (c *MainController) FileRm() {
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -517,7 +517,7 @@ func (c *MainController) FileUpload() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 	for _, mfile := range files {
@@ -528,7 +528,7 @@ func (c *MainController) FileUpload() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		}
 		fileContents, err := ioutil.ReadAll(file)
 		path := models.Config.HugoContentDir + pathFolder + "/" + mfile.Filename
@@ -538,13 +538,13 @@ func (c *MainController) FileUpload() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/folder"+pathFolder)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		}
 	}
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -566,14 +566,14 @@ func (c *MainController) FileMkdir() {
 		logs.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/folder"+pathFolder)
+		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
 
 	// reLoad Folder
 	models.HugoReload()
 	publishDev(c)
-	c.Ctx.Redirect(302, "/folder"+pathFolder)
+	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
 
@@ -622,9 +622,9 @@ func (c *MainController) Action() {
 
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *MainController) {
-	logs.Info("publishDev", models.Config.HugoPrivateDir)
 	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivateDir,
-		"--environment", models.Config.HugoPrivatePath, "--cleanDestinationDir")
+		"--environment", "hugo", "--cleanDestinationDir")
+	logs.Info("publishDev", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)
@@ -638,9 +638,9 @@ func publishDev(c *MainController) {
 
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
 func pushProd(c *MainController) {
-	logs.Info("pushProd", models.Config.HugoPublicDir)
 	cmd := exec.Command("hugo", "-d", models.Config.HugoPublicDir,
-		"--environment", models.Config.HugoPublicPath, "--cleanDestinationDir")
+		"--environment", "production", "--cleanDestinationDir")
+	logs.Info("pushProd", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)

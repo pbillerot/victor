@@ -156,7 +156,7 @@ $(document).ready(function () {
         $('#bee-modal-move').find('.message>.header').html($path);
         $('#bee-ajax-folders').dropdown({
             apiSettings: {
-                url: '/api/folders',
+                url: '/victor/api/folders',
                 cache: false,
                 onResponse: (response) => {
                     // console.log(response);

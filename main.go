@@ -3,13 +3,13 @@ package main
 import (
 	"github.com/astaxie/beego/logs"
 	"github.com/beego/beego/v2/core/config"
-	beego "github.com/beego/beego/v2/server/web"
+	"github.com/beego/beego/v2/server/web"
 	"github.com/pbillerot/victor/models"
 	_ "github.com/pbillerot/victor/routers"
 )
 
 func main() {
-	beego.Run()
+	web.Run()
 }
 
 func init() {
@@ -19,18 +19,6 @@ func init() {
 		models.Config.HugoContentDir = val + "/content"
 		models.Config.HugoPrivateDir = val + "/private"
 		models.Config.HugoPublicDir = val + "/public"
-	}
-	if val, ok := config.String("private_path"); ok == nil {
-		models.Config.HugoPrivatePath = val
-	}
-	if val, ok := config.String("public_path"); ok == nil {
-		models.Config.HugoPublicPath = val
-	}
-	if val, ok := config.String("private_url"); ok == nil {
-		models.Config.HugoPrivateURL = val
-	}
-	if val, ok := config.String("public_url"); ok == nil {
-		models.Config.HugoPublicURL = val
 	}
 	if val, ok := config.String("title"); ok == nil {
 		models.Config.Title = val
@@ -46,9 +34,9 @@ func init() {
 	}
 	logs.Info("Config", models.Config)
 
-	// Enregistrement en tant que répertoire static
-	beego.SetStaticPath("/content", models.Config.HugoContentDir)
-	beego.SetStaticPath("/private", models.Config.HugoPrivateDir)
-	beego.SetStaticPath("/public", models.Config.HugoPublicDir)
+	// Répertoires statiques
+	web.SetStaticPath("/content", models.Config.HugoContentDir)
+	web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
+	web.SetStaticPath("/", models.Config.HugoPublicDir)
 
 }

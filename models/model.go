@@ -67,19 +67,16 @@ type HugoPathInfo struct {
 
 // AppConfig structure du fichier de configuration de l'application app.conf
 type AppConfig struct {
-	Title           string
-	Description     string
-	Version         string
-	Favicon         string
-	Icon            string
-	HugoRacine      string // /volshare/foirexpo
-	HugoContentDir  string // /volshare/foirexpo/content
-	HugoPrivateDir  string // /volshare/foirexpo/private
-	HugoPublicDir   string // /volshare/foirexpo/public
-	HugoPrivatePath string // foired
-	HugoPublicPath  string // foirep
-	HugoPrivateURL  string // https://host/foired
-	HugoPublicURL   string // https://host/foirep
+	Title       string
+	Description string
+	Version     string
+	Favicon     string
+	Icon        string
+	HugoRacine  string // /volshare/foirexpo
+	// Calculé dans main
+	HugoContentDir string // /volshare/foirexpo/content
+	HugoPrivateDir string // /volshare/foirexpo/private
+	HugoPublicDir  string // /volshare/foirexpo/public
 }
 
 // Breadcrumb as
@@ -195,7 +192,7 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.Tags = strings.Join(meta.Tags, ",")
 		record.Categories = strings.Join(meta.Categories, ",")
 		record.Content = string(content[:])
-		record.HugoPath = strings.Replace(record.Path, ".md", "", 1)
+		record.HugoPath = strings.Replace(record.Path, ".md", "", 1) + "/"
 		// maj meta
 		// for _, v := range meta.Categories {
 		// 	metaCat[v] = append(metaCat[v], id)

@@ -6,10 +6,10 @@
 <div class="circular ui right floated basic icon button bee-modal-upload" title="Déposer un fichier...">
     <i class="upload icon"></i>
 </div>
-<div class="circular ui right floated basic icon button bee-modal-new" data-action="/mkdir" title="Créer un dossier...">
+<div class="circular ui right floated basic icon button bee-modal-new" data-action="/victor/mkdir" title="Créer un dossier...">
     <i class="icon folder plus"></i>
 </div>
-<div class="circular ui right floated basic icon button bee-modal-new" data-action="/new" title="Créer un fichier...">
+<div class="circular ui right floated basic icon button bee-modal-new" data-action="/victor/new" title="Créer un fichier...">
     <i class="icon file plus"></i>
 </div>
 {{ range $irecord, $record := .Records }}
@@ -23,7 +23,7 @@
 {{ if eq $record.IsDir 1 }}
 {{$notFolder = false}}
 <!-- FOLDER -->
-<div class="ui compact message bee-tap bee-press" data-action="/folder{{$record.Path}}" data-base="{{$record.Base}}"
+<div class="ui compact message bee-tap bee-press" data-action="/victor/folder{{$record.Path}}" data-base="{{$record.Base}}"
     data-path="{{$record.Path}}">
     <i class="folder outline large icon"></i>{{$record.Base}}
 </div>
@@ -38,26 +38,26 @@
 {{end}}
 {{ if $record.IsImage }}
 <!-- IMAGE -->
-<div class="ui compact message bee-press bee-tap" data-action="/image{{$record.Path}}" data-base="{{$record.Base}}"
+<div class="ui compact message bee-press bee-tap" data-action="/victor/image{{$record.Path}}" data-base="{{$record.Base}}"
     data-path="{{$record.Path}}">
     <img class="ui middle aligned mini image" src="/content{{$record.Path}}?{{$composter}}">
     <span>{{$record.Base}}</span>
 </div>
 {{ else if (eq $record.Ext ".pdf")}}
 <!-- PDF -->
-<div class="ui compact message bee-tap bee-press" data-action="/pdf{{$record.Path}}" data-base="{{$record.Base}}"
+<div class="ui compact message bee-tap bee-press" data-action="/victor/pdf{{$record.Path}}" data-base="{{$record.Base}}"
     data-path="{{$record.Path}}">
     <i class="file pdf outline red large icon"></i>{{$record.Base}}
 </div>
 {{ else if (eq $record.Ext ".yaml")}}
 <!-- YAML -->
-<div class="ui compact message bee-tap bee-press" data-action="/document{{$record.Path}}" data-base="{{$record.Base}}"
+<div class="ui compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}" data-base="{{$record.Base}}"
     data-path="{{$record.Path}}">
     <i class="file code outline brown large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsText }}
 <!-- MARKDOWN -->
-<div class="ui {{$color}} compact message bee-tap bee-press" data-action="/document{{$record.Path}}"
+<div class="ui {{$color}} compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}"
     data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file alternate outline green large icon"></i>
     <span class="ui blue medium text">
@@ -94,7 +94,7 @@
 </div>
 {{ else }}
 <!-- INCONNU -->
-<div class="ui compact message bee-press" data-action="/document{{$record.Path}}" data-base="{{$record.Base}}"
+<div class="ui compact message bee-press" data-action="/victor/document{{$record.Path}}" data-base="{{$record.Base}}"
     data-path="{{$record.Path}}">
     <i class="file outline large icon"></i>{{$record.Base}}
 </div>

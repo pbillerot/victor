@@ -15,7 +15,7 @@
         {{end}}
     </div>
 </div>
-<form class="ui form attached segment" style="padding: 0;" method="POST" action="/document{{.File}}">
+<form class="ui form attached segment" style="padding: 0;" method="POST" action="/victor/document{{.File}}">
     {{ .xsrfdata }}
     <textarea id="bee-editor" name="document" id="document">{{.Record.Content}}</textarea>
 </form>
