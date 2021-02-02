@@ -29,14 +29,20 @@ $(document).ready(function () {
         var $base = $(this).data('base')
         var $path = $(this).data('path')
         if ($(this).hasClass('bee-selected')) {
-            $('.bee-hidden').hide();
+            // désélection
+            $('.bee-press-visible').hide();
             $(this).removeClass('bee-selected');
             $('#bee-action').val('')
             $('#bee-base').val('')
+            // Element à réafficher sur press et sur mobile
+            $('.bee-press-hidden-mobile').each(function(){
+                $(this).removeClass('bee-desktop')
+            });
         } else {
+            // sélection
             $(this).parent().find('.bee-selected').removeClass('bee-selected');
             $(this).addClass("bee-selected");
-            $('.bee-hidden').show();
+            $('.bee-press-visible').show();
             $('#bee-action').val($action)
             $('#bee-base').val($base)
             $('#bee-path').val($path)
@@ -45,6 +51,10 @@ $(document).ready(function () {
             if ($(this).hasClass('bee-tap')) {
                 $('.bee-button-edit').show();
             }
+            // Element à cacher sur press et sur mobile
+            $('.bee-press-hidden-mobile').each(function(){
+                $(this).addClass('bee-desktop')
+            });
         }
         event.preventDefault();
     });

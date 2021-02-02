@@ -85,7 +85,7 @@ func (c *MainController) Image() {
 			return
 		}
 		models.HugoReload()
-		publishDev(c)
+		pushDev(c)
 		c.Data["Refresh"] = true
 	}
 
@@ -163,7 +163,7 @@ func (c *MainController) Document() {
 			return
 		}
 		models.HugoReload()
-		publishDev(c)
+		pushDev(c)
 		c.Data["Refresh"] = true
 	}
 	// Remplissage du contexte pour le template
@@ -263,7 +263,7 @@ func (c *MainController) FileRename() {
 	}
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -354,7 +354,7 @@ func (c *MainController) FileMove() {
 	}
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -388,7 +388,7 @@ func (c *MainController) FileCp() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			models.HugoReload()
-			publishDev(c)
+			pushDev(c)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
@@ -405,7 +405,7 @@ func (c *MainController) FileCp() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			models.HugoReload()
-			publishDev(c)
+			pushDev(c)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
@@ -416,7 +416,7 @@ func (c *MainController) FileCp() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			models.HugoReload()
-			publishDev(c)
+			pushDev(c)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
@@ -424,7 +424,7 @@ func (c *MainController) FileCp() {
 
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -463,7 +463,7 @@ func (c *MainController) FileNew() {
 
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -501,7 +501,7 @@ func (c *MainController) FileRm() {
 	}
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -543,7 +543,7 @@ func (c *MainController) FileUpload() {
 	}
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -572,7 +572,7 @@ func (c *MainController) FileMkdir() {
 
 	// reLoad Folder
 	models.HugoReload()
-	publishDev(c)
+	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
 }
@@ -608,7 +608,7 @@ func (c *MainController) Action() {
 
 	switch action {
 	case "publishDev":
-		publishDev(c)
+		pushDev(c)
 	case "pushProd":
 		pushProd(c)
 	}
@@ -620,11 +620,11 @@ func (c *MainController) Action() {
 	c.TplName = "index.html"
 }
 
-// publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
-func publishDev(c *MainController) {
+// pushDev : Exécution du moteur Hugo pour mettre à jour le site de développement
+func pushDev(c *MainController) {
 	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivateDir,
 		"--environment", "hugo", "--cleanDestinationDir")
-	logs.Info("publishDev", cmd)
+	logs.Info("pushDev", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)
@@ -633,14 +633,14 @@ func publishDev(c *MainController) {
 		flash.Error("ERREURG Génération des pages : %v", err)
 		flash.Store(&c.Controller)
 	}
-	logs.Info("publishDev", string(out))
+	logs.Info("pushDev", string(out))
 }
 
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
 func pushProd(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("sh", "-C", "./git-push.sh")
+	cmd := exec.Command("hugo", "--cleanDestinationDir")
 	logs.Info("pushProd", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
@@ -651,7 +651,6 @@ func pushProd(c *MainController) {
 		flash.Store(&c.Controller)
 		return
 	}
-
 	flash.Success(string(out))
 	logs.Info("pushProd", string(out))
 }
