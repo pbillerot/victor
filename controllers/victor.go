@@ -609,6 +609,7 @@ func (c *MainController) Action() {
 	switch action {
 	case "refresh":
 		models.HugoReload()
+		pushDev(c)
 	case "publishDev":
 		pushDev(c)
 	case "pushProd":
