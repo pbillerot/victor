@@ -607,6 +607,8 @@ func (c *MainController) Action() {
 	action := c.Ctx.Input.Param(":action")
 
 	switch action {
+	case "refresh":
+		models.HugoReload()
 	case "publishDev":
 		pushDev(c)
 	case "pushProd":
