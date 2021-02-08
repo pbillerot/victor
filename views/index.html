@@ -36,8 +36,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="ui buttons bee-press-hidden-mobile">
+                <div class="item bee-hidden-mobile">
+                    <div class="ui buttons">
                         <div class="ui icon blue large button bee-window-open" data-url="/hugo/" data-posx="left"
                             data-width="1200" data-posy="150" target="hugo-test" title="Voir sur le site de test">
                             <i class="eye icon"></i>
@@ -47,17 +47,21 @@
                 <div class="ui dropdown item bee-press-hidden-mobile">
                     <i class="ellipsis vertical icon"></i>
                     <div class="menu">
-                        <a class="ui icon item bee-modal-confirm" data-action="/victor/action/refresh"
+                        <div class="ui icon item bee-hidden-desktop bee-window-open" data-url="/hugo/" data-posx="left"
+                            data-width="1200" data-posy="150" target="hugo-test">
+                            <i class="blue eye icon"></i> Voir sur le site de test
+                        </div>
+                        <div class="ui icon item bee-modal-confirm" data-action="/victor/action/refresh"
                             title="Actualiser le répertoire..." data-message="Veuillez le confirmer">
-                            <i class="refresh icon"></i> Actualiser le répertoire...
-                        </a>
-                        <a class="ui icon item bee-modal-confirm" data-action="/victor/action/pushProd"
+                            <i class="teal refresh icon"></i> Actualiser le répertoire...
+                        </div>
+                        <div class="ui icon item bee-modal-confirm" data-action="/victor/action/pushProd"
                             title="Mettre le site en production..." data-message="Veuillez le confirmer">
-                            <i class="play circle outline square icon"></i> Mettre le site en production...
-                        </a>
+                            <i class="red play circle outline square icon"></i> Mettre le site en production...
+                        </div>
                         <div class="ui icon item bee-window-open" data-url="/" data-posx="right" data-width="1200"
                             data-posy="150" target="hugo-prod">
-                            <i class="eye icon"></i> Voir le site de production
+                            <i class="blue eye icon"></i> Voir le site de production
                         </div>
                         <!-- end if actions-->
                     </div>

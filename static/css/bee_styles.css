@@ -36,6 +36,8 @@ main {
 .ui.message.bee-selected {
     -webkit-box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
     box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
+    background-color: #E1F7F7;
+    color: #10A3A3;
 }
 
 .ui.button.bee-press-visible,
@@ -101,14 +103,14 @@ bee-press,
 }
 /* Mobile */
 @media only screen and (max-width: 820px) {
-    .bee-desktop {
+    .bee-hidden-mobile {
         display: none !important;
     }
 }
 
 /* Desktop */
 @media only screen and (min-width: 821px) {
-    .bee-mobile {
+    .bee-hidden-desktop {
         display: none !important;
     }
 }

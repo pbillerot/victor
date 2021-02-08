@@ -109,14 +109,14 @@ jQuery(function() {
                 $('.bee-press-visible').show();
                 $('.bee-selector').html(qselected);
                 $('.bee-press-hidden-mobile').each(function () {
-                    $(this).addClass('bee-desktop')
+                    $(this).addClass('bee-hidden-mobile')
                 });
             } else {
                 $('.bee-press-visible').hide();
                 $('.bee-selected').removeClass('bee-selected');
                 $('.bee-selector').html('<i class="check icon"></i>');
                 $('.bee-press-hidden-mobile').each(function () {
-                    $(this).removeClass('bee-desktop')
+                    $(this).removeClass('bee-hidden-mobile')
                 })
             }
             if (qselected > 1) {
@@ -154,7 +154,7 @@ jQuery(function() {
             $(this).removeClass('bee-selected');
             // Element à réafficher sur press et sur mobile
             $('.bee-press-hidden-mobile').each(function () {
-                $(this).removeClass('bee-desktop')
+                $(this).removeClass('bee-hidden-mobile')
             });
         } else {
             // sélection
@@ -164,7 +164,7 @@ jQuery(function() {
             $('.bee-modal-rename').show();
             // Element à cacher sur press et sur mobile
             $('.bee-press-hidden-mobile').each(function () {
-                $(this).addClass('bee-desktop')
+                $(this).addClass('bee-hidden-mobile')
             });
         }
         event.preventDefault();
