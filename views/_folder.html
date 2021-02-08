@@ -20,7 +20,7 @@
 {{ if $record.Expired}}{{$color = "warning"}}{{end}}
 {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
 
-{{ if eq $record.IsDir 1 }}
+{{ if $record.IsDir }}
 {{$notFolder = false}}
 <!-- FOLDER -->
 <div class="ui compact message bee-tap bee-press" data-action="/victor/folder{{$record.Path}}" data-base="{{$record.Base}}"

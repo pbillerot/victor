@@ -24,28 +24,35 @@
                         <div class="ui icon button bee-modal-move" data-action="/victor/mv" title="Déplacer...">
                             <i class="arrow right icon"></i>
                         </div>
-                        <div class="ui icon button bee-modal-confirm" data-action="/victor/rm" title="Supprimer...">
+                        <div class="ui icon button bee-modal-delete" data-action="/victor/rm" title="Supprimer...">
                             <i class="trash alternate outline icon"></i>
                         </div>
                     </div>
                 </div>
                 <div class="item">
                     <div class="ui buttons">
+                        <div class="ui icon large button bee-selector">
+                            <i class="check icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="ui buttons bee-press-hidden-mobile">
                         <div class="ui icon blue large button bee-window-open" data-url="/hugo/" data-posx="left"
                             data-width="1200" data-posy="150" target="hugo-test" title="Voir sur le site de test">
                             <i class="eye icon"></i>
                         </div>
                     </div>
                 </div>
-                <div class="ui dropdown item">
+                <div class="ui dropdown item bee-press-hidden-mobile">
                     <i class="ellipsis vertical icon"></i>
                     <div class="menu">
-                        <a class="ui icon item bee-modal-confirm" data-action="/victor/action/refresh" title="Actualiser le répertoire..."
-                        data-message="Veuillez le confirmer">
+                        <a class="ui icon item bee-modal-confirm" data-action="/victor/action/refresh"
+                            title="Actualiser le répertoire..." data-message="Veuillez le confirmer">
                             <i class="refresh icon"></i> Actualiser le répertoire...
                         </a>
-                        <a class="ui icon item bee-modal-confirm" data-action="/victor/action/pushProd" title="Mettre le site en production..."
-                            data-message="Veuillez le confirmer">
+                        <a class="ui icon item bee-modal-confirm" data-action="/victor/action/pushProd"
+                            title="Mettre le site en production..." data-message="Veuillez le confirmer">
                             <i class="play circle outline square icon"></i> Mettre le site en production...
                         </a>
                         <div class="ui icon item bee-window-open" data-url="/" data-posx="right" data-width="1200"
@@ -85,7 +92,7 @@
     </main>
     <!-- Modal Nouveau Nom -->
     <div id="bee-modal-new" class="ui tiny modal">
-        <div class="header">à venir</div>
+        <div class="header bee-modal-title">à venir</div>
         <div class="content">
             <form class="ui form" method="POST" action="a venir">
                 {{ .xsrfdata }}
@@ -102,10 +109,11 @@
     </div>
     <!-- Modal Confirmation Action -->
     <div id="bee-modal-confirm" class="ui tiny modal">
-        <div class="header">à venir</div>
+        <div class="header bee-modal-title">à venir</div>
         <div class="content">
             <form class="ui form" method="POST" action="a venir">
                 {{ .xsrfdata }}
+                <input type="hidden" name="paths" value="">
                 <div class="ui message">
                     <div class="header">
                         à venir
@@ -118,24 +126,31 @@
             <div class="ui approve button">Je confirme</div>
         </div>
     </div>
-    <!-- Modal Déplacer -->
+    <!-- Modal Copier Déplacer -->
     <div id="bee-modal-move" class="ui tiny modal">
-        <div class="header">à venir</div>
-        <div class="content">
+        <div class="header bee-modal-title">à venir</div>
+        <div class="scrolling content">
             <form class="ui form" method="POST" action="a venir">
                 {{ .xsrfdata }}
+                <input type="hidden" name="paths" value="">
+                <input type="hidden" name="dest" value="">
                 <div class="field">
-                    <label>De</label>
+                    <label>Liste des fichiers sélectionnés</label>
                     <div class="ui message">
-                        <div class="header">
+                        <div class="header bee-input-paths">
                             à venir
                         </div>
                     </div>
                 </div>
                 <div class="required field">
                     <label>Vers</label>
-                    <select id="bee-ajax-folders" name="new_path" class="ui selection dropdown">
-                    </select>
+                    <div class="ui message">
+                        <div class="header bee-input-dest">
+                            à venir
+                        </div>
+                    </div>
+                    <div id="bee-tree-folders" class="ui list">
+                    </div>
                 </div>
             </form>
         </div>
@@ -146,7 +161,7 @@
     </div>
     <!-- Modal Upload -->
     <div id="bee-modal-upload" class="ui tiny modal">
-        <div class="header">Déposer des fichiers...</div>
+        <div class="header bee-modal-title">Déposer des fichiers...</div>
         <div class="content">
             <form class="ui form" method="POST" action="/victor/upload" enctype="multipart/form-data">
                 {{ .xsrfdata }}
@@ -159,11 +174,11 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label for="bee-input-file" class="ui labeled icon button">
+                    <label for="bee-upload-file" class="ui labeled icon button">
                         <i class="upload icon"></i>
                         Sélection de fichiers...
                     </label>
-                    <input style="display: none" type="file" id="bee-input-file" name="files" multiple />
+                    <input style="display: none" type="file" id="bee-upload-file" name="files" multiple />
                 </div>
                 <!-- fichiers sur le départ -->
                 <div class="ui message" id="bee-files-selected">
@@ -176,12 +191,9 @@
         </div>
     </div>
 
+
     <!-- CONTEXTE PAGE -->
-    <div data-rem="CONTEXTE PAGE">
-        <!-- update by bee-press -->
-        <input type="hidden" id="bee-action" value>
-        <input type="hidden" id="bee-path" value>
-        <input type="hidden" id="bee-base" value>
+    <div id="bee-ctx" data-folder="{{.Folder}}">
     </div>
 
     {{template "_foot.html" .}}

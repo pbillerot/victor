@@ -1,41 +1,159 @@
 /**
  * Script.js
  */
-$(document).ready(function () {
+jQuery(function() {
 
-    // Ouverture d'un dossier ou fichier
-    $('.bee-tap').on('tap', function (event) {
-        var $action = $(this).data('action')
-        if ($action.indexOf('/folder') != -1) {
-            window.location = $action;
-        } else {
-            // Préparation window.open
-            var $height = 'max';
-            var $width = 'large';
-            var $posx = 'right';
-            var $posy = '5';
-            var $target = 'hugo-file';
-            if (window.opener == null) {
-                window.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+    // Chargement $file
+    var $file = null
+    $.ajax({
+        url: '/victor/api/file'
+    }).done(function (response) {
+        $file = response.results;
+        // Réglage de l'UI du formulaire des fichiers
+        if ($file.Inline) {
+            $('.bee-window-open').removeClass('bee-hidden');
+        }
+        if ($file.IsText || $file.IsImage) {
+            $('#button_validate').removeClass('bee-hidden');
+        }
+    });
+
+    // Chargement #bee-tree-folders
+    $.ajax({
+        url: '/victor/api/folders'
+    }).done(function (response) {
+        var $data = response.results
+        // généralion du  tree en html
+        var $html = "";
+        var $rang = 1;
+        for (i = 0; i < $data.length; i++) {
+            if ($data[i].rang > $rang) {
+                $html += '<div class="list">'; // start list
+            } else if ($data[i].rang < $rang) {
+                for (ir = 0; ir < $rang - $data[i].rang; ir++) {
+                    $html += '</div>'; // end content
+                    $html += '</div>'; // end item
+                    $html += '</div>'; // end list
+                    $html += '</div>'; // end content
+                    $html += '</div>'; // end item
+                }
             } else {
-                window.opener.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+                if (i > 0) {
+                    $html += '</div>'; // end content
+                    $html += '</div>'; // end item
+                }
+            } // endif
+            $html += '<div class="item">';
+            $html += '<i class="folder outline icon"></i>';
+            $html += '<div class="content">';
+            if ($data[i].selected) {
+                $html += '<a class="header selected" data-path="' + $data[i].path + '">'
+                    + $data[i].base + '</a>';
+            } else {
+                $html += '<a href="" class="header" data-path="' + $data[i].path + '">'
+                    + $data[i].base + '</a>';
+            }
+            $rang = $data[i].rang;
+        }
+        $html += '</div>'; // end content
+        $html += '</div>'; // end item
+        $html += '</div>'; // end list
+        $('#bee-tree-folders').html($html);
+        $('#bee-tree-folders .header').on('click', function (event) {
+            $('#bee-tree-folders').find('.selected').removeClass('selected');
+            $(this).addClass('selected');
+            // Update champ input dest
+            var $folder = $(this).data('path')
+            $(this).closest('form').find('input[name="dest"]').val($folder)
+            // le message dans la modal
+            $(this).closest('form').find('.bee-input-dest').html($folder)
+
+            event.preventDefault();
+        });
+    });
+
+    // Ouverture d'un dossier ou fichier ou sélection multiple
+    $('.bee-tap').on('tap', function (event) {
+        if ($bee_selector == false) {
+            // Mode sélection unique
+            var $action = $(this).data('action')
+            if ($action.indexOf('/folder') != -1) {
+                window.location = $action;
+            } else {
+                // Ouverture de l'éditeur viewer dans une fenêtre séparée à droite
+                var $height = 'max';
+                var $width = 'large';
+                var $posx = 'right';
+                var $posy = '5';
+                var $target = 'hugo-file';
+                if (window.opener == null) {
+                    window.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+                } else {
+                    window.opener.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+                }
+            }
+        } else {
+            // Mode sélection multiple
+            if ($(this).hasClass('bee-selected')) {
+                // désélection d'un item
+                $(this).removeClass('bee-selected');
+            } else {
+                // sélection ajout d'un item
+                $(this).addClass("bee-selected");
+            }
+            var qselected = $('.bee-selected').length
+            if (qselected > 0) {
+                $('.bee-modal-rename').show();
+            }
+            if (qselected > 0) {
+                $('.bee-press-visible').show();
+                $('.bee-selector').html(qselected);
+                $('.bee-press-hidden-mobile').each(function () {
+                    $(this).addClass('bee-desktop')
+                });
+            } else {
+                $('.bee-press-visible').hide();
+                $('.bee-selected').removeClass('bee-selected');
+                $('.bee-selector').html('<i class="check icon"></i>');
+                $('.bee-press-hidden-mobile').each(function () {
+                    $(this).removeClass('bee-desktop')
+                })
+            }
+            if (qselected > 1) {
+                $('.bee-modal-rename').hide();
             }
         }
         event.preventDefault();
     });
+    // SELECTION MULTIPLE
+    var $bee_selector = false;
+    $('.bee-selector').on('tap', function (event) {
+        if ($bee_selector) {
+            $(this).removeClass('teal');
+            $bee_selector = false;
+            $(this).html('<i class="check icon"></i>')
+            $('.bee-selected').removeClass('bee-selected');
+            $('.bee-press-visible').hide();
+        } else {
+            $(this).addClass('teal');
+            $bee_selector = true;
+            $(this).html($('.bee-selected').length);
+        }
+        event.preventDefault();
+    });
+
     // Sélection d'un dossier ou fichier
     $('.bee-press').on('press', function (event) {
-        var $action = $(this).data('action')
-        var $base = $(this).data('base')
-        var $path = $(this).data('path')
+        if ($bee_selector) {
+            event.preventDefault();
+            return;
+        }
         if ($(this).hasClass('bee-selected')) {
             // désélection
             $('.bee-press-visible').hide();
             $(this).removeClass('bee-selected');
-            $('#bee-action').val('')
-            $('#bee-base').val('')
             // Element à réafficher sur press et sur mobile
-            $('.bee-press-hidden-mobile').each(function(){
+            $('.bee-press-hidden-mobile').each(function () {
                 $(this).removeClass('bee-desktop')
             });
         } else {
@@ -43,24 +161,12 @@ $(document).ready(function () {
             $(this).parent().find('.bee-selected').removeClass('bee-selected');
             $(this).addClass("bee-selected");
             $('.bee-press-visible').show();
-            $('#bee-action').val($action)
-            $('#bee-base').val($base)
-            $('#bee-path').val($path)
-            // boutons edit si markdown et image
-            $('.bee-button-edit').hide();
-            if ($(this).hasClass('bee-tap')) {
-                $('.bee-button-edit').show();
-            }
+            $('.bee-modal-rename').show();
             // Element à cacher sur press et sur mobile
-            $('.bee-press-hidden-mobile').each(function(){
+            $('.bee-press-hidden-mobile').each(function () {
                 $(this).addClass('bee-desktop')
             });
         }
-        event.preventDefault();
-    });
-    // Bouton Edit seulement sur markdown et image
-    $(".bee-button-edit").on('click', function (event) {
-        window.location = $('#bee-action').val();
         event.preventDefault();
     });
 
@@ -91,11 +197,11 @@ $(document).ready(function () {
     // ACTION RENAME
     $('.bee-modal-rename').on('click', function (event) {
         var $form = $('#bee-modal-new').find('form');
-        var $base = $('#bee-base').val();
-        var $path = $('#bee-path').val();
-        $form.attr('action', $(this).data('action') + $path);
-        $('#bee-modal-new').find('.header').html($(this).attr('title'));
-        $('#bee-modal-new').find("input[name='new_name']").val($base);
+        // valorisation de paths et bases
+        $selected = getSelectedPathHtml();
+        $form.attr('action', $(this).data('action') + $selected.paths);
+        $('#bee-modal-new').find('.bee-modal-title').html($(this).attr('title'));
+        $('#bee-modal-new').find("input[name='new_name']").val($selected.baseUnique);
         $('#bee-modal-new')
             .modal({
                 closable: false,
@@ -111,15 +217,10 @@ $(document).ready(function () {
     // ACTION CONFIRMATION
     $('.bee-modal-confirm').on('click', function (event) {
         var $form = $('#bee-modal-confirm').find('form');
-        $('#bee-modal-confirm').find('.header').html($(this).attr('title'));
+        $('.bee-modal-title').html($(this).attr('title'));
+        $form.attr('action', $(this).data('action'));
         if ($(this).data('message')) {
-            // cas submit action
-            $form.attr('action', $(this).data('action'));
             $('#bee-modal-confirm').find('.message>.header').html($(this).data('message'));
-        } else {
-            var $path = $('#bee-path').val();
-            $form.attr('action', $(this).data('action') + $path);
-            $('#bee-modal-confirm').find('.message>.header').html($path);
         }
         $('#bee-modal-confirm')
             .modal({
@@ -148,33 +249,32 @@ $(document).ready(function () {
             }).modal('show');
         event.preventDefault();
     });
-    $('#bee-input-file').on('change', function () {
+    $('#bee-upload-file').on('change', function () {
         var $files = $(this).get(0).files;
         var $html = "";
         for (var i = 0; i < $files.length; i++) {
             var $filename = $files[i].name.replace(/.*(\/|\\)/, '');
-            $html += '<div class="ui label">' + $filename + '</div>'
+            $html += '<div class="ui teal label">' + $filename + '</div>'
         }
         $('#bee-files-selected').html($html);
     });
-    // ACTION DEPLACER
+    // ACTION COPIER ou DEPLACER
     $('.bee-modal-move').on('click', function (event) {
-        var $form = $('#bee-modal-move').find('form');
-        var $path = $('#bee-path').val();
-        $form.attr('action', $(this).data('action') + $path);
-        $('#bee-modal-move').find('.header').html($(this).attr('title'));
-        $('#bee-modal-move').find('.message>.header').html($path);
-        $('#bee-ajax-folders').dropdown({
-            apiSettings: {
-                url: '/victor/api/folders',
-                cache: false,
-                onResponse: (response) => {
-                    // console.log(response);
-                    return response
-                }
-            },
-            saveRemoteData: false
-        });
+        var $modal = $('#bee-modal-move')
+        // titre 
+        $modal.find('.bee-modal-title').html($(this).attr('title'));
+        var $form = $modal.find('form');
+        // valorisation de paths et bases
+        $selected = getSelectedPathHtml();
+        // Le champ input des fichiers sources
+        $form.find('input[name="paths"]').val($selected.paths)
+        $form.find('.bee-input-paths').html($selected.bases)
+        // Le champ input du répertoire destination par défaut
+        var $folder = $('#bee-ctx').data('folder')
+        $form.find('input[name="dest"]').val($folder)
+        $form.find('.bee-input-dest').html($folder)
+        // l'action à déclencher sur le serveur
+        $form.attr('action', $(this).data('action'));
         $('#bee-modal-move')
             .modal({
                 closable: false,
@@ -183,6 +283,33 @@ $(document).ready(function () {
                 },
                 onApprove: function () {
                     $form.submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+
+    // ACTION SUPPRIMER
+    $('.bee-modal-delete').on('click', function (event) {
+        var $modal = $('#bee-modal-confirm')
+        // titre 
+        $modal.find('.bee-modal-title').html($(this).attr('title'));
+        var $form = $modal.find('form');
+        // valorisation de paths et bases
+        $selected = getSelectedPathHtml();
+        // Le champ input des fichiers sources
+        $form.find('input[name="paths"]').val($selected.paths)
+        // l'action à déclencher sur le serveur
+        $form.attr('action', $(this).data('action'));
+        // le message dans la modal
+        $form.find('.message>.header').html($selected.bases);
+        $('#bee-modal-confirm')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $('form', document).submit();
                 }
             }).modal('show');
         event.preventDefault();
@@ -342,6 +469,25 @@ $(document).ready(function () {
         }
         event.preventDefault();
     });
+
+    /**
+     * retourne le HTML des chemins concaténés des fichiers et répertoires sélectionnés 
+     */
+    function getSelectedPathHtml() {
+        // valorisation de bee-path
+        var $paths = ""; var $bases = ""; var $baseUnique = ""
+        $('.bee-selected').each(function () {
+            if ($paths.length > 0) {
+                $paths += ",";
+            }
+            $paths += $(this).data('path');
+            $bases += '<span class="ui teal label">' + $(this).data('base') + '</span>';
+            $baseUnique = $(this).data('base');
+        });
+        return {
+            paths: $paths, bases: $bases, baseUnique: $baseUnique
+        }
+    }
 
 });
 

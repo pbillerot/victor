@@ -193,7 +193,7 @@ func (c *MainController) FileRename() {
 		return
 	}
 
-	if record.IsDir == 1 {
+	if record.IsDir {
 		newName := sanitize.Name(c.GetString("new_name"))
 		path := strings.Split(record.PathAbsolu, "/")
 		path[len(path)-1] = newName
@@ -270,88 +270,88 @@ func (c *MainController) FileRename() {
 
 // FileMove Déplacer le fichier
 func (c *MainController) FileMove() {
-	path := "/" + c.Ctx.Input.Param(":path")
-	if c.Ctx.Input.Param(":ext") != "" {
-		path += "." + c.Ctx.Input.Param(":ext")
-	}
-	pathFolder := c.GetSession("Folder").(string)
+	// liste des fichiers à déplacer sépârés avec des ,
+	paths := strings.Split(c.GetString("paths"), ",")
+	// Répertoire destination
+	dest := c.GetString("dest")
+
 	flash := beego.ReadFromRequest(&c.Controller)
-	// Recherche du record
-	record := models.HugoGetRecord(path)
-	if record.Path == "" {
-		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-		return
+	pathFolder := c.GetSession("Folder").(string) // répertoire source des fichiers
+	// Traitement unitaire des fichiers ou répertoires
+	for _, path := range paths {
+		record := models.HugoGetRecord(path)
+		if record.Path == "" {
+			msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+			return
+		}
+		if record.IsDir {
+			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			if _, err := os.Stat(newPath); err == nil {
+				msg := fmt.Sprintf("Déplacer [%s] vers [%s] : Existe déjà", record.PathAbsolu, newPath)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
+			err = os.Rename(record.PathAbsolu, newPath)
+			if err != nil {
+				msg := fmt.Sprintf("Déplacer [%s] vers [%s] : %v", record.PathAbsolu, newPath, err)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
+		} else {
+			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			if _, err := os.Stat(newPath); err == nil {
+				msg := fmt.Sprintf("Déplacer [%s] vers [%s] : Existe déjà", record.PathAbsolu, newPath)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
+			err = shutil.CopyFile(record.PathAbsolu, newPath, false)
+			if err != nil {
+				msg := fmt.Sprintf("Déplacer [%s] vers %s : %v", record.PathAbsolu, newPath, err)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
+			// Suppression du fichier source
+			err = os.RemoveAll(record.PathAbsolu)
+			if err != nil {
+				msg := fmt.Sprintf("Déplacer [%s] vers %s : %v", record.PathAbsolu, newPath, err)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
+			if path == c.GetSession("File").(string) {
+				c.SetSession("File", "")
+			}
+		}
 	}
 
-	if record.IsDir == 1 {
-		newFile := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
-		if _, err := os.Stat(newFile); err == nil {
-			// path/to/whatever exists
-			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, "existe déjà")
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-		err = os.Rename(record.PathAbsolu, newFile)
-		if err != nil {
-			msg := fmt.Sprintf("Déplacer [%s] : %s", record.Path, err)
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-	} else {
-		// Copie du fichier sur la cible
-		newFile := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
-		if _, err := os.Stat(newFile); err == nil {
-			// path/to/whatever exists
-			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, "existe déjà")
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-
-		data, err := ioutil.ReadFile(record.PathAbsolu)
-		if err != nil {
-			msg := fmt.Sprintf("Déplacer [%s] : %s", record.Path, err)
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-		err = ioutil.WriteFile(newFile, data, 0644)
-		if err != nil {
-			msg := fmt.Sprintf("Déplacer [%s] : %s", newFile, err)
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-		// Suppression du fichier source
-		err = os.RemoveAll(record.PathAbsolu)
-		if err != nil {
-			msg := fmt.Sprintf("Renommer en [%s] : %s", record.Path, err)
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-	}
-	if path == c.GetSession("File").(string) {
-		c.SetSession("File", "")
-	}
 	// reLoad Folder
 	models.HugoReload()
 	pushDev(c)
@@ -361,64 +361,54 @@ func (c *MainController) FileMove() {
 
 // FileCp Recopier le fichier ou dossier
 func (c *MainController) FileCp() {
-	path := "/" + c.Ctx.Input.Param(":path")
-	if c.Ctx.Input.Param(":ext") != "" {
-		path += "." + c.Ctx.Input.Param(":ext")
-	}
-	pathFolder := c.GetSession("Folder").(string)
-	flash := beego.ReadFromRequest(&c.Controller)
-	// Recherche du record
-	record := models.HugoGetRecord(path)
-	if record.Path == "" {
-		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-		return
-	}
+	// liste des fichiers à déplacer sépârés avec des ,
+	paths := strings.Split(c.GetString("paths"), ",")
+	// Répertoire destination
+	dest := c.GetString("dest")
 
-	if record.IsDir == 1 {
-		newPath := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
-		err = shutil.CopyTree(record.PathAbsolu, newPath, nil)
-		// err = os.Rename(record.PathAbsolu, newPath)
-		if err != nil {
-			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, err)
+	flash := beego.ReadFromRequest(&c.Controller)
+	pathFolder := c.GetSession("Folder").(string) // répertoire source des fichiers
+	// Traitement unitaire des fichiers ou répertoires
+	for _, path := range paths {
+		record := models.HugoGetRecord(path)
+		if record.Path == "" {
+			msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			models.HugoReload()
-			pushDev(c)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
-	} else {
-		newPath := models.Config.HugoContentDir + c.GetString("new_path") + "/" + record.Base
-		if _, err := os.Stat(newPath); err == nil {
-			// path/to/whatever exists
-			newPath = models.Config.HugoContentDir + c.GetString("new_path") + "/" + "Copy " + record.Base
-		}
-		data, err := ioutil.ReadFile(record.PathAbsolu)
-		if err != nil {
-			msg := fmt.Sprintf("Copie vers [%s] : %s", newPath, err)
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			models.HugoReload()
-			pushDev(c)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
-		}
-		err = ioutil.WriteFile(newPath, data, 0644)
-		if err != nil {
-			msg := fmt.Sprintf("Copie vers [%s : %s", newPath, err)
-			logs.Error(msg)
-			flash.Error(msg)
-			flash.Store(&c.Controller)
-			models.HugoReload()
-			pushDev(c)
-			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-			return
+		if record.IsDir {
+			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			err = shutil.CopyTree(record.PathAbsolu, newPath, nil)
+			if err != nil {
+				msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", record.PathAbsolu, newPath, err)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
+		} else {
+			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			if _, err := os.Stat(newPath); err == nil {
+				// path/to/whatever exists
+				newPath = models.Config.HugoContentDir + dest + "/" + "Copy " + record.Base
+			}
+			err = shutil.CopyFile(record.PathAbsolu, newPath, false)
+			if err != nil {
+				msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", record.PathAbsolu, newPath, err)
+				logs.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				models.HugoReload()
+				pushDev(c)
+				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+				return
+			}
 		}
 	}
 
@@ -470,35 +460,38 @@ func (c *MainController) FileNew() {
 
 // FileRm Supprimer le fichier ou dossier
 func (c *MainController) FileRm() {
-	path := "/" + c.Ctx.Input.Param(":path")
-	if c.Ctx.Input.Param(":ext") != "" {
-		path += "." + c.Ctx.Input.Param(":ext")
-	}
-	pathFolder := c.GetSession("Folder").(string)
+	// liste des fichiers à supprimer séparés avec des ,
+	paths := strings.Split(c.GetString("paths"), ",")
+
 	flash := beego.ReadFromRequest(&c.Controller)
-	// Recherche du record
-	record := models.HugoGetRecord(path)
-	if record.Path == "" {
-		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-		return
+	pathFolder := c.GetSession("Folder").(string) // répertoire source des fichiers
+	// Traitement unitaire des fichiers ou répertoires
+	for _, path := range paths {
+		record := models.HugoGetRecord(path)
+		if record.Path == "" {
+			msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+			return
+		}
+		err = os.RemoveAll(record.PathAbsolu)
+		if err != nil {
+			msg := fmt.Sprintf("Suppression de [%s] : %v", record.PathAbsolu, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			models.HugoReload()
+			pushDev(c)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+			return
+		}
+		if path == c.GetSession("File").(string) {
+			c.SetSession("File", "")
+		}
 	}
 
-	err = os.RemoveAll(record.PathAbsolu)
-	if err != nil {
-		msg := fmt.Sprintf("Suppression de [%s] : %s", record.Path, err)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-		return
-	}
-	if path == c.GetSession("File").(string) {
-		c.SetSession("File", "")
-	}
 	// reLoad Folder
 	models.HugoReload()
 	pushDev(c)
@@ -580,8 +573,10 @@ func (c *MainController) FileMkdir() {
 // APIFolders as /api/folders
 func (c *MainController) APIFolders() {
 	type myList struct {
-		Name  string `json:"name"`
-		Value string `json:"value"`
+		Base     string `json:"base"`
+		Path     string `json:"path"`
+		Rang     int    `json:"rang"`
+		Selected bool   `json:"selected"`
 	}
 	type myStruct struct {
 		Success bool     `json:"success"`
@@ -590,13 +585,45 @@ func (c *MainController) APIFolders() {
 	}
 	var list []myList
 	for _, record := range models.HugoGetFolders() {
-		list = append(list, myList{Name: record.Path, Value: record.Path})
+		if record.Path == c.GetSession("Folder").(string) {
+			list = append(list, myList{
+				Base:     record.Base,
+				Path:     record.Path,
+				Rang:     record.Rang,
+				Selected: true,
+			})
+		} else {
+			list = append(list, myList{
+				Base:     record.Base,
+				Path:     record.Path,
+				Rang:     record.Rang,
+				Selected: false,
+			})
+		}
 	}
 
 	var resp myStruct
 	resp.Success = true
 	resp.Message = "ok coral"
 	resp.Results = list
+
+	c.Data["json"] = &resp
+	c.ServeJSON()
+}
+
+// APIFile as /api/file
+func (c *MainController) APIFile() {
+	type myStruct struct {
+		Success bool            `json:"success"`
+		Message string          `json:"message"`
+		Results models.HugoFile `json:"results"`
+	}
+	record := models.HugoGetRecord(c.GetSession("File").(string))
+
+	var resp myStruct
+	resp.Success = true
+	resp.Message = "ok coral"
+	resp.Results = record
 
 	c.Data["json"] = &resp
 	c.ServeJSON()

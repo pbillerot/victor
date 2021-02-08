@@ -22,30 +22,31 @@ var hugo []HugoFile
 // HugoFile propriétés d'un fichier dans le dossier hugoDir
 type HugoFile struct {
 	Action      string
-	Path        string
-	Prefix      string
-	PathAbsolu  string
-	PathReal    string // path réel du fichier Ex. /data/config.yaml
 	Base        string
-	Dir         string
-	Ext         string
-	IsImage     bool
-	IsText      bool
-	IsPdf       bool
-	Order       int
-	IsDir       int
-	Title       string
-	Draft       string
-	Date        string
-	DatePublish string
-	DateExpiry  string
-	Inline      bool // page en ligne et visible
-	Planified   bool // page qui sera en ligne bientôt
-	Expired     bool // page dont la date a expirée
-	Tags        string
 	Categories  string
 	Content     string
+	Date        string
+	DateExpiry  string
+	DatePublish string
+	Dir         string
+	Draft       string
+	Expired     bool // page dont la date a expirée
+	Ext         string
 	HugoPath    string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
+	Inline      bool   // page en ligne et visible
+	IsDir       bool
+	IsImage     bool
+	IsPdf       bool
+	IsText      bool
+	Order       int
+	Path        string
+	PathAbsolu  string
+	PathReal    string // path réel du fichier Ex. /data/config.yaml
+	Planified   bool   // page qui sera en ligne bientôt
+	Prefix      string
+	Rang        int
+	Tags        string
+	Title       string
 	URL         string
 }
 
@@ -92,7 +93,7 @@ func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
 	// suppression du / à la fin
 	hugoFolder := strings.TrimSuffix(Config.HugoContentDir+folder, "/")
 	var pis []HugoPathInfo
-	err = readDir(hugoFolder, &pis)
+	err = readFolder(hugoFolder, &pis)
 	if err != nil {
 		return
 	}
@@ -118,19 +119,20 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	record.Path = path // on enlève la partie hugoDirectory du chemin
 	record.Dir = filepath.Dir(path)
 	record.Base = filepath.Base(path)
+	record.Rang = strings.Count(record.Path, "/")
 	if info.IsDir() {
-		record.IsDir = 1
+		record.IsDir = true
 		if record.Dir == "/" {
 			record.Dir += record.Base
 		} else {
 			record.Dir += "/" + record.Base
 		}
 	} else {
-		record.IsDir = 0
+		record.IsDir = false
 	}
 	record.Ext = filepath.Ext(path)
 	record.Order = 9
-	if record.IsDir == 1 {
+	if record.IsDir {
 		record.Order = 0
 	}
 	if contains([]string{".md", ".yaml", ".conf", ".txt"}, record.Ext) {
@@ -206,8 +208,8 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	return
 }
 
-// readDir retourne la liste des fichiers dans HugoPathInfo
-func readDir(dirname string, info *[]HugoPathInfo) (err error) {
+// readFolder retourne la liste des fichiers dans HugoPathInfo
+func readFolder(dirname string, info *[]HugoPathInfo) (err error) {
 	// ouverture du dossier
 	f, err := os.Open(dirname)
 	if err != nil {
@@ -259,7 +261,7 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 			pi.Info = file
 			// *info = append(*info, pi)
 			// appel récursif des répertoires
-			readDir(dirname+"/"+file.Name(), info)
+			readFolder(dirname+"/"+file.Name(), info)
 		}
 	}
 	return
@@ -269,7 +271,7 @@ func readDir(dirname string, info *[]HugoPathInfo) (err error) {
 func loadHugo() {
 	hugoFolder := Config.HugoContentDir
 	var pis []HugoPathInfo
-	err := readDir(hugoFolder, &pis)
+	err := readFolder(hugoFolder, &pis)
 	if err != nil {
 		return
 	}
@@ -325,7 +327,7 @@ func HugoGetFolders() (hugoFiles []HugoFile) {
 		loadHugo()
 	}
 	for _, record := range hugo {
-		if record.IsDir == 1 {
+		if record.IsDir {
 			hugoFiles = append(hugoFiles, record)
 		}
 	}
