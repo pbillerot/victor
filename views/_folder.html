@@ -40,7 +40,7 @@
 <!-- IMAGE -->
 <div class="ui compact message bee-press bee-tap" data-action="/victor/image{{$record.Path}}" data-base="{{$record.Base}}"
     data-path="{{$record.Path}}">
-    <img class="ui middle aligned mini image" src="/content{{$record.Path}}?{{$composter}}">
+    <img class="ui middle aligned mini image" src="/content{{$record.Path}}">
     <span>{{$record.Base}}</span>
 </div>
 {{ else if (eq $record.Ext ".pdf")}}
