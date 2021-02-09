@@ -55,6 +55,30 @@
     data-path="{{$record.Path}}">
     <i class="file code outline brown large icon"></i>{{$record.Base}}
 </div>
+{{ else if $record.IsWord }}
+<!-- WORD -->
+<div class="ui compact message bee-tap bee-press bee-download" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
+    data-path="{{$record.Path}}">
+    <i class="file word outline blue large icon"></i>{{$record.Base}}
+</div>
+{{ else if $record.IsExcel }}
+<!-- EXCEL -->
+<div class="ui compact message bee-tap bee-press bee-download" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
+    data-path="{{$record.Path}}">
+    <i class="file excel outline blue large icon"></i>{{$record.Base}}
+</div>
+{{ else if $record.IsPowerpoint }}
+<!-- POWERPOINT -->
+<div class="ui compact message bee-tap bee-press bee-download" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
+    data-path="{{$record.Path}}">
+    <i class="file powerpoint outline blue large icon"></i>{{$record.Base}}
+</div>
+{{ else if $record.IsDraw }}
+<!-- DRAW -->
+<a class="ui compact message bee-tap bee-press" href="/content{{$record.Path}}" data-base="{{$record.Base}}"
+    data-path="{{$record.Path}}" download>
+    <i class="file image outline blue large icon"></i>{{$record.Base}}
+</a>
 {{ else if $record.IsText }}
 <!-- MARKDOWN -->
 <div class="ui {{$color}} compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}"

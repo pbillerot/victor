@@ -79,6 +79,9 @@ jQuery(function () {
             var $action = $(this).data('action')
             if ($action.indexOf('/folder') != -1) {
                 window.location = $action;
+            } else if ($(this).hasClass('bee-download')) {
+                // window.open($action, "download");
+                location.replace($action);
             } else {
                 // Ouverture de l'éditeur viewer dans une fenêtre séparée à droite
                 var $height = 'max';

@@ -21,33 +21,37 @@ var hugo []HugoFile
 
 // HugoFile propriétés d'un fichier dans le dossier hugoDir
 type HugoFile struct {
-	Action      string
-	Base        string
-	Categories  string
-	Content     string
-	Date        string
-	DateExpiry  string
-	DatePublish string
-	Dir         string
-	Draft       string
-	Expired     bool // page dont la date a expirée
-	Ext         string
-	HugoPath    string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
-	Inline      bool   // page en ligne et visible
-	IsDir       bool
-	IsImage     bool
-	IsPdf       bool
-	IsText      bool
-	Order       int
-	Path        string
-	PathAbsolu  string
-	PathReal    string // path réel du fichier Ex. /data/config.yaml
-	Planified   bool   // page qui sera en ligne bientôt
-	Prefix      string
-	Rang        int
-	Tags        string
-	Title       string
-	URL         string
+	Action       string
+	Base         string
+	Categories   string
+	Content      string
+	Date         string
+	DateExpiry   string
+	DatePublish  string
+	Dir          string
+	Draft        string
+	Expired      bool // page dont la date a expirée
+	Ext          string
+	HugoPath     string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
+	Inline       bool   // page en ligne et visible
+	IsDir        bool
+	IsDraw       bool
+	IsExcel      bool
+	IsImage      bool
+	IsPdf        bool
+	IsPowerpoint bool
+	IsText       bool
+	IsWord       bool
+	Order        int
+	Path         string
+	PathAbsolu   string
+	PathReal     string // path réel du fichier Ex. /data/config.yaml
+	Planified    bool   // page qui sera en ligne bientôt
+	Prefix       string
+	Rang         int
+	Tags         string
+	Title        string
+	URL          string
 }
 
 // HugoFileMeta meta données
@@ -146,6 +150,22 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	if contains([]string{".pdf"}, record.Ext) {
 		record.IsPdf = true
 		record.Order = 3
+	}
+	if contains([]string{".doc", ".dot", ".docx", ".dotx", ".odt"}, record.Ext) {
+		record.IsWord = true
+		record.Order = 4
+	}
+	if contains([]string{".xls", ".xlsx", ".ods"}, record.Ext) {
+		record.IsExcel = true
+		record.Order = 4
+	}
+	if contains([]string{".ppt", ".pps", ".pptx", ".ppsx", ".odp"}, record.Ext) {
+		record.IsPowerpoint = true
+		record.Order = 4
+	}
+	if contains([]string{".odg", ".pub", ".drawio"}, record.Ext) {
+		record.IsDraw = true
+		record.Order = 4
 	}
 
 	ext := filepath.Ext(path)
