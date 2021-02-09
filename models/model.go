@@ -195,7 +195,11 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.Tags = strings.Join(meta.Tags, ",")
 		record.Categories = strings.Join(meta.Categories, ",")
 		record.Content = string(content[:])
-		record.HugoPath = strings.Replace(record.Path, ".md", "", 1) + "/"
+		if record.Base == "index.md" {
+			record.HugoPath = strings.Replace(record.Path, "index.md", "", 1)
+		} else {
+			record.HugoPath = strings.Replace(record.Path, ".md", "", 1) + "/"
+		}
 		// maj meta
 		// for _, v := range meta.Categories {
 		// 	metaCat[v] = append(metaCat[v], id)
