@@ -642,12 +642,7 @@ func (c *MainController) Action() {
 	case "pushProd":
 		pushProd(c)
 	}
-	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
-	c.Data["Folder"] = c.GetSession("Folder").(string)
-	c.Data["File"] = c.GetSession("File").(string)
-	c.TplName = "index.html"
+	c.Ctx.Redirect(302, "/victor/folder"+c.GetSession("Folder").(string))
 }
 
 // pushDev : Exécution du moteur Hugo pour mettre à jour le site de développement
@@ -682,5 +677,6 @@ func pushProd(c *MainController) {
 		return
 	}
 	flash.Success(string(out))
+	flash.Store(&c.Controller)
 	logs.Info("pushProd", string(out))
 }

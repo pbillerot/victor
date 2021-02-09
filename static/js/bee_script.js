@@ -394,8 +394,6 @@ jQuery(function () {
         $('#bee-progress').removeClass('bee-hidden');
     }).on('upload:after', function (e, file, i) {
         window.location.reload();
-    // }).on('upload:progress', function (e, file, i, loaded, total) {
-    //     console.log(file, i, loaded, total)
     })
         ;
 
