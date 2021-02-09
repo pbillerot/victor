@@ -46,7 +46,7 @@ main {
 }
 
 bee-press,
-.bee-tap {
+.bee-tap, .bee-press {
     cursor: pointer;
 }
 .ui.label {
@@ -101,6 +101,11 @@ bee-press,
     padding: 3px;
     border: 1px solid darkgrey ;
 }
+
+.ui.segment.simple-upload-dragover {
+    background-color: #E1F7F7;
+}
+
 /* Mobile */
 @media only screen and (max-width: 820px) {
     .bee-hidden-mobile {

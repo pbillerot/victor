@@ -1,7 +1,7 @@
 /**
  * Script.js
  */
-jQuery(function() {
+jQuery(function () {
 
     // Chargement $file
     var $file = null
@@ -382,6 +382,22 @@ jQuery(function() {
         });
         $("#bee-editor").focus();
     }
+
+    $('#bee-upload-file').simpleUpload({
+        url: '/victor/upload',
+        method: 'post',
+        // maxFileNum: 4,
+        // maxFileSize: 10 * 1024 * 1024, // Bytes
+        dropZone: '#bee-dropzone',
+        progress: '#bee-progress',
+    }).on('upload:before', function (e, file, i) {
+        $('#bee-progress').removeClass('bee-hidden');
+    }).on('upload:after', function (e, file, i) {
+        window.location.reload();
+    // }).on('upload:progress', function (e, file, i, loaded, total) {
+    //     console.log(file, i, loaded, total)
+    })
+        ;
 
     // IHM SEMANTIC
     // $('.menu .item').tab();

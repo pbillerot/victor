@@ -89,9 +89,11 @@
             </div>
             {{template "_flash.html" .}}
             <!-- FOLDER -->
-            <section class="ui segment">
+            <section class="ui segment" id="bee-dropzone">
                 {{template "_folder.html" .}}
             </section>
+            <div class="ui compact info message bee-hidden" id="bee-progress">
+            </div>
         </div>
     </main>
     <!-- Modal Nouveau Nom -->
