@@ -79,6 +79,12 @@
     data-path="{{$record.Path}}" download>
     <i class="file image outline blue large icon"></i>{{$record.Base}}
 </a>
+{{ else if (eq $record.Ext ".wav")}}
+<!-- WAV -->
+<div class="ui compact message bee-modal-player bee-press" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
+    data-path="{{$record.Path}}">
+    <i class="file audio orange large icon"></i>{{$record.Base}}
+</div>
 {{ else if $record.IsText }}
 <!-- MARKDOWN -->
 <div class="ui {{$color}} compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}"

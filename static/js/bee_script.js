@@ -397,8 +397,138 @@ jQuery(function () {
         $('#bee-progress').removeClass('bee-hidden');
     }).on('upload:after', function (e, file, i) {
         window.location.reload();
-    })
-        ;
+    });
+
+    // MODAL PALYER
+    $('.bee-modal-player').on('click', function (event) {
+        // titre du morceau
+        $('#bee-modal-player').find('p').html($(this).data('base'));
+        // path du morceau
+        $('.bee-player').data('path', $(this).data('path'));
+        $('#bee-modal-player')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    $player.stop();
+                    return true;
+                },
+                onVisible: function () {
+                    return true;
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+    /**
+     * Clic sur un player parmi les players
+     */
+    $('.bee-player').on('click', function (event) {
+        $player.click($(this));
+        event.preventDefault();
+    });
+    var $player = {
+        selector: null,
+        path: null,
+        isContextLoaded: false,
+        isSourceLoaded: false,
+        context: null,
+        source: null,
+        getPath: function (selector) {
+            var path = null;
+            if (window.location.pathname.indexOf("hugo/") > -1) {
+                path = "/hugo" + selector.data('path');
+            } else {
+                path = selector.data('path');
+            }
+            return path;
+        },
+        init: function (selector) {
+            this.selector = selector;
+            this.path = this.getPath(selector);
+            if (!this.isContextLoaded) {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.context = new AudioContext();
+                this.isContextLoaded = true;
+            }
+            // console.log(this.path, 'init ok');
+        },
+        loadSource: function () {
+            // console.log(this.path, 'source loading...');
+            this.isSourceLoaded = false;
+            // Requête asynchrone sur le serveur
+            var $request = new XMLHttpRequest();
+            $request.open('GET', this.path, true);
+            $request.responseType = 'arraybuffer';
+            $request.onload = function () {
+                // Nous sommes dans un événement -> pas d'utilisation de this
+                $player.context.decodeAudioData($request.response, function (buffer) {
+                    $player.source = $player.context.createBufferSource();
+                    $player.source.buffer = buffer;
+                    $player.source.connect($player.context.destination);
+                    $player.source.loop = true;
+                    $player.isSourceLoaded = true;
+                    $player.source.start(0);
+                    $player.uiPlay();
+                }, function (e) {
+                    console.log("Erreur lors du décodage des données audio ", e.err);
+                });
+            }
+            $request.send();
+        },
+        stop: function () {
+            if (this.isSourceLoaded) {
+                this.source.stop(0);
+                this.source.disconnect(0);
+                this.context.resume();
+            }
+            this.uiInit();
+        },
+        uiPause: function () {
+            this.uiInit();
+            this.selector.removeClass('error');
+            this.selector.addClass('success');
+            this.selector.children('i').removeClass('pause file audio outline orange');
+            this.selector.children('i').addClass('play');
+        },
+        uiPlay: function () {
+            this.uiInit();
+            this.selector.removeClass('success');
+            this.selector.addClass('error');
+            this.selector.children('i').removeClass('play file audio outline orange');
+            this.selector.children('i').addClass('pause');
+        },
+        uiInit: function () {
+            $('.bee-player').each(function () {
+                $(this).removeClass('success error');
+                $(this).children('i').removeClass('pause play');
+                $(this).children('i').addClass('file audio outline orange');
+            })
+        },
+        click: function (selector) {
+            if (this.getPath(selector) == this.path) {
+                // clic sur le player en cours
+                if (!this.isSourceLoaded) {
+                    return
+                }
+                // Pause ou Start du player
+                if (this.context.state === 'running') {
+                    this.context.suspend();
+                    this.uiPause();
+                } else if (this.context.state === 'suspended') {
+                    this.context.resume();
+                    this.uiPlay();
+                }
+            } else {
+                // clic sur un nouveau player
+                // arrêt du player en cours
+                if (this.isSourceLoaded) {
+                    this.stop();
+                }
+                // démarrage d'un nouveau player
+                this.init(selector);
+                this.loadSource();
+            } // end if CurrentPlayer
+        },
+    } // end $player
 
     // IHM SEMANTIC
     // $('.menu .item').tab();
