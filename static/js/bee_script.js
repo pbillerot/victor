@@ -566,6 +566,7 @@ jQuery(function () {
             document.getElementById('codemirror-markdown'), {
             lineNumbers: false,
             lineWrapping: true,
+            showTrailingSpace: true,
             mode: 'yaml-frontmatter',
             readOnly: false,
             theme: 'eclipse',
