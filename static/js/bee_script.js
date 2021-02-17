@@ -418,8 +418,11 @@ jQuery(function () {
             }).modal('show');
         event.preventDefault();
     });
+
     /**
      * Clic sur un player parmi les players
+     * data-path="path du fichier" (http ou /path..)
+     * data-loop="false" (true par défaut)
      */
     $('.bee-player').on('click', function (event) {
         $player.click($(this));
@@ -430,16 +433,17 @@ jQuery(function () {
         path: null,
         isContextLoaded: false,
         isSourceLoaded: false,
+        isLoop: true,
         context: null,
         source: null,
         getPath: function (selector) {
-            var path = null;
-            if (window.location.pathname.indexOf("hugo/") > -1) {
-                path = "/hugo" + selector.data('path');
-            } else {
-                path = selector.data('path');
+            $path = selector.data('path')
+            if (window.location.pathname.indexOf("http") > -1) {
+                return $path;
+            } else if (window.location.pathname.indexOf("hugo/") > -1) {
+                return "/hugo" + $path;
             }
-            return path;
+            return $path;
         },
         init: function (selector) {
             this.selector = selector;
@@ -448,6 +452,9 @@ jQuery(function () {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 this.context = new AudioContext();
                 this.isContextLoaded = true;
+                if (selector.data('loop') == "false") {
+                    this.isLoop = false;
+                }
             }
             // console.log(this.path, 'init ok');
         },
@@ -464,7 +471,7 @@ jQuery(function () {
                     $player.source = $player.context.createBufferSource();
                     $player.source.buffer = buffer;
                     $player.source.connect($player.context.destination);
-                    $player.source.loop = true;
+                    if ($player.isLoop) $player.source.loop = true;
                     $player.isSourceLoaded = true;
                     $player.source.start(0);
                     $player.uiPlay();
@@ -472,6 +479,7 @@ jQuery(function () {
                     console.log("Erreur lors du décodage des données audio ", e.err);
                 });
             }
+            this.uiWait();
             $request.send();
         },
         stop: function () {
@@ -482,24 +490,30 @@ jQuery(function () {
             }
             this.uiInit();
         },
+        uiWait: function () {
+            // notched circle loading
+            this.uiInit();
+            this.selector.children('i').removeClass('file audio outline orange');
+            this.selector.addClass('warning');
+            this.selector.children('i').addClass('notched circle loading');
+
+        },
         uiPause: function () {
             this.uiInit();
-            this.selector.removeClass('error');
+            this.selector.children('i').removeClass('play file audio outline orange');
             this.selector.addClass('success');
-            this.selector.children('i').removeClass('pause file audio outline orange');
             this.selector.children('i').addClass('play');
         },
         uiPlay: function () {
             this.uiInit();
-            this.selector.removeClass('success');
-            this.selector.addClass('error');
             this.selector.children('i').removeClass('play file audio outline orange');
+            this.selector.addClass('error');
             this.selector.children('i').addClass('pause');
         },
         uiInit: function () {
             $('.bee-player').each(function () {
-                $(this).removeClass('success error');
-                $(this).children('i').removeClass('pause play');
+                $(this).removeClass('success error warning');
+                $(this).children('i').removeClass('pause play notched circle loading');
                 $(this).children('i').addClass('file audio outline orange');
             })
         },
