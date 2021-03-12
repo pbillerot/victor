@@ -323,3 +323,15 @@ func CopyTree(src, dst string, options *CopyTreeOptions) error {
 	}
 	return nil
 }
+
+// CreateDir Création d'un répertoire si non existe
+func CreateDir(pathDir string) error {
+	if _, err := os.Stat(pathDir); os.IsNotExist(err) {
+		// path/to/whatever does not exist
+		err = os.MkdirAll(pathDir, 0744)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

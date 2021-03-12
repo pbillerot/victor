@@ -58,31 +58,31 @@
 {{ else if $record.IsWord }}
 <!-- WORD -->
 <div class="ui compact message bee-tap bee-press bee-download" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="{{$record.Path}}">
+    data-path="/content{{$record.Path}}">
     <i class="file word outline blue large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsExcel }}
 <!-- EXCEL -->
 <div class="ui compact message bee-tap bee-press bee-download" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="{{$record.Path}}">
+    data-path="/content{{$record.Path}}">
     <i class="file excel outline blue large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsPowerpoint }}
 <!-- POWERPOINT -->
 <div class="ui compact message bee-tap bee-press bee-download" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="{{$record.Path}}">
+    data-path="/content{{$record.Path}}">
     <i class="file powerpoint outline blue large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsDraw }}
 <!-- DRAW -->
 <a class="ui compact message bee-tap bee-press" href="/content{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="{{$record.Path}}" download>
+    data-path="/content{{$record.Path}}" download>
     <i class="file image outline blue large icon"></i>{{$record.Base}}
 </a>
-{{ else if (eq $record.Ext ".wav")}}
-<!-- WAV -->
+{{ else if $record.IsAudio}}
+<!-- AUDIO -->
 <div class="ui compact message bee-modal-player bee-press" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="{{$record.Path}}">
+    data-path="/content{{$record.Path}}">
     <i class="file audio orange large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsText }}

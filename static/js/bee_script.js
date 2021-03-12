@@ -25,6 +25,9 @@ jQuery(function () {
         var $data = response.results
         // généralion du  tree en html
         var $html = "";
+        // Ajout de la racine
+        $html += '<div class="item"><i class="home icon"></i><div class="content"><a href="" class="header" data-path="/">...</a></div></div>';
+
         var $rang = 1;
         for (i = 0; i < $data.length; i++) {
             if ($data[i].rang > $rang) {

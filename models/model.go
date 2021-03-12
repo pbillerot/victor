@@ -34,6 +34,7 @@ type HugoFile struct {
 	Ext          string
 	HugoPath     string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
 	Inline       bool   // page en ligne et visible
+	IsAudio      bool
 	IsDir        bool
 	IsDraw       bool
 	IsExcel      bool
@@ -73,12 +74,16 @@ type HugoPathInfo struct {
 
 // AppConfig structure du fichier de configuration de l'application app.conf
 type AppConfig struct {
+	Appname     string
+	Version     string
 	Title       string
 	Description string
-	Version     string
+	Background  string
 	Favicon     string
 	Icon        string
 	HugoRacine  string // /volshare/foirexpo
+	HugoTheme   string
+	HelpEditor  string
 	// Calculé dans main
 	HugoContentDir string // /volshare/foirexpo/content
 	HugoPrivateDir string // /volshare/foirexpo/private
@@ -143,7 +148,7 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.IsText = true
 		record.Order = 1
 	}
-	if contains([]string{".jpeg", ".jpg", ".png", ".svg"}, record.Ext) {
+	if contains([]string{".jpeg", ".jpg", ".png", ".svg", ".gif"}, record.Ext) {
 		record.IsImage = true
 		record.Order = 2
 	}
@@ -167,17 +172,22 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.IsDraw = true
 		record.Order = 4
 	}
+	if contains([]string{".wav", ".mp3", ".ogg", ".wma"}, record.Ext) {
+		record.IsAudio = true
+		record.Order = 4
+	}
 
 	ext := filepath.Ext(path)
 	if record.Base == "config.yaml" {
-		// le fichier a son clone dans /data
+		// le fichier a son clone dans /config/_default
 		// lecture du fichier yaml
 		content, err := ioutil.ReadFile(pathAbsolu)
 		if err != nil {
 			logs.Error(err)
 		}
 		record.Content = string(content[:])
-		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/data/", 1)
+		// Recopie dans /config/_default/
+		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/config/_default/", 1)
 	} else if ext == ".md" || ext == ".yaml" {
 		// lecture des metadata du fichier markdown
 		content, err := ioutil.ReadFile(pathAbsolu)

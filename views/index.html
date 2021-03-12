@@ -92,7 +92,12 @@
             <section class="ui segment" id="bee-dropzone">
                 {{template "_folder.html" .}}
             </section>
-            <div class="ui compact info message bee-hidden" id="bee-progress">
+            <div class="ui right floated image label">
+                <img src="{{.Config.Favicon}}">
+                {{.Config.Appname}}
+                <div class="detail">{{.Config.Version}}</div>
+            </div>
+            <div class="ui left floated compact info message bee-hidden" id="bee-progress">
             </div>
         </div>
     </main>
@@ -213,7 +218,6 @@
     <!-- CONTEXTE PAGE -->
     <div id="bee-ctx" data-folder="{{.Folder}}">
     </div>
-
     {{template "_foot.html" .}}
 </body>
 
