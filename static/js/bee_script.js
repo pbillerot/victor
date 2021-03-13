@@ -110,6 +110,7 @@ jQuery(function () {
             var qselected = $('.bee-selected').length
             if (qselected > 0) {
                 $('.bee-modal-rename').show();
+                $('.bee-select-download').show();
             }
             if (qselected > 0) {
                 $('.bee-press-visible').show();
@@ -127,6 +128,7 @@ jQuery(function () {
             }
             if (qselected > 1) {
                 $('.bee-modal-rename').hide();
+                $('.bee-select-download').hide();
             }
         }
         event.preventDefault();
@@ -168,6 +170,7 @@ jQuery(function () {
             $(this).addClass("bee-selected");
             $('.bee-press-visible').show();
             $('.bee-modal-rename').show();
+            $('.bee-select-download').show();
             // Element à cacher sur press et sur mobile
             $('.bee-press-hidden-mobile').each(function () {
                 $(this).addClass('bee-hidden-mobile')
@@ -218,6 +221,17 @@ jQuery(function () {
                     $form.submit();
                 }
             }).modal('show');
+        event.preventDefault();
+    });
+    // ACTION DOWNLOAD
+    $('.bee-select-download').on('click', function (event) {
+        // Recherche du fichier sélectionné qui sera unique
+        $selected = getSelectedPathHtml();
+        var link = document.createElement('a');
+        link.href = $selected.paths;
+        link.download = $selected.baseUnique;
+        link.click();
+        // window.open($selected.paths, '_blank');
         event.preventDefault();
     });
     // ACTION CONFIRMATION
