@@ -39,32 +39,32 @@
 {{ if $record.IsImage }}
 <!-- IMAGE -->
 <div class="ui compact message bee-press bee-tap" data-action="/victor/image{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="/content{{$record.Path}}">
+    data-path="{{$record.Path}}">
     <img class="ui middle aligned mini image" src="/content{{$record.Path}}">
     <span>{{$record.Base}}</span>
 </div>
 {{ else if (eq $record.Ext ".pdf")}}
 <!-- PDF -->
 <div class="ui compact message bee-tap bee-press" data-action="/victor/pdf{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="/content{{$record.Path}}">
+    data-path="{{$record.Path}}">
     <i class="file pdf outline red large icon"></i>{{$record.Base}}
 </div>
 {{ else if (eq $record.Ext ".yaml")}}
 <!-- YAML -->
 <div class="ui compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="/content{{$record.Path}}">
+    data-path="{{$record.Path}}">
     <i class="file code outline brown large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsAudio}}
 <!-- AUDIO -->
 <div class="ui compact message bee-modal-player bee-press" data-action="/content{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="/content{{$record.Path}}">
+    data-path="{{$record.Path}}">
     <i class="file audio orange large icon"></i>{{$record.Base}}
 </div>
 {{ else if $record.IsText }}
 <!-- MARKDOWN -->
 <div class="ui {{$color}} compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}"
-    data-base="{{$record.Base}}" data-path="/content{{$record.Path}}">
+    data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file alternate outline green large icon"></i>
     <span class="ui blue medium text">
         <b class="searchable">{{$record.Base}}</b>
@@ -101,7 +101,7 @@
 {{ else }}
 <!-- INCONNU -->
 <div class="ui compact message bee-press" data-action="/victor/document{{$record.Path}}" data-base="{{$record.Base}}"
-    data-path="/content{{$record.Path}}">
+    data-path="{{$record.Path}}">
     <i class="file outline large icon"></i>{{$record.Base}}
 </div>
 {{end}}
