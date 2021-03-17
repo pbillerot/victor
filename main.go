@@ -28,6 +28,9 @@ func init() {
 	if val, ok := config.String("HelpEditor"); ok == nil {
 		models.Config.HelpEditor = val
 	}
+	if val, ok := config.String("github"); ok == nil {
+		models.Config.Github = val
+	}
 	if val, ok := config.String("hugo_theme"); ok == nil {
 		models.Config.HugoTheme = val
 	}

@@ -95,11 +95,11 @@
             <section class="ui segment" id="bee-dropzone">
                 {{template "_folder.html" .}}
             </section>
-            <div class="ui right floated image label">
-                <img src="{{.Config.Favicon}}">
+            <a class="ui right floated image label" href="{{.Config.Github}}" target="_blank">
+                <i class="github icon"></i>
                 {{.Config.Appname}}
                 <div class="detail">{{.Config.Version}}</div>
-            </div>
+            </a>
             <div class="ui left floated compact info message bee-hidden" id="bee-progress">
             </div>
         </div>
