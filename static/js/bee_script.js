@@ -416,12 +416,12 @@ jQuery(function () {
         window.location.reload();
     });
 
-    // MODAL PALYER
+    // MODAL PLaYER
     $('.bee-modal-player').on('click', function (event) {
         // titre du morceau
         $('#bee-modal-player').find('p').html($(this).data('base'));
         // path du morceau
-        $('.bee-player').data('path', $(this).data('path'));
+        $('.bee-player').data('path', '/content/'+$(this).data('path'));
         $('#bee-modal-player')
             .modal({
                 closable: false,
