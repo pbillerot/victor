@@ -46,7 +46,7 @@ main {
 }
 
 bee-press,
-.bee-tap, .bee-press {
+.bee-tap, .bee-press, .bee-player {
     cursor: pointer;
 }
 .ui.label {

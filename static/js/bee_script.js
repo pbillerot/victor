@@ -427,6 +427,7 @@ jQuery(function () {
                 closable: false,
                 onDeny: function () {
                     $player.stop();
+                    $player.path = null;
                     return true;
                 },
                 onVisible: function () {
