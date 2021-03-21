@@ -641,6 +641,8 @@ func (c *MainController) Action() {
 		pushDev(c)
 	case "pushProd":
 		pushProd(c)
+	case "gitUpdateTheme":
+		gitUpdateTheme(c)
 	}
 	c.Ctx.Redirect(302, "/victor/folder"+c.GetSession("Folder").(string))
 }
@@ -681,4 +683,24 @@ func pushProd(c *MainController) {
 	flash.Success(string(out))
 	flash.Store(&c.Controller)
 	logs.Info("pushProd", string(out))
+}
+
+// gitUpdateTheme : Mise à jour du thème à partir du référentiel git
+func gitUpdateTheme(c *MainController) {
+	flash := beego.ReadFromRequest(&c.Controller)
+
+	cmd := exec.Command("git", "submodule", "update", "--remote")
+	logs.Info("gitUpdateTheme", cmd)
+	cmd.Dir = models.Config.HugoRacine
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Error("gitUpdateTheme", err)
+		flash.Error("gitUpdateTheme : %v", err)
+		flash.Error(string(out))
+		flash.Store(&c.Controller)
+		return
+	}
+	flash.Success(string(out))
+	flash.Store(&c.Controller)
+	logs.Info("gitUpdateTheme", string(out))
 }
