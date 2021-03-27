@@ -32,6 +32,12 @@
 							<i class="edit icon"></i>
 						</div>
 						{{end}}
+						{{ if .Record.IsDrawio }}
+						<div class="ui icon green button bee-drawio" data-src="/content{{.File}}"
+							title="Modifier le dessin">
+							<i class="edit icon"></i>
+						</div>
+						{{end}}
 						<div id="button_validate" class="ui icon red button bee-submit disabled bee-hidden" title="Enregistrer">
 							<i class="save icon"></i>
 						</div>
@@ -48,6 +54,8 @@
 			<!-- DOCUMENT -->
 			{{ if .Record.IsImage }}
 			{{template "_image.html" .}}
+			{{ else if .Record.IsDrawio }}
+			{{template "_drawio.html" .}}
 			{{ else if .Record.IsPdf }}
 			{{template "_pdf.html" .}}
 			{{ else if .Record.IsText }}

@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/base64"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -94,6 +95,15 @@ func (c *MainController) Image() {
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
+	if record.IsDrawio {
+		dataURL, err := shutil.EncodePngToDataURL(strings.Replace(record.PathAbsolu, ".drawio", ".png", -1))
+		if err != nil {
+			c.Data["DataURL"] = template.URL("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=")
+		} else {
+			c.Data["DataURL"] = template.URL(dataURL)
+		}
+		// logs.Info("dataURL=[%s]", dataURL)
+	}
 	c.TplName = "file.html"
 }
 

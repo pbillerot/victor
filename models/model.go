@@ -30,13 +30,13 @@ type HugoFile struct {
 	DatePublish  string
 	Dir          string
 	Draft        string
-	Expired      bool // page dont la date a expirée
-	Ext          string
+	Expired      bool   // page dont la date a expirée
+	Ext          string // extension du fichier
 	HugoPath     string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
 	Inline       bool   // page en ligne et visible
 	IsAudio      bool
 	IsDir        bool
-	IsDraw       bool
+	IsDrawio     bool
 	IsExcel      bool
 	IsImage      bool
 	IsPdf        bool
@@ -153,6 +153,10 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.IsImage = true
 		record.Order = 2
 	}
+	if contains([]string{".drawio"}, record.Ext) {
+		record.IsDrawio = true
+		record.Order = 2
+	}
 	if contains([]string{".pdf"}, record.Ext) {
 		record.IsPdf = true
 		record.Order = 3
@@ -167,10 +171,6 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	}
 	if contains([]string{".ppt", ".pps", ".pptx", ".ppsx", ".odp"}, record.Ext) {
 		record.IsPowerpoint = true
-		record.Order = 4
-	}
-	if contains([]string{".odg", ".pub", ".drawio"}, record.Ext) {
-		record.IsDraw = true
 		record.Order = 4
 	}
 	if contains([]string{".wav", ".mp3", ".ogg", ".wma"}, record.Ext) {

@@ -1,6 +1,8 @@
 package shutil
 
 import (
+	"bufio"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -334,4 +336,23 @@ func CreateDir(pathDir string) error {
 		}
 	}
 	return nil
+}
+
+// EncodePngToDataURL Lecture d'une image
+// et retourne la chaîne à intégrer dans l'attribut src d'un img
+func EncodePngToDataURL(pathDir string) (string, error) {
+	// Open file on disk.
+	f, err := os.Open(pathDir)
+	if err != nil {
+		return "", err
+	}
+	// Read entire JPG, PNG into byte slice.
+	reader := bufio.NewReader(f)
+	content, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return "", err
+	}
+	// Encode as base64.
+	encoded := base64.StdEncoding.EncodeToString(content)
+	return "data:image/png;base64," + encoded, nil
 }
