@@ -22,7 +22,6 @@ main {
 }
 .ui.fixed.menu {
     background-color: #f9fafb;
-    z-index: 0; /* pour les besoins de bee-drawio */
 }
 .ui.grid>.row {
     padding-left: 1em;

@@ -141,6 +141,13 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.IsDir = false
 	}
 	record.Ext = filepath.Ext(path)
+
+	// lecture du fichier
+	content, err := ioutil.ReadFile(pathAbsolu)
+	if err != nil {
+		logs.Error(err)
+	}
+
 	record.Order = 9
 	if record.IsDir {
 		record.Order = 0
@@ -150,32 +157,35 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		record.Order = 1
 	}
 	if contains([]string{".jpeg", ".jpg", ".png", ".svg", ".gif"}, record.Ext) {
+		if strings.Contains(string(content[:]), "Cmxfile") {
+			record.IsDrawio = true
+		}
 		record.IsImage = true
-		record.Order = 2
+		record.Order = 1
 	}
 	if contains([]string{".drawio"}, record.Ext) {
 		record.IsDrawio = true
-		record.Order = 2
+		record.Order = 1
 	}
 	if contains([]string{".pdf"}, record.Ext) {
 		record.IsPdf = true
-		record.Order = 3
+		record.Order = 1
 	}
 	if contains([]string{".doc", ".dot", ".docx", ".dotx", ".odt"}, record.Ext) {
 		record.IsWord = true
-		record.Order = 4
+		record.Order = 1
 	}
 	if contains([]string{".xls", ".xlsx", ".ods"}, record.Ext) {
 		record.IsExcel = true
-		record.Order = 4
+		record.Order = 1
 	}
 	if contains([]string{".ppt", ".pps", ".pptx", ".ppsx", ".odp"}, record.Ext) {
 		record.IsPowerpoint = true
-		record.Order = 4
+		record.Order = 1
 	}
 	if contains([]string{".wav", ".mp3", ".ogg", ".wma"}, record.Ext) {
 		record.IsAudio = true
-		record.Order = 4
+		record.Order = 1
 	}
 
 	ext := filepath.Ext(path)
@@ -190,11 +200,6 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		// Recopie dans /config/_default/
 		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/config/_default/", 1)
 	} else if ext == ".md" || ext == ".yaml" {
-		// lecture des metadata du fichier markdown
-		content, err := ioutil.ReadFile(pathAbsolu)
-		if err != nil {
-			logs.Error(err)
-		}
 		// Extraction des meta entre les --- meta ---
 		var meta HugoFileMeta
 		err = yaml.Unmarshal(content, &meta)

@@ -26,15 +26,14 @@
 				</div>
 				<div class="item">
 					<div class="ui buttons">
-						{{ if .Record.IsImage }}
-						<div class="ui icon green button bee-popup-image-editor" data-src="/content{{.File}}"
-							title="Modifier l'image">
-							<i class="edit icon"></i>
-						</div>
-						{{end}}
 						{{ if .Record.IsDrawio }}
 						<div class="ui icon green button bee-drawio" data-src="/content{{.File}}"
 							title="Modifier le dessin">
+							<i class="edit icon"></i>
+						</div>
+						{{ else if .Record.IsImage }}
+						<div class="ui icon green button bee-popup-image-editor" data-src="/content{{.File}}"
+							title="Modifier l'image">
 							<i class="edit icon"></i>
 						</div>
 						{{end}}
@@ -52,10 +51,10 @@
 		<div class="ui container" style="height:90%">
 			{{template "_flash.html" .}}
 			<!-- DOCUMENT -->
-			{{ if .Record.IsImage }}
-			{{template "_image.html" .}}
-			{{ else if .Record.IsDrawio }}
+			{{ if .Record.IsDrawio }}
 			{{template "_drawio.html" .}}
+			{{ else if .Record.IsImage }}
+			{{template "_image.html" .}}
 			{{ else if .Record.IsPdf }}
 			{{template "_pdf.html" .}}
 			{{ else if .Record.IsText }}

@@ -431,10 +431,7 @@ func (c *MainController) FileCp() {
 
 // FileNew Nouveau document à partir du modele.md
 func (c *MainController) FileNew() {
-	path := "/" + c.Ctx.Input.Param(":path")
-	if c.Ctx.Input.Param(":ext") != "" {
-		path += "." + c.Ctx.Input.Param(":ext")
-	}
+	// path := "/" + c.Ctx.Input.Param(":path")
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
 
@@ -450,8 +447,13 @@ func (c *MainController) FileNew() {
 		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		return
 	}
-
-	err = ioutil.WriteFile(newFile, data, 0644)
+	if strings.Contains(newName, ".md") {
+		err = ioutil.WriteFile(newFile, data, 0644)
+	} else if strings.Contains(newName, ".drawio") {
+		err = ioutil.WriteFile(newFile, []byte(`<mxfile host="app.diagrams.net" modified="2021-03-27T19:06:57.160Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" etag="Yp9FEHdANYuDQw8SWEj7" version="14.5.3" type="device"><diagram id="YCoROl1Z30g34DxwZvgp" name="Page-1"></diagram></mxfile>`), 0644)
+	} else {
+		err = ioutil.WriteFile(newFile, []byte("Created by Victor"), 0644)
+	}
 	if err != nil {
 		msg := fmt.Sprintf("Nouveau fichier %s : %s", newFile, err)
 		logs.Error(msg)
