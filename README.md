@@ -9,6 +9,6 @@ Outils utilisés
 - Codemirror https://codemirror.net/doc/manual.html
 - Jquery Finger https://github.com/ngryman/jquery.finger 
 - Filerobot Image Editor https://github.com/scaleflex/filerobot-image-editor
-- Lighbox2 https://lokeshdhakar.com/projects/lightbox2/
+- Drawio https://github.com/jgraph/drawio-integration
 
 

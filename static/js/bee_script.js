@@ -673,6 +673,8 @@ jQuery(function () {
   $('.bee-drawio').on('click', function (event) {
     var url = 'https://embed.diagrams.net/?embed=1&ui=atlas&spin=1&modified=unsavedChanges&proto=json';
     var source = $('#bee-drawio')[0];
+    // var title = source.getAttribute('title')
+    // url += '&title=' + title;
     if (source.drawIoWindow == null || source.drawIoWindow.closed) {
       // Implements protocol for loading and exporting with embedded XML
       var receive = function (evt) {
@@ -717,7 +719,7 @@ jQuery(function () {
       var $target = '_blank';
       source.drawIoWindow = window.open(url, $target, computeWindow($posx, $posy, $width, $height, false));
       // source.drawIoWindow = window.open(url);
-  }
+    }
     else {
       // Shows existing editor window
       source.drawIoWindow.focus();
