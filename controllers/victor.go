@@ -437,20 +437,31 @@ func (c *MainController) FileNew() {
 
 	newName := sanitize.Name(c.GetString("new_name"))
 	newFile := models.Config.HugoContentDir + pathFolder + "/" + newName
-	modele := models.Config.HugoRacine + "/content/site/modele.md"
-	data, err := ioutil.ReadFile(modele)
-	if err != nil {
-		msg := fmt.Sprintf("Modèle fichier %s : %s", modele, err)
-		logs.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-		return
-	}
 	if strings.Contains(newName, ".md") {
+		modele := models.Config.HugoRacine + "/content/site/modele.md"
+		data, err := ioutil.ReadFile(modele)
+		if err != nil {
+			msg := fmt.Sprintf("Modèle fichier %s : %s", modele, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+			return
+		}
 		err = ioutil.WriteFile(newFile, data, 0644)
 	} else if strings.Contains(newName, ".drawio") {
-		err = ioutil.WriteFile(newFile, []byte(`<mxfile host="app.diagrams.net" modified="2021-03-27T19:06:57.160Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" etag="Yp9FEHdANYuDQw8SWEj7" version="14.5.3" type="device"><diagram id="YCoROl1Z30g34DxwZvgp" name="Page-1"></diagram></mxfile>`), 0644)
+		modele := "./static/img/new.png"
+		data, err := ioutil.ReadFile(modele)
+		if err != nil {
+			msg := fmt.Sprintf("Modèle fichier %s : %s", modele, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+			return
+		}
+		newFile = strings.Replace(newFile, ".drawio", ".png", 1)
+		err = ioutil.WriteFile(newFile, data, 0644)
 	} else {
 		err = ioutil.WriteFile(newFile, []byte("Created by Victor"), 0644)
 	}
