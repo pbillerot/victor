@@ -75,6 +75,24 @@ jQuery(function () {
     });
   });
 
+  // Ouverture d'un fichier pour modification
+  $('.bee-file-edit').on('tap', function (event) {
+    // Mode sélection unique
+    var $action = $(this).data('action')
+    // Ouverture de l'éditeur viewer dans une fenêtre séparée à droite
+    var $height = 'max';
+    var $width = 'large';
+    var $posx = 'right';
+    var $posy = '5';
+    var $target = 'hugo-file';
+    if (window.opener == null) {
+      window.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+    } else {
+      window.opener.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
+    }
+    event.preventDefault();
+  });
+
   // Ouverture d'un dossier ou fichier ou sélection multiple
   $('.bee-tap').on('tap', function (event) {
     if ($bee_selector == false) {

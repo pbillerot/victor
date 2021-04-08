@@ -1,0 +1,18 @@
+# config.yaml
+baseURL: "/"
+languageCode: "fr-FR"
+title: "My New Hugo Site"
+theme: "beedream"
+
+params:
+  enableSearch: false
+
+outputs:
+  home: ["HTML", "RSS", "JSON"]
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    style: friendly # monokai dracula friendly

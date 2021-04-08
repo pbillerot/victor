@@ -433,22 +433,23 @@ func (c *MainController) FileCp() {
 func (c *MainController) FileNew() {
 	// path := "/" + c.Ctx.Input.Param(":path")
 	pathFolder := c.GetSession("Folder").(string)
+	if pathFolder == "/" {
+		pathFolder = ""
+	}
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	newName := sanitize.Name(c.GetString("new_name"))
+	newName := c.GetString("new_name")
 	newFile := models.Config.HugoContentDir + pathFolder + "/" + newName
 	if strings.Contains(newName, ".md") {
-		modele := models.Config.HugoRacine + "/content/site/modele.md"
-		data, err := ioutil.ReadFile(modele)
+		err = newDocument(c, pathFolder, newName)
 		if err != nil {
-			msg := fmt.Sprintf("Modèle fichier %s : %s", modele, err)
+			msg := fmt.Sprintf("Modèle fichier %s : %s", newName, err)
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
 		}
-		err = ioutil.WriteFile(newFile, data, 0644)
 	} else if strings.Contains(newName, ".drawio") {
 		modele := "./static/img/new.png"
 		data, err := ioutil.ReadFile(modele)
@@ -676,6 +677,7 @@ func pushDev(c *MainController) {
 
 	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivateDir,
 		"--environment", "hugo", "--cleanDestinationDir")
+	// cmd := exec.Command("ls", "-l")
 	logs.Info("pushDev", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
@@ -686,6 +688,26 @@ func pushDev(c *MainController) {
 		flash.Store(&c.Controller)
 	}
 	logs.Info("pushDev", string(out))
+}
+
+// newDocument : Exécution du moteur Hugo pour créer un nouveau document
+func newDocument(c *MainController, folder string, filename string) error {
+	folder = strings.TrimPrefix(folder, "/")
+	var cmd *exec.Cmd
+	if folder == "" {
+		cmd = exec.Command("hugo", "new", filename)
+	} else {
+		cmd = exec.Command("hugo", "new", folder+"/"+filename)
+	}
+	// cmd := exec.Command("ls", "-l")
+	logs.Info("newDocument", cmd)
+	cmd.Dir = models.Config.HugoRacine
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Error("newDocument", err)
+	}
+	logs.Info("newDocument", string(out))
+	return err
 }
 
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
