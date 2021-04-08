@@ -71,10 +71,12 @@ func init() {
 		web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
 		web.SetStaticPath("/", models.Config.HugoPublicDir)
 	} else {
+		// path relatif à la webapp victor
 		web.SetStaticPath("/content", models.Config.HugoContentDir)
 		web.SetStaticPath("/hugo", models.Config.HugoRacine+"/"+models.Config.HugoPrivateDir)
 		web.SetStaticPath("/", models.Config.HugoRacine+"/"+models.Config.HugoPublicDir)
 	}
+	web.SetStaticPath("/help", "site/public/")
 
 	initConfigHugo()
 }

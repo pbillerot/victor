@@ -20,5 +20,5 @@ mem*
 *.tmp
 victor
 conf/custom.conf
-site/public
+#site/public
 site/private

@@ -1,5 +1,5 @@
 # config.yaml
-baseURL: "/"
+baseURL: "/help/"
 languageCode: "fr-FR"
 title: "My New Hugo Site"
 theme: "beedream"

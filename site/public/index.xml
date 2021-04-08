@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Guide d&#39;utilisation de Victor on My New Hugo Site</title>
+    <link>/help/</link>
+    <description>Recent content in Guide d&#39;utilisation de Victor on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>fr-FR</language>
+    <lastBuildDate>Wed, 07 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/help/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Deploiement</title>
+      <link>/help/technique/deploiement/</link>
+      <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/help/technique/deploiement/</guid>
+      <description>&lt;p&gt;Résumé de l&amp;rsquo;article&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Installation</title>
+      <link>/help/technique/installation/</link>
+      <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/help/technique/installation/</guid>
+      <description>&lt;p&gt;Résumé de l&amp;rsquo;article&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

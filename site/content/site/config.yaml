@@ -3,7 +3,7 @@
 # Configuration du site
 # à recopier dans /content/site/config.yaml
 #
-
+baseURL: "/help/"
 # TITRE
 params:
   title: "VICTOR"
@@ -28,8 +28,12 @@ menu:
     weight: 10
     pre: "help" # nom de l'icône de la bibliothèque des icônes
   - name: "Bibliothèque des icônes"
-    url: "https://fontawesome.com/icons?d=gallery&p=2&m=free"
+    url: "https://semantic-ui.com/elements/icon.html"
     weight: 20 # pour trier le menu
     pre: "font awesome" # nom de l'icône de la bibliothèque des icônes
+  - name: "Documentation Hugo"
+    url: "https://gohugo.io/"
+    weight: 30 # pour trier le menu
+    pre: "hospital symbol" # nom de l'icône de la bibliothèque des icône  
 
 ---

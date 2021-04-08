@@ -98,6 +98,8 @@ type Breadcrumb struct {
 	IsLast bool
 }
 
+var err error
+
 // GetFilesFolder retourne la liste des fichiers du <folder>
 func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
 	// suppression du / à la fin
@@ -124,6 +126,7 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	if path == "" {
 		return
 	}
+	var content []byte
 
 	record.PathAbsolu = pathAbsolu
 	record.Path = path // on enlève la partie hugoDirectory du chemin
@@ -139,14 +142,13 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		}
 	} else {
 		record.IsDir = false
+		// lecture du fichier
+		content, err = ioutil.ReadFile(pathAbsolu)
+		if err != nil {
+			logs.Error(err)
+		}
 	}
 	record.Ext = filepath.Ext(path)
-
-	// lecture du fichier
-	content, err := ioutil.ReadFile(pathAbsolu)
-	if err != nil {
-		logs.Error(err)
-	}
 
 	record.Order = 9
 	if record.IsDir {
