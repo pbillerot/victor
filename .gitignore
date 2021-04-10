@@ -19,6 +19,5 @@ mem*
 # bee
 *.tmp
 victor
-conf/custom.conf
 #site/public
 site/private

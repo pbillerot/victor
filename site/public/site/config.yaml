@@ -1,7 +1,7 @@
 ---
 #
 # Configuration du site
-# à recopier dans /content/site/config.yaml
+# lien symbolyque /config/-default/config.yaml
 #
 baseURL: "/help/"
 # TITRE

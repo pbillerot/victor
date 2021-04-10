@@ -3,6 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/help/site/</loc>
+    <lastmod>2021-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/tags/</loc>
+    <lastmod>2021-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/tags/technique/</loc>
+    <lastmod>2021-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/help/categories/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
@@ -19,21 +34,6 @@
   
   <url>
     <loc>/help/categories/news/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/help/site/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/help/tags/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/help/tags/technique/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   

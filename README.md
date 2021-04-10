@@ -1,3 +1,17 @@
+---
+# lien symbolyque victor/README.md
+title: "README"
+date: 2021-04-09
+draft: false
+tags:
+- technique
+categories:
+style: bee-doc
+_build:
+   list: false
+---
+<!--more-->
+
 # VICTOR
 
 Explorateur et éditeur de contenu d'un site Web HUGO
@@ -10,5 +24,3 @@ Outils utilisés
 - Jquery Finger https://github.com/ngryman/jquery.finger 
 - Filerobot Image Editor https://github.com/scaleflex/filerobot-image-editor
 - Drawio https://github.com/jgraph/drawio-integration
-
-

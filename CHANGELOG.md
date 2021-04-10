@@ -1,19 +1,20 @@
 ---
+# lien symbolyque victor/CHANGELOG.md
 title: "Quoi de neuf dans Victor ?"
 date: 2021-04-08
 draft: false
 tags:
+- technique
 categories:
 - news
 style: bee-doc
-# Ne sera pas affiché dans le sommaire
 _build:
    list: false
 ---
 
 <!--more-->
 
-[2.6.0] - 8 avril 2021
+Version 2.6.0 du 10 avril 2021
 ---------------------------
 - `added` Gestion du changelog
 - `added` aide intégrée dans la webapp /help

@@ -191,27 +191,28 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	}
 
 	ext := filepath.Ext(path)
-	if record.Base == "config.yaml" && record.Dir == "/site" {
-		// le fichier a son clone dans /config/_default
-		// lecture du fichier yaml
-		content, err := ioutil.ReadFile(pathAbsolu)
-		if err != nil {
-			logs.Error(err)
-		}
-		record.Content = string(content[:])
-		// Recopie dans /config/_default/
-		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/config/_default/", 1)
-	} else if record.Base == "default.md" && record.Dir == "/site" {
-		// le fichier a son clone dans /archetypes/
-		// lecture du fichier
-		content, err := ioutil.ReadFile(pathAbsolu)
-		if err != nil {
-			logs.Error(err)
-		}
-		record.Content = string(content[:])
-		// Recopie dans /archetypes/
-		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/archetypes/", 1)
-	} else if ext == ".md" || ext == ".yaml" {
+	// if record.Base == "config.yaml" && record.Dir == "/site" {
+	// 	// le fichier a son clone dans /config/_default
+	// 	// lecture du fichier yaml
+	// 	content, err := ioutil.ReadFile(pathAbsolu)
+	// 	if err != nil {
+	// 		logs.Error(err)
+	// 	}
+	// 	record.Content = string(content[:])
+	// 	// Recopie dans /config/_default/
+	// 	record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/config/_default/", 1)
+	// } else if record.Base == "default.md" && record.Dir == "/site" {
+	// 	// le fichier a son clone dans /archetypes/
+	// 	// lecture du fichier
+	// 	content, err := ioutil.ReadFile(pathAbsolu)
+	// 	if err != nil {
+	// 		logs.Error(err)
+	// 	}
+	// 	record.Content = string(content[:])
+	// 	// Recopie dans /archetypes/
+	// 	record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/archetypes/", 1)
+	// } else if ext == ".md" || ext == ".yaml" {
+	if ext == ".md" || ext == ".yaml" {
 		// Extraction des meta entre les --- meta ---
 		var meta HugoFileMeta
 		err = yaml.Unmarshal(content, &meta)
@@ -248,7 +249,7 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		} else if record.Base == "index.md" {
 			record.HugoPath = strings.Replace(record.Path, "index.md", "", 1)
 		} else {
-			record.HugoPath = strings.Replace(record.Path, ".md", "", 1) + "/"
+			record.HugoPath = strings.Replace(strings.ToLower(record.Path), ".md", "", 1) + "/"
 		}
 		// maj meta
 		// for _, v := range meta.Categories {

@@ -144,16 +144,16 @@ func initConfigHugo() {
 				return
 			}
 		}
-		configHugoDst = fmt.Sprintf("%s/content/site/config.yaml", models.Config.HugoRacine)
-		_, err = os.Open(configHugoDst)
-		if os.IsNotExist(err) {
-			err = shutil.CopyFile(configHugoSrc, configHugoDst, false)
-			if err != nil {
-				msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", configHugoSrc, configHugoDst, err)
-				logs.Error(msg)
-				return
-			}
-		}
+		// configHugoDst = fmt.Sprintf("%s/content/site/config.yaml", models.Config.HugoRacine)
+		// _, err = os.Open(configHugoDst)
+		// if os.IsNotExist(err) {
+		// 	err = shutil.CopyFile(configHugoSrc, configHugoDst, false)
+		// 	if err != nil {
+		// 		msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", configHugoSrc, configHugoDst, err)
+		// 		logs.Error(msg)
+		// 		return
+		// 	}
+		// }
 	}
 
 	// remplacer le modèle par défaut par celui du thème
