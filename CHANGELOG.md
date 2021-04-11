@@ -14,7 +14,11 @@ _build:
 
 <!--more-->
 
-Version 2.6.0 du 10 avril 2021
+2.6.1 du 11 avril 2021
+---------------------------
+- `changed` path /victorhelp au lieu de /help
+
+2.6.0 du 10 avril 2021
 ---------------------------
 - `added` Gestion du changelog
 - `added` aide intégrée dans la webapp /help

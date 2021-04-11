@@ -10,6 +10,9 @@ article.main {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+.ui.attached.segment {
+  overflow: auto;
+}
 .ui.bee-segment-image {
   padding: 0;
   margin-top: 0.5em;

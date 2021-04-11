@@ -3,7 +3,7 @@
 # Configuration du site
 # lien symbolyque /config/-default/config.yaml
 #
-baseURL: "/help/"
+baseURL: "/victorhelp/"
 # TITRE
 params:
   title: "VICTOR"
