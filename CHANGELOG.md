@@ -14,6 +14,10 @@ _build:
 
 <!--more-->
 
+2.6.2 du 11 avril 2021
+---------------------------
+- `changed` intégration beedream 1.1.7
+
 2.6.1 du 11 avril 2021
 ---------------------------
 - `changed` path /victorhelp au lieu de /help
