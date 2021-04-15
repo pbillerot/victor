@@ -1,4 +1,3 @@
----
 #
 # Configuration du site
 # lien symbolyque /config/-default/config.yaml
@@ -35,5 +34,3 @@ menu:
     url: "https://gohugo.io/"
     weight: 30 # pour trier le menu
     pre: "hospital symbol" # nom de l'icône de la bibliothèque des icône  
-
----

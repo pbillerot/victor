@@ -57,7 +57,7 @@
 			{{template "_image.html" .}}
 			{{ else if .Record.IsPdf }}
 			{{template "_pdf.html" .}}
-			{{ else if .Record.IsText }}
+			{{ else if .Record.IsMarkdown }}
 			{{template "_document.html" .}}
 			{{ else }}
 			{{template "_document.html" .}}

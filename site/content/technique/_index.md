@@ -1,11 +1,14 @@
 ---
-title: "Deploiement"
-date: 2021-04-08
+title: "Technique Admin"
+date: 2021-04-12
 draft: false
 categories:
 tags:
-- technique
-cover: "/site/media/cloud.jpg"
+cover:
+menu:
+  page:
+    identifier: technique
+    weight: 90
 ---
 
 Résumé de l'article

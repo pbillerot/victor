@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/astaxie/beego/logs"
 	"github.com/beego/beego/v2/core/config"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/pbillerot/victor/models"
 	_ "github.com/pbillerot/victor/routers"

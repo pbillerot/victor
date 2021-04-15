@@ -48,7 +48,7 @@
 <div class="ui compact message bee-tap bee-press" data-action="/victor/pdf{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file pdf outline red large icon"></i>{{$record.Base}}
 </div>
-{{ else if (eq $record.Ext ".yaml")}}
+{{ else if $record.IsSystem}}
 <!-- YAML -->
 <div class="ui compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file code outline brown large icon"></i>{{$record.Base}}
@@ -63,7 +63,7 @@
 <div class="ui compact message bee-modal-player bee-press" data-action="/victor/content{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file audio orange large icon"></i>{{$record.Base}}
 </div>
-{{ else if $record.IsText }}
+{{ else if or $record.IsText $record.IsMarkdown }}
 <!-- MARKDOWN -->
 <div class="ui {{$color}} compact message bee-tap bee-press" data-action="/victor/document{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file alternate outline green large icon"></i>

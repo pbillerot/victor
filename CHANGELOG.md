@@ -14,6 +14,11 @@ _build:
 
 <!--more-->
 
+2.6.3 du 15 avril 2021
+---------------------------
+- `changed` Doc install
+- `added` Editeur étendu yaml toml json dockerfile conf sh ini properties
+
 2.6.2 du 11 avril 2021
 ---------------------------
 - `changed` intégration beedream 1.1.8

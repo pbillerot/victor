@@ -13,7 +13,7 @@ jQuery(function () {
     if ($file.Inline) {
       $('.bee-window-open').removeClass('bee-hidden');
     }
-    if ($file.IsText || $file.IsImage || $file.IsDrawio) {
+    if ($file.IsText || $file.IsImage || $file.IsDrawio || $file.IsMarkdown || $file.IsSystem) {
       $('#button_validate').removeClass('bee-hidden');
     }
   });
@@ -394,11 +394,12 @@ jQuery(function () {
 
   // Coloriage syntaxique CODEMIRROR
   if ($("#bee-editor").length != 0) {
+    var $mode = $("#bee-editor").data("mode");
     var myCodeMirror = CodeMirror.fromTextArea(
       document.getElementById('bee-editor'), {
       lineNumbers: true,
       lineWrapping: true,
-      mode: 'yaml-frontmatter',
+      mode: $mode,
       readOnly: false,
       theme: 'eclipse',
       viewportMargin: 20
@@ -608,25 +609,6 @@ jQuery(function () {
       position: 'bottom right',
       message: $('#toaster').val()
     });
-
-
-  // Coloriage syntaxique
-  if ($("#codemirror-markdown").length != 0) {
-    var myCodeMirror = CodeMirror.fromTextArea(
-      document.getElementById('codemirror-markdown'), {
-      lineNumbers: false,
-      lineWrapping: true,
-      showTrailingSpace: true,
-      mode: 'yaml-frontmatter',
-      readOnly: false,
-      theme: 'eclipse',
-      viewportMargin: 20
-    }
-    );
-    myCodeMirror.on("change", function (cm) {
-      $('#button_validate').removeAttr('disabled');
-    })
-  }
 
   /**
    * Ouverture d'une fenêtre en popup

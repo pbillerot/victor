@@ -133,7 +133,10 @@ func (c *MainController) Pdf() {
 
 // Document Visualiser Modifier un document
 func (c *MainController) Document() {
-	pathFile := "/" + c.Ctx.Input.Param(":path") + "." + c.Ctx.Input.Param(":ext")
+	pathFile := "/" + c.Ctx.Input.Param(":path")
+	if c.Ctx.Input.Param(":ext") != "" {
+		pathFile += "." + c.Ctx.Input.Param(":ext")
+	}
 	setSession(c, "File", pathFile)
 	flash := beego.ReadFromRequest(&c.Controller)
 

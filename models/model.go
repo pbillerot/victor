@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/astaxie/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
 	"gopkg.in/yaml.v2"
 )
 
@@ -39,10 +39,13 @@ type HugoFile struct {
 	IsDrawio     bool
 	IsExcel      bool
 	IsImage      bool
+	IsMarkdown   bool
 	IsPdf        bool
 	IsPowerpoint bool
+	IsSystem     bool
 	IsText       bool
 	IsWord       bool
+	Mode         string // Codemirror mode yaml-frontmatter json conf
 	Order        int
 	Path         string
 	PathAbsolu   string
@@ -154,8 +157,39 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	if record.IsDir {
 		record.Order = 0
 	}
-	if contains([]string{".md", ".yaml", ".conf", ".txt"}, record.Ext) {
+	if contains([]string{".md"}, record.Ext) {
+		record.IsMarkdown = true
+		record.Mode = "yaml-frontmatter"
+		record.Order = 1
+	}
+	if contains([]string{".txt"}, record.Ext) {
 		record.IsText = true
+		record.Mode = ""
+		record.Order = 1
+	}
+	if strings.Contains(strings.ToLower(record.Base), "dockerfile") {
+		record.IsSystem = true
+		record.Mode = "dockerfile"
+		record.Order = 1
+	}
+	if contains([]string{".sh"}, record.Ext) {
+		record.IsSystem = true
+		record.Mode = "shell"
+		record.Order = 1
+	}
+	if contains([]string{".json", ".js"}, record.Ext) {
+		record.IsSystem = true
+		record.Mode = "javascript"
+		record.Order = 1
+	}
+	if contains([]string{".ini", ".conf", ".properties"}, record.Ext) {
+		record.IsSystem = true
+		record.Mode = "properties"
+		record.Order = 1
+	}
+	if contains([]string{".yaml", ".toml"}, record.Ext) {
+		record.IsSystem = true
+		record.Mode = strings.ReplaceAll(record.Ext, ".", "")
 		record.Order = 1
 	}
 	if contains([]string{".jpeg", ".jpg", ".png", ".svg", ".gif"}, record.Ext) {
@@ -212,7 +246,7 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 	// 	// Recopie dans /archetypes/
 	// 	record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/archetypes/", 1)
 	// } else if ext == ".md" || ext == ".yaml" {
-	if ext == ".md" || ext == ".yaml" {
+	if record.IsMarkdown || ext == ".yaml" {
 		// Extraction des meta entre les --- meta ---
 		var meta HugoFileMeta
 		err = yaml.Unmarshal(content, &meta)
@@ -259,6 +293,8 @@ func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record
 		// 	metaTag[v] = append(metaTag[v], id)
 		// }
 
+	} else if record.IsSystem || record.IsText {
+		record.Content = string(content[:])
 	}
 	return
 }
