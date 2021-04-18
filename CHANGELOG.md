@@ -11,13 +11,24 @@ style: bee-doc
 _build:
    list: false
 ---
-
 <!--more-->
+### À venir :
+- bug chemin des images /media non préfixé par /hugo
+- update theme ctrl git submodule
+- bivouac out data - lien bivouac_content dans data
+- doc sauvegarde data - docker
+- Structure du contenu - content/site/config.yaml -> ../config.yaml
+- Doc Environnements Test et Production
+
+2.6.4 du 18 avril 2021
+----------------------
+- avant suppression /victor
 
 2.6.3 du 15 avril 2021
----------------------------
+----------------------
 - `changed` Doc install
 - `added` Editeur étendu yaml toml json dockerfile conf sh ini properties
+- `changed` intégration beedream 1.2.0
 
 2.6.2 du 11 avril 2021
 ---------------------------

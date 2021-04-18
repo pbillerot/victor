@@ -5,7 +5,7 @@ draft: false
 #categories:
 tags:
 - technique
-cover: "/site/media/installation.jpg"
+cover: "/media/installation.jpg"
 style: bee-doc
 menu:
   page:
@@ -15,13 +15,14 @@ menu:
 *Guide pour l'administrateur technique*
 <!--more-->
 {{< toc >}}
+{{< diaporama >}}
 
 Je vous propose d'installer une plateforme complète pour héberger notre application **Victor**.
 
-Nous utiliserons une VM (Machine Virtuelle) [DEBIAN Buster](https://fr.wikipedia.org/wiki/Debian) pour accueillir notre plateforme avec le gestionnaire de conteneur [Docker](https://fr.wikipedia.org/wiki/Docker_(logiciel)) installé.
+Nous utiliserons une VM (Machine Virtuelle) [DEBIAN 10](https://fr.wikipedia.org/wiki/Debian) avec le gestionnaire de conteneur [Docker](https://fr.wikipedia.org/wiki/Docker_(logiciel)) installé.
 
-Ce document ne décrit pas l'installation d'une VM Debian.  
-Pour ma part je loue une VPS Debian chez l'hébergeur [OVH](https://www.ovhcloud.com/fr/vps/)
+Ce document ne décrit pas l'installation d'une VM Debian et de Docker.  
+Pour ma part je loue une **VPS Debian 10 Docker** chez l'hébergeur [OVH](https://www.ovhcloud.com/fr/vps/) (1 vCore 2 Go 20 Go 1 domaine.eu pour 46.16 €/an)
 
 ## Prérequis du système hôte
 
@@ -58,7 +59,7 @@ OpenSSL version: OpenSSL 1.1.1d  10 Sep 2019
 
 ## La plateforme Docker
 
-{{< image image="/technique/docker.png" >}}
+{{< image image="/media/docker.png" >}}
 
 Notre plateforme sera composée de 4 containers :
 
@@ -74,29 +75,33 @@ Pour plus de confort, j'utilise
 - [Portainer](https://korben.info/portainer-io-un-outil-graphique-pour-gerer-vos-environnements-docker-en-toute-securite.html) pour gérer graphiquement l'environnement Docker  
 - [Filebrowser](https://filebrowser.org/features) pour manipuler les fichiers du répertoire partagé (volshare)
 
-Les 4 containers ont accès à la même ressource de fichiers `volshare` et les échanges entre **Caddy Server** et les autres containers se feront à travers le réseau privé `web`. Ces containers ne seront pas  accessibles de l'extérieur.
+Les 4 containers ont accès à la même ressource de fichiers `volshare` et les échanges entre **Caddy Server** et les autres containers se font à travers le réseau privé `web`. Ces containers ne sont pas  accessibles de l'extérieur.
 
-La configuration de **Docker** se fera à travers le fichier `/volshare/dockker/docker-compose.yaml`, 
-**Caddy Server**, via `/volshare/docker/caddy/caddyfile.conf`
+La configuration de **Docker** se fait à travers le fichier `/volshare/docker/docker-compose.yaml`, 
+**Caddy Server** via `/volshare/docker/caddy/caddyfile.conf`
 
-Nous allons les détailler ci-aprés.
+Nous allons détailler tout cela ci-aprés.
 
 ## Volume partagé /volshare
 
 `/volshare` est le répertoire partagé entre tous les containers.
 
-Il aura la structure suivante
+Il aura la structure suivante :
 ```
 /volshare
   /logs
     access.log access.0.log ... access.9.log
   /etc
     (les certificats du domaine)
+  /bivouac
+    (le site web Hugo administré par Victor)
+  /filebrowser
+    database.db
   /data (le répertoire des données à sauvegarder)
     /store
       (le répertoire des fichiers statiques servi par Caddy)
-    /filebrowser
-      database.db
+    /bivouac
+      bivouac_content --> ../../bivouac/content
   /docker (les fichiers de configuration des containers)
     docker-compose.yaml
     /caddy
@@ -111,7 +116,9 @@ Il aura la structure suivante
 
 ## Container Filebrowser
 
-### /volshare/dockker/docker-compose.yaml
+{{< image image="/media/filebrowser.gif" taille="m" position="droite" >}}
+
+### /volshare/docker/docker-compose.yaml
 
 ```yaml
   filebrowser:
@@ -120,18 +127,10 @@ Il aura la structure suivante
     restart: unless-stopped
     volumes:
     - /volshare:/srv
-    - /volshare/data/filebrowser/database.db:/database.db
+    - /volshare/filebrowser/database.db:/database.db
     - ./filebrowser/filebrowser.json:/.filebrowser.json    
     networks:
     - web
-```
-
-### /volshare/docker/caddy/caddyfile.conf
-
-```shell
-# filebrowser /fb
-redir /fb /fb/
-reverse_proxy /fb/* filebrowser:80
 ```
 
 ### /volshare/docker/filebrowser/filebrowser.json
@@ -147,9 +146,19 @@ reverse_proxy /fb/* filebrowser:80
 }
 ```
 
+### /volshare/docker/caddy/caddyfile.conf
+
+```shell
+# filebrowser /fb
+redir /fb /fb/
+reverse_proxy /fb/* filebrowser:80
+```
+
 ## Container Portainer
 
-### /volshare/dockker/docker-compose.yaml
+{{< image image="/media/portainer.png" taille="m" position="droite" >}}
+
+### /volshare/docker/docker-compose.yaml
 
 ```yaml
   portainer:
@@ -177,7 +186,9 @@ route /portainer/* {
 
 ## Container Bivouac (Victor)
 
-### /volshare/dockker/docker-compose.yaml
+{{< image image="/media/page-site.png" position="droite" taille="m" >}}
+
+### /volshare/docker/docker-compose.yaml
 
 ```yaml
   bivouac:
@@ -209,7 +220,7 @@ EnableXSRF = true # mettre true en HTTPS
 title = "BiVouac Admin"
 
 # Répertoire de la webapp Hugo
-hugo_dir = "/volshare/data/bivouac"
+hugo_dir = "/volshare/bivouac"
 ```
 
 ### /volshare/docker/caddy/caddyfile.conf
@@ -236,10 +247,12 @@ basicauth /hugo/* {
 
 ## Image Victor
 
-### /volshare/dockker/victor/dockerfile
+Ci-après le script qui permet de construire l'image Victor.
+
+### /volshare/docker/victor/dockerfile
 
 ```dockerfile
-# IMAGE VICTOR
+# IMAGE VICTOR <200 Mo
 
 # ETAPE COMPILATION
 # Le GOPATH par défaut de cette image est /go.
@@ -258,7 +271,7 @@ RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /src/victor/victor
 FROM alpine
 # Installation de victor...
 # l'environnement go ne sera pas installé car victor a été compilé dans l'étape compilation
-# ce qui réduit consiérablement la taille de l'image finale
+# ce qui réduit considérablement la taille de l'image finale
 RUN mkdir -p /src/victor
 copy --from=goalpine /src/victor /src/victor
 # Uptade OS + hugo + git + nano
@@ -266,7 +279,7 @@ RUN apk add --update nano hugo git
 # Ajout du user 1000
 USER 1000:1000
 
-# POINT D'ENTREE
+# POINT D'ENTREE (l'exécutable en écoute)
 WORKDIR /src/victor
 ENTRYPOINT ./victor
 # Le port sur lequel notre service écoute
@@ -275,9 +288,14 @@ EXPOSE 8080
 
 ## Container Caddy
 
-### /volshare/dockker/docker-compose.yaml
+### /volshare/docker/docker-compose.yaml
+
+Version complète
 
 ```yaml
+version: "3.3"
+services:
+
   caddy:
     # https://hub.docker.com/_/caddy?tab=description
     image: caddy:latest
@@ -293,9 +311,28 @@ EXPOSE 8080
     - '/volshare:/volshare'
     networks:
     - web
+    
+    filebrowser:
+    ...
+    
+    portainer:
+    ...
+    
+    bivouac:
+    ...
+
+volumes:
+  certs:
+
+networks:
+  web:
+    driver: bridge
+
 ```
 
 ### /volshare/docker/caddy/caddyfile.conf
+
+Version complète
 
 ```shell
 # Configuration du serveur Caddy
@@ -310,7 +347,7 @@ EXPOSE 8080
 # HOST
 mon.domaine.com
 
-# blacklist - 
+# blacklist - sites indésirables
 @blaklist {
     remote_ip 94.130.212.180 134.119.20.10
 }
@@ -318,7 +355,7 @@ handle @blaklist {
     respond "Refused!" 403
 }
 
-# Serveur de fichiers statics
+# Serveur de fichiers statiques
 redir /store /store/
 handle_path /store/* {
     root * /volshare/data/store
@@ -331,5 +368,34 @@ log {
     format single_field common_log
 }
 
+# filebrowser
+# ...
+# portainer
+# ...
+# bivouac
+# ...
+
 ```
+
+## Procédure d'installation
+
+```shell
+cd /volshare/docker
+# création/mise à jour des containers avec reconstruction des images
+docker-compose up -d --build 
+# nettoyage des images intermédiaires
+docker image prune -f
+```
+
+## Démarrage de Victor
+
+{{< image image="/media/page-site.png" position="droite" taille="m" >}}
+
+Dans votre navigateur préféré taper l'URL :
+
+[https://mon.domaine.fr/victor](https://mon.domaine.fr/victor)
+
+puis renseigner le code utilisateur et son mot de passe que vous avez configuré
+
+et vous devriez avoir l'écran d'accueil de Victor :
 

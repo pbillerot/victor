@@ -7,7 +7,7 @@
     <title>VICTOR</title>
 
     
-<link href="/victorhelp/site/media/victor-help.png" rel="shortcut icon" type="image/x-icon" />
+<link href="/victorhelp/media/victor-help.png" rel="shortcut icon" type="image/x-icon" />
 
 
 
@@ -17,12 +17,12 @@
 
 
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" sizes="192x192" href="/victorhelp/site/media/victor-help.png">
+<link rel="icon" sizes="192x192" href="/victorhelp/media/victor-help.png">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="VICTOR">
-<link rel="apple-touch-icon-precomposed" href="/victorhelp/site/media/victor-help.png">
+<link rel="apple-touch-icon-precomposed" href="/victorhelp/media/victor-help.png">
 
 
 <meta name="generator" content="Hugo 0.77.0-DEV" />
@@ -74,7 +74,7 @@
 
     
     
-    background-image: url('/victorhelp/site/media/geometric.jpg');
+    background-image: url('/victorhelp/media/geometric.jpg');
     
     
   }
@@ -129,13 +129,19 @@
                 </h1>
             </header>
             <article id="article" class="main"><p><em>Guide pour l&rsquo;administrateur technique</em></p>
+<p>
 <div id="toc"></div>
 
+
+
+  
+
+</p>
 <p>Je vous propose d&rsquo;installer une plateforme complète pour héberger notre application <strong>Victor</strong>.</p>
 <p>Nous utiliserons une VM (Machine Virtuelle) 
-<a href="https://fr.wikipedia.org/wiki/Debian" target="_blank" rel="noopener">DEBIAN Buster</a> pour accueillir notre plateforme avec le gestionnaire de conteneur 
+<a href="https://fr.wikipedia.org/wiki/Debian" target="_blank" rel="noopener">DEBIAN Buster</a> avec le gestionnaire de conteneur 
 <a href="https://fr.wikipedia.org/wiki/Docker_%28logiciel%29" target="_blank" rel="noopener">Docker</a> installé.</p>
-<p>Ce document ne décrit pas l&rsquo;installation d&rsquo;une VM Debian.<br>
+<p>Ce document ne décrit pas l&rsquo;installation d&rsquo;une VM Debian et de Docker.<br>
 Pour ma part je loue une VPS Debian chez l&rsquo;hébergeur 
 <a href="https://www.ovhcloud.com/fr/vps/" target="_blank" rel="noopener">OVH</a></p>
 <h2 id="prérequis-du-système-hôte">Prérequis du système hôte</h2>
@@ -173,8 +179,8 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 
 
 
-<div class="" data-src="/victorhelp/technique/docker.png">
-    <img class="ui    image" src="/victorhelp/technique/docker.png"></img>
+<div class="bee-diapo" data-src="/victorhelp/media/docker.png">
+    <img class="ui    image" src="/victorhelp/media/docker.png"></img>
 </div>
 
 <p>Notre plateforme sera composée de 4 containers :</p>
@@ -200,13 +206,13 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 <li>
 <a href="https://filebrowser.org/features" target="_blank" rel="noopener">Filebrowser</a> pour manipuler les fichiers du répertoire partagé (volshare)</li>
 </ul>
-<p>Les 4 containers ont accès à la même ressource de fichiers <code>volshare</code> et les échanges entre <strong>Caddy Server</strong> et les autres containers se feront à travers le réseau privé <code>web</code>. Ces containers ne seront pas  accessibles de l&rsquo;extérieur.</p>
-<p>La configuration de <strong>Docker</strong> se fera à travers le fichier <code>/volshare/dockker/docker-compose.yaml</code>, 
-<strong>Caddy Server</strong>, via <code>/volshare/docker/caddy/caddyfile.conf</code></p>
-<p>Nous allons les détailler ci-aprés.</p>
+<p>Les 4 containers ont accès à la même ressource de fichiers <code>volshare</code> et les échanges entre <strong>Caddy Server</strong> et les autres containers se font à travers le réseau privé <code>web</code>. Ces containers ne sont pas  accessibles de l&rsquo;extérieur.</p>
+<p>La configuration de <strong>Docker</strong> se fait à travers le fichier <code>/volshare/docker/docker-compose.yaml</code>, 
+<strong>Caddy Server</strong> via <code>/volshare/docker/caddy/caddyfile.conf</code></p>
+<p>Nous allons détailler tout cela ci-aprés.</p>
 <h2 id="volume-partagé-volshare">Volume partagé /volshare</h2>
 <p><code>/volshare</code> est le répertoire partagé entre tous les containers.</p>
-<p>Il aura la structure suivante</p>
+<p>Il aura la structure suivante :</p>
 <pre><code>/volshare
   /logs
     access.log access.0.log ... access.9.log
@@ -215,6 +221,8 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
   /data (le répertoire des données à sauvegarder)
     /store
       (le répertoire des fichiers statiques servi par Caddy)
+    /bivouac
+      (le site web Hugo administré par Victor)
     /filebrowser
       database.db
   /docker (les fichiers de configuration des containers)
@@ -228,7 +236,22 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
     /victor
       dockerfile
 </code></pre><h2 id="container-filebrowser">Container Filebrowser</h2>
-<h3 id="volsharedockkerdocker-composeyaml">/volshare/dockker/docker-compose.yaml</h3>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/victorhelp/media/filebrowser.gif">
+    <img class="ui medium  right floated image" src="/victorhelp/media/filebrowser.gif"></img>
+</div>
+
+<h3 id="volsharedockerdocker-composeyaml">/volshare/docker/docker-compose.yaml</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>filebrowser/filebrowser:latest<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>filebrowser<span style="color:#bbb">
@@ -239,11 +262,7 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 </span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json    <span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
-</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf">/volshare/docker/caddy/caddyfile.conf</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># filebrowser /fb</span>
-redir /fb /fb/
-reverse_proxy /fb/* filebrowser:80
-</code></pre></div><h3 id="volsharedockerfilebrowserfilebrowserjson">/volshare/docker/filebrowser/filebrowser.json</h3>
+</span></code></pre></div><h3 id="volsharedockerfilebrowserfilebrowserjson">/volshare/docker/filebrowser/filebrowser.json</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
   <span style="color:#062873;font-weight:bold">&#34;port&#34;</span>: <span style="color:#40a070">80</span>,
   <span style="color:#062873;font-weight:bold">&#34;baseURL&#34;</span>: <span style="color:#4070a0">&#34;/fb&#34;</span>,
@@ -252,8 +271,27 @@ reverse_proxy /fb/* filebrowser:80
   <span style="color:#062873;font-weight:bold">&#34;database&#34;</span>: <span style="color:#4070a0">&#34;/database.db&#34;</span>,
   <span style="color:#062873;font-weight:bold">&#34;root&#34;</span>: <span style="color:#4070a0">&#34;/srv&#34;</span>,
 }
+</code></pre></div><h3 id="volsharedockercaddycaddyfileconf">/volshare/docker/caddy/caddyfile.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># filebrowser /fb</span>
+redir /fb /fb/
+reverse_proxy /fb/* filebrowser:80
 </code></pre></div><h2 id="container-portainer">Container Portainer</h2>
-<h3 id="volsharedockkerdocker-composeyaml-1">/volshare/dockker/docker-compose.yaml</h3>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/victorhelp/media/portainer.png">
+    <img class="ui medium  right floated image" src="/victorhelp/media/portainer.png"></img>
+</div>
+
+<h3 id="volsharedockerdocker-composeyaml-1">/volshare/docker/docker-compose.yaml</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>portainer/portainer-ce<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>portainer<span style="color:#bbb">
@@ -272,7 +310,22 @@ route /portainer/* <span style="color:#666">{</span>
     reverse_proxy portainer:9000
 <span style="color:#666">}</span>
 </code></pre></div><h2 id="container-bivouac-victor">Container Bivouac (Victor)</h2>
-<h3 id="volsharedockkerdocker-composeyaml-2">/volshare/dockker/docker-compose.yaml</h3>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/victorhelp/media/page-site.png">
+    <img class="ui medium  right floated image" src="/victorhelp/media/page-site.png"></img>
+</div>
+
+<h3 id="volsharedockerdocker-composeyaml-2">/volshare/docker/docker-compose.yaml</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">build</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
@@ -318,8 +371,9 @@ basicauth /hugo/* <span style="color:#666">{</span>
 <span style="color:#666">}</span>
 
 </code></pre></div><h2 id="image-victor">Image Victor</h2>
-<h3 id="volsharedockkervictordockerfile">/volshare/dockker/victor/dockerfile</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#60a0b0;font-style:italic"># IMAGE VICTOR</span><span style="">
+<p>Ci-après le script qui permet de construire l&rsquo;image Victor.</p>
+<h3 id="volsharedockervictordockerfile">/volshare/docker/victor/dockerfile</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#60a0b0;font-style:italic"># IMAGE VICTOR &lt;200 Mo</span><span style="">
 </span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ETAPE COMPILATION</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le GOPATH par défaut de cette image est /go.</span><span style="">
@@ -338,7 +392,7 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span><span style=""></span><span style="color:#007020;font-weight:bold">FROM</span><span style="color:#4070a0"> alpine</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de victor...</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># l&#39;environnement go ne sera pas installé car victor a été compilé dans l&#39;étape compilation</span><span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ce qui réduit consiérablement la taille de l&#39;image finale</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ce qui réduit considérablement la taille de l&#39;image finale</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> mkdir -p /src/victor<span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">copy</span> --from<span style="color:#666">=</span>goalpine /src/victor /src/victor<span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Uptade OS + hugo + git + nano</span><span style="">
@@ -346,14 +400,18 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Ajout du user 1000</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">USER</span><span style="color:#4070a0"> 1000:1000</span><span style="">
 </span><span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># POINT D&#39;ENTREE</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># POINT D&#39;ENTREE (l&#39;exécutable en écoute)</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src/victor</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">ENTRYPOINT</span> ./victor<span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le port sur lequel notre service écoute</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">EXPOSE</span><span style="color:#4070a0"> 8080</span><span style="">
 </span></code></pre></div><h2 id="container-caddy">Container Caddy</h2>
-<h3 id="volsharedockkerdocker-composeyaml-3">/volshare/dockker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">caddy</span>:<span style="color:#bbb">
+<h3 id="volsharedockerdocker-composeyaml-3">/volshare/docker/docker-compose.yaml</h3>
+<p>Version complète</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#062873;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">services</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">caddy</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># https://hub.docker.com/_/caddy?tab=description</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>caddy:latest<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>caddy<span style="color:#bbb">
@@ -368,6 +426,23 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare:/volshare&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
+</span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">certs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">web</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
+</span><span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-3">/volshare/docker/caddy/caddyfile.conf</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># Configuration du serveur Caddy</span>
 <span style="color:#60a0b0;font-style:italic"># https://caddyserver.com/docs/</span>
@@ -381,7 +456,7 @@ basicauth /hugo/* <span style="color:#666">{</span>
 <span style="color:#60a0b0;font-style:italic"># HOST</span>
 mon.domaine.com
 
-<span style="color:#60a0b0;font-style:italic"># blacklist - </span>
+<span style="color:#60a0b0;font-style:italic"># blacklist - sites indésirables</span>
 @blaklist <span style="color:#666">{</span>
     remote_ip 94.130.212.180 134.119.20.10
 <span style="color:#666">}</span>
@@ -389,7 +464,7 @@ handle @blaklist <span style="color:#666">{</span>
     respond <span style="color:#4070a0">&#34;Refused!&#34;</span> <span style="color:#40a070">403</span>
 <span style="color:#666">}</span>
 
-<span style="color:#60a0b0;font-style:italic"># Serveur de fichiers statics</span>
+<span style="color:#60a0b0;font-style:italic"># Serveur de fichiers statiques</span>
 redir /store /store/
 handle_path /store/* <span style="color:#666">{</span>
     root * /volshare/data/store
@@ -401,6 +476,13 @@ log <span style="color:#666">{</span>
     output file /volshare/log/access.log
     format single_field common_log
 <span style="color:#666">}</span>
+
+<span style="color:#60a0b0;font-style:italic"># filebrowser</span>
+<span style="color:#60a0b0;font-style:italic"># ...</span>
+<span style="color:#60a0b0;font-style:italic"># portainer</span>
+<span style="color:#60a0b0;font-style:italic"># ...</span>
+<span style="color:#60a0b0;font-style:italic"># bivouac</span>
+<span style="color:#60a0b0;font-style:italic"># ...</span>
 
 </code></pre></div></article>
         </section>
@@ -432,7 +514,7 @@ log <span style="color:#666">{</span>
     <div class="ui small circular image">
       
       <a href="/victorhelp/">
-        <img src="/victorhelp/site/media/victor-help.png">
+        <img src="/victorhelp/media/victor-help.png">
       </a>
       
     </div>
@@ -589,6 +671,11 @@ log <span style="color:#666">{</span>
 <script src="/victorhelp/js/post.js"></script>
 
 
+
+<script src="/victorhelp/lightbox/js/lightgallery.min.js"></script>
+<script>
+    lightGallery(document.getElementById('article'),{ selector: '.bee-diapo'});
+</script>
 
 
 

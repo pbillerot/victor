@@ -18,6 +18,11 @@ import (
 	"github.com/pbillerot/victor/shutil"
 )
 
+// Hugo redir /hugo en /hugo/
+// func (c *MainController) Hugo() {
+// 	c.Ctx.Redirect(302, "/hugo/")
+// }
+
 // Main as get and Post
 func (c *MainController) Main() {
 	setSession(c, "Folder", "/")
@@ -736,6 +741,8 @@ func pushProd(c *MainController) {
 // gitUpdateTheme : Mise à jour du thème à partir du référentiel git
 func gitUpdateTheme(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
+
+	// git or submodule ? .gitmodules
 
 	cmd := exec.Command("git", "submodule", "update", "--remote")
 	logs.Info("gitUpdateTheme", cmd)

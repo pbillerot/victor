@@ -8,11 +8,11 @@ params:
   title: "VICTOR"
   subtitle: "Guide d'utilisation"
   # l'image arrondie
-  avatar: "/site/media/victor-help.png"
+  avatar: "/media/victor-help.png"
   # l'icône dans l'onglet du navigateur
-  favicon: "/site/media/victor-help.png"
+  favicon: "/media/victor-help.png"
   # l'image d'arrière plan
-  backgroundImage: "/site/media/geometric.jpg"
+  backgroundImage: "/media/geometric.jpg"
 
 # Les menus que l'on peut ajouter
 menu:

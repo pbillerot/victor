@@ -8,7 +8,7 @@ cover:
 ---
 <!--more-->
 {{< diaporama >}}
-{{< image image="/site/captures/page-site.png" position="droite" taille="m" >}}
+{{< image image="/media/page-site.png" position="droite" taille="m" >}}
 
 **VICTOR** est une application pour gérer le contenu d'un site [HUGO](https://gohugo.io/).  
 Un site **Hugo** n'est constituée que de fichiers statiques et par conséquent sans utilisation de base de données.

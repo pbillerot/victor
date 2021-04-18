@@ -1,11 +1,11 @@
 ---
-title: "Répertoires"
+title: "Le site Hugo"
 date: 2021-04-08
 draft: false
 #categories:
 tags:
 - technique
-cover: "/site/media/tree.jpg"
+cover: "/media/tree.jpg"
 menu:
   page:
     parent: technique
@@ -17,6 +17,8 @@ Résumé de l'article
 <!--more-->
 
 Complément de l'article
+
+
 ```
 drwxr-xr-x 2 billerot billerot 4,0K avril  3 19:30 bacasable
 drwxr-xr-x 2 billerot billerot 4,0K avril  6 19:32 captures

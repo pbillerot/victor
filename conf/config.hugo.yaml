@@ -1,0 +1,8 @@
+#
+# Personnalisation dans l'environnement de test /hugo
+#
+
+baseURL: "/hugo/"
+
+params:
+  favicon: "/img/hugo-h.png"

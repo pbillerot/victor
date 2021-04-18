@@ -5,7 +5,7 @@ draft: false
 categories:
 tags:
 - technique
-cover: "/site/media/cloud.jpg"
+cover: "/media/cloud.jpg"
 ---
 
 Résumé de l'article
