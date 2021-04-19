@@ -65,15 +65,15 @@ func init() {
 	// Répertoires statiques
 	if strings.HasPrefix(models.Config.HugoRacine, "/") {
 		web.SetStaticPath("/content", models.Config.HugoContentDir)
-		// web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
-		// web.SetStaticPath("/", models.Config.HugoPublicDir)
+		web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
+		web.SetStaticPath("/", models.Config.HugoPublicDir)
 	} else {
 		// path relatif à la webapp victor
 		web.SetStaticPath("/content", models.Config.HugoContentDir)
-		// web.SetStaticPath("/hugo", models.Config.HugoRacine+"/"+models.Config.HugoPrivateDir)
-		// web.SetStaticPath("/", models.Config.HugoRacine+"/"+models.Config.HugoPublicDir)
+		web.SetStaticPath("/hugo", models.Config.HugoRacine+"/"+models.Config.HugoPrivateDir)
+		web.SetStaticPath("/", models.Config.HugoRacine+"/"+models.Config.HugoPublicDir)
 	}
-	web.SetStaticPath("/victorhelp", "site/public/")
+	web.SetStaticPath("/help", "site/public/")
 	initConfigHugo()
 }
 

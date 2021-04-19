@@ -1,1 +1,1 @@
-/home/billerot/go/src/github.com/pbillerot/victor/README.md
+../../../README.md
