@@ -20,6 +20,12 @@ _build:
 - Structure du contenu - content/site/config.yaml -> ../config.yaml
 - Doc Environnements Test et Production
 
+2.7.0 du 19 avril 2021
+----------------------
+- `removed` référentiel de l'aide en ligne - Répertoire help alimenté par ../victor-doc/public
+- `changed` maj du thème via le git ou submodule
+
+
 2.6.4 du 18 avril 2021
 ----------------------
 - avant suppression /victor

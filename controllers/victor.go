@@ -743,19 +743,52 @@ func gitUpdateTheme(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// git or submodule ? .gitmodules
-
-	cmd := exec.Command("git", "submodule", "update", "--remote")
-	logs.Info("gitUpdateTheme", cmd)
-	cmd.Dir = models.Config.HugoRacine
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		logs.Error("gitUpdateTheme", err)
-		flash.Error("gitUpdateTheme : %v", err)
-		flash.Error(string(out))
+	_, err = os.Open(models.Config.HugoRacine + "/.gitmodules")
+	if !os.IsNotExist(err) {
+		// submodule
+		cmd := exec.Command("git", "submodule", "update", "--remote")
+		logs.Info("gitUpdateTheme submodule", cmd)
+		cmd.Dir = models.Config.HugoRacine
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			logs.Error("gitUpdateTheme", err)
+			flash.Error("gitUpdateTheme : %v", err)
+			flash.Error(string(out))
+			flash.Store(&c.Controller)
+			return
+		}
+		flash.Success(string(out))
 		flash.Store(&c.Controller)
-		return
+		logs.Info("gitUpdateTheme", string(out))
+	} else {
+		// git
+		cmd := exec.Command("git", "reset", "--hard")
+		logs.Info("gitUpdateTheme git reset", cmd)
+		cmd.Dir = models.Config.HugoRacine + "/themes/" + models.Config.HugoTheme
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			logs.Error("gitUpdateTheme", err)
+			flash.Error("gitUpdateTheme : %v", err)
+			flash.Error(string(out))
+			flash.Store(&c.Controller)
+			return
+		}
+		flash.Success(string(out))
+		logs.Info("gitUpdateTheme", string(out))
+		cmd = exec.Command("git", "pull")
+		logs.Info("gitUpdateTheme git reset", cmd)
+		cmd.Dir = models.Config.HugoRacine + "/themes/" + models.Config.HugoTheme
+		out, err = cmd.CombinedOutput()
+		if err != nil {
+			logs.Error("gitUpdateTheme", err)
+			flash.Error("gitUpdateTheme : %v", err)
+			flash.Error(string(out))
+			flash.Store(&c.Controller)
+			return
+		}
+		flash.Success(string(out))
+		flash.Store(&c.Controller)
+		logs.Info("gitUpdateTheme", string(out))
 	}
-	flash.Success(string(out))
-	flash.Store(&c.Controller)
-	logs.Info("gitUpdateTheme", string(out))
+
 }

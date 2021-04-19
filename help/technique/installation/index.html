@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr-FR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>VICTOR</title>
+
+    
+<link href="/media/victor-help.png" rel="shortcut icon" type="image/x-icon" />
+
+
+
+<meta name="author" content="" />
+<meta name="description" content="" />
+
+
+
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" sizes="192x192" href="/media/victor-help.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VICTOR">
+<link rel="apple-touch-icon-precomposed" href="/media/victor-help.png">
+
+
+<meta name="generator" content="Hugo 0.77.0-DEV" />
+
+<link rel="canonical" href="/technique/installation/" />
+
+
+<meta property="og:title" content="Installation" />
+<meta property="og:description" content="Guide pour l&rsquo;administrateur technique" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/technique/installation/" />
+<meta property="article:published_time" content="2021-04-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-04-08T00:00:00+00:00" /><meta property="og:site_name" content="VICTOR" />
+
+
+<link rel="stylesheet" href="/css/semantic.min.css" />
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Rancho&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/css/icomoon.css" />
+
+<link rel="stylesheet" href="/css/github-markdown.css" />
+<link rel="stylesheet" href="/css/site.css" />
+
+<link rel="stylesheet" href="/lightbox/css/lightgallery.min.css" />
+
+<link rel="stylesheet" href="/css/custom.css?v=1.2.1%20du%2018%20avril%202021" />
+
+<style>
+  a:hover {
+    text-decoration: underline; 
+  }
+
+  
+  a {
+    color: seagreen !important;
+  }
+  
+
+  
+
+  
+  body {
+    
+    background-color: DarkSeaGreen;
+    
+
+    
+    
+    background-image: url('/media/geometric.jpg');
+    
+    
+  }
+  
+</style>
+
+     
+  </head>
+
+  <body>
+    <nav class="ui secondary menu dream-menu">
+    <a class="item" href="" style="color: black !important;">
+        <i class="large link home icon" title="Home"></i>
+    </a>
+    
+    
+    <a class="item" href="https://beedream.billerot.eu/" style="color: black !important;" target="_blank"
+        >
+        <i class="large help icon" title="Documentation sur le thème BeeDream"></i>
+    </a>
+    
+    <a class="item" href="https://semantic-ui.com/elements/icon.html" style="color: black !important;" target="_blank"
+        >
+        <i class="large font awesome icon" title="Bibliothèque des icônes"></i>
+    </a>
+    
+    <a class="item" href="https://gohugo.io/" style="color: black !important;" target="_blank"
+        >
+        <i class="large hospital symbol icon" title="Documentation Hugo"></i>
+    </a>
+    
+    
+    
+    
+</nav>
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui centered relaxed grid dream-grid">
+    <div class="sixteen wide mobile sixteen wide tablet twelve wide computer column markdown-body dream-single bee-doc" 
+    id="dream-save-post-as-img">
+        <section class="ui top attached segment">
+            <header>
+                <h1 class="ui large header">
+                    Installation
+                    <div class="sub header">
+                        Publié le 8 avril
+                        2021
+                    </div>
+                </h1>
+            </header>
+            <article id="article" class="main"><p><em>Guide pour l&rsquo;administrateur technique</em></p>
+<p>
+<div id="toc"></div>
+
+
+
+  
+
+</p>
+<p>Je vous propose d&rsquo;installer une plateforme complète pour héberger notre application <strong>Victor</strong>.</p>
+<p>Nous utiliserons une VM (Machine Virtuelle) 
+<a href="https://fr.wikipedia.org/wiki/Debian" target="_blank" rel="noopener">DEBIAN 10</a> avec le gestionnaire de conteneur 
+<a href="https://fr.wikipedia.org/wiki/Docker_%28logiciel%29" target="_blank" rel="noopener">Docker</a> installé.</p>
+<p>Ce document ne décrit pas l&rsquo;installation d&rsquo;une VM Debian et de Docker.<br>
+Pour ma part je loue une <strong>VPS Debian 10 Docker</strong> chez l&rsquo;hébergeur 
+<a href="https://www.ovhcloud.com/fr/vps/" target="_blank" rel="noopener">OVH</a> (1 vCore 2 Go 20 Go 1 domaine.eu pour 46.16 €/an)</p>
+<h2 id="prérequis-du-système-hôte">Prérequis du système hôte</h2>
+<p>Système : <code>Debian Buster</code></p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt;uname -a
+Linux vps-7d2d773f 4.19.0-16-cloud-amd64 <span style="color:#60a0b0;font-style:italic">#1 SMP Debian 4.19.181-1 (2021-03-19) x86_64 GNU/Linux</span>
+</code></pre></div><p>Gestionnaire de conteneur Docker :</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt;docker version
+Client: Docker Engine - Community
+ Version:           20.10.5
+ API version:       1.41
+ Go version:        go1.13.15
+ ...
+ 
+Server: Docker Engine - Community
+ Engine:
+  Version:          20.10.5
+  API version:      1.41 <span style="color:#666">(</span>minimum version 1.12<span style="color:#666">)</span>
+  Go version:       go1.13.15
+  ...
+</code></pre></div><div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt;docker-compose version
+docker-compose version 1.21.0, build unknown
+docker-py version: 3.4.1
+CPython version: 3.7.3
+OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span style="color:#40a070">2019</span>
+</code></pre></div><h2 id="la-plateforme-docker">La plateforme Docker</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/media/docker.png">
+    <img class="ui    image" src="/media/docker.png"></img>
+</div>
+
+<p>Notre plateforme sera composée de 4 containers :</p>
+<ul>
+<li>
+<a href="https://caddyserver.com/docs/" target="_blank" rel="noopener">Caddy Server</a> le frontal web, c&rsquo;est l&rsquo;élément le plus important. Il sera chargé :
+<ul>
+<li>de contrôler le trafic http (:80) et https (:443)</li>
+<li>de renouveller le certificat lié au nom de domaine</li>
+<li>de gérer les authentifications pour certaines 
+<a href="https://fr.wikipedia.org/wiki/Uniform_Resource_Identifier" target="_blank" rel="noopener">URI</a></li>
+<li>de rediriger les flux vers les autres containers en fonction des URI</li>
+<li>de journaliser les accès et les erreurs</li>
+</ul>
+</li>
+<li>
+<a href="https://www.billerot.eu" target="_blank" rel="noopener">Bivouac</a> le container de notre application qui utilisera une image de <strong>Victor</strong></li>
+</ul>
+<p>Pour plus de confort, j&rsquo;utilise</p>
+<ul>
+<li>
+<a href="https://korben.info/portainer-io-un-outil-graphique-pour-gerer-vos-environnements-docker-en-toute-securite.html" target="_blank" rel="noopener">Portainer</a> pour gérer graphiquement l&rsquo;environnement Docker</li>
+<li>
+<a href="https://filebrowser.org/features" target="_blank" rel="noopener">Filebrowser</a> pour manipuler les fichiers du répertoire partagé (volshare)</li>
+</ul>
+<p>Les 4 containers ont accès à la même ressource de fichiers <code>volshare</code> et les échanges entre <strong>Caddy Server</strong> et les autres containers se font à travers le réseau privé <code>web</code>. Ces containers ne sont pas  accessibles de l&rsquo;extérieur.</p>
+<p>La configuration de <strong>Docker</strong> se fait à travers le fichier <code>/volshare/docker/docker-compose.yaml</code>, 
+<strong>Caddy Server</strong> via <code>/volshare/docker/caddy/caddyfile.conf</code></p>
+<p>Nous allons détailler tout cela ci-aprés.</p>
+<h2 id="volume-partagé-volshare">Volume partagé /volshare</h2>
+<p><code>/volshare</code> est le répertoire partagé entre tous les containers.</p>
+<p>Il aura la structure suivante :</p>
+<pre><code>/volshare
+  /logs
+    access.log access.0.log ... access.9.log
+  /etc
+    (les certificats du domaine)
+  /bivouac
+    (le site web Hugo administré par Victor)
+  /filebrowser
+    database.db
+  /data (le répertoire des données à sauvegarder)
+    /store
+      (le répertoire des fichiers statiques servi par Caddy)
+    /bivouac
+      bivouac_content --&gt; ../../bivouac/content
+  /docker (les fichiers de configuration des containers)
+    docker-compose.yaml
+    /caddy
+      caddyfile.conf
+    /filebrowser
+      filebrowser.conf
+    /bivouac
+      custom.conf
+    /victor
+      dockerfile
+</code></pre><h2 id="container-filebrowser">Container Filebrowser</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/media/filebrowser.gif">
+    <img class="ui medium  right floated image" src="/media/filebrowser.gif"></img>
+</div>
+
+<h3 id="volsharedockerdocker-composeyaml">/volshare/docker/docker-compose.yaml</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>filebrowser/filebrowser:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>filebrowser<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- /volshare:/srv<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- /volshare/filebrowser/database.db:/database.db<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json    <span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockerfilebrowserfilebrowserjson">/volshare/docker/filebrowser/filebrowser.json</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#062873;font-weight:bold">&#34;port&#34;</span>: <span style="color:#40a070">80</span>,
+  <span style="color:#062873;font-weight:bold">&#34;baseURL&#34;</span>: <span style="color:#4070a0">&#34;/fb&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;address&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;log&#34;</span>: <span style="color:#4070a0">&#34;stdout&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;database&#34;</span>: <span style="color:#4070a0">&#34;/database.db&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;root&#34;</span>: <span style="color:#4070a0">&#34;/srv&#34;</span>,
+}
+</code></pre></div><h3 id="volsharedockercaddycaddyfileconf">/volshare/docker/caddy/caddyfile.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># filebrowser /fb</span>
+redir /fb /fb/
+reverse_proxy /fb/* filebrowser:80
+</code></pre></div><h2 id="container-portainer">Container Portainer</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/media/portainer.png">
+    <img class="ui medium  right floated image" src="/media/portainer.png"></img>
+</div>
+
+<h3 id="volsharedockerdocker-composeyaml-1">/volshare/docker/docker-compose.yaml</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>portainer/portainer-ce<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>portainer<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">command</span>:<span style="color:#bbb"> </span>-H unix:///var/run/docker.sock<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- /var/run/docker.sock:/var/run/docker.sock<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-1">/volshare/docker/caddy/caddyfile.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># portainer </span>
+<span style="color:#60a0b0;font-style:italic"># on supprime le préfix /portainer après le routage</span>
+redir /portainer /portainer/
+route /portainer/* <span style="color:#666">{</span>
+    uri strip_prefix /portainer
+    reverse_proxy portainer:9000
+<span style="color:#666">}</span>
+</code></pre></div><h2 id="container-bivouac-victor">Container Bivouac (Victor)</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/media/page-site.png">
+    <img class="ui medium  right floated image" src="/media/page-site.png"></img>
+</div>
+
+<h3 id="volsharedockerdocker-composeyaml-2">/volshare/docker/docker-compose.yaml</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">build</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>victor:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>bivouac<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">user</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1000</span>:<span style="color:#40a070">1000</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- /volshare:/volshare<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- ./bivouac/custom.conf:/src/victor/conf/custom.conf<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockerbivouaccustomconf">/volshare/docker/bivouac/custom.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># custom.conf -  Personnalisation du site déployé</span>
+
+<span style="color:#60a0b0;font-style:italic"># dev / production pour ne pas afficher les erreurs en détail</span>
+<span style="color:#bb60d5">runmode</span> <span style="color:#666">=</span> production
+
+<span style="color:#60a0b0;font-style:italic"># Session</span>
+<span style="color:#bb60d5">EnableXSRF</span> <span style="color:#666">=</span> <span style="color:#007020">true</span> <span style="color:#60a0b0;font-style:italic"># mettre true en HTTPS</span>
+
+<span style="color:#60a0b0;font-style:italic"># Titre de l&#39;application</span>
+<span style="color:#bb60d5">title</span> <span style="color:#666">=</span> <span style="color:#4070a0">&#34;BiVouac Admin&#34;</span>
+
+<span style="color:#60a0b0;font-style:italic"># Répertoire de la webapp Hugo</span>
+<span style="color:#bb60d5">hugo_dir</span> <span style="color:#666">=</span> <span style="color:#4070a0">&#34;/volshare/bivouac&#34;</span>
+</code></pre></div><h3 id="volsharedockercaddycaddyfileconf-2">/volshare/docker/caddy/caddyfile.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># bivouac</span>
+<span style="color:#60a0b0;font-style:italic"># est l&#39;application d&#39;accueil du site</span>
+reverse_proxy /* bivouac:8080
+
+<span style="color:#60a0b0;font-style:italic"># PROTECTION par mot de passe pour les uri /victor /hugo</span>
+<span style="color:#60a0b0;font-style:italic"># user: admin password: admin (qui a été haché par la commande ci-dessous)</span>
+<span style="color:#60a0b0;font-style:italic"># docker container exec -it caddy /bin/sh</span>
+<span style="color:#60a0b0;font-style:italic"># puis</span>
+<span style="color:#60a0b0;font-style:italic"># caddy hash-password [--plaintext &lt;password&gt;]</span>
+
+basicauth /victor/* <span style="color:#666">{</span>
+    admin JDJhJDE0JGRKNmt6a3g5L1BlSXRmbmVWV2RXeU9Lc2NlZzFGUnV6eHFyYlVYOUFGc3FmL3NsSS5zRXdt
+<span style="color:#666">}</span>
+basicauth /hugo/* <span style="color:#666">{</span>
+    admin JDJhJDE0JGRKNmt6a3g5L1BlSXRmbmVWV2RXeU9Lc2NlZzFGUnV6eHFyYlVYOUFGc3FmL3NsSS5zRXdt
+<span style="color:#666">}</span>
+
+</code></pre></div><h2 id="image-victor">Image Victor</h2>
+<p>Ci-après le script qui permet de construire l&rsquo;image Victor.</p>
+<h3 id="volsharedockervictordockerfile">/volshare/docker/victor/dockerfile</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#60a0b0;font-style:italic"># IMAGE VICTOR &lt;200 Mo</span><span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ETAPE COMPILATION</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le GOPATH par défaut de cette image est /go.</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">FROM</span><span style="color:#4070a0"> golang:alpine as goalpine</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de GCC et GIT</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> apk add build-base git<span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de victor</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> git clone https://github.com/pbillerot/victor.git<span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src/victor</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Build avec CGO du binaire victor</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> <span style="color:#bb60d5">GOOS</span><span style="color:#666">=</span>linux <span style="color:#bb60d5">GOARCH</span><span style="color:#666">=</span>amd64 go build -a -installsuffix cgo -o /src/victor/victor<span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ETAPE GENERATION D&#39;UN IMAGE </span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># avec le projet</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">FROM</span><span style="color:#4070a0"> alpine</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de victor...</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># l&#39;environnement go ne sera pas installé car victor a été compilé dans l&#39;étape compilation</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ce qui réduit considérablement la taille de l&#39;image finale</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> mkdir -p /src/victor<span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">copy</span> --from<span style="color:#666">=</span>goalpine /src/victor /src/victor<span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Uptade OS + hugo + git + nano</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> apk add --update nano hugo git<span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Ajout du user 1000</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">USER</span><span style="color:#4070a0"> 1000:1000</span><span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># POINT D&#39;ENTREE (l&#39;exécutable en écoute)</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src/victor</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">ENTRYPOINT</span> ./victor<span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le port sur lequel notre service écoute</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">EXPOSE</span><span style="color:#4070a0"> 8080</span><span style="">
+</span></code></pre></div><h2 id="container-caddy">Container Caddy</h2>
+<h3 id="volsharedockerdocker-composeyaml-3">/volshare/docker/docker-compose.yaml</h3>
+<p>Version complète</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#062873;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">services</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">caddy</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># https://hub.docker.com/_/caddy?tab=description</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>caddy:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>caddy<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;80:80&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;443:443&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;./caddy/caddyfile.conf:/etc/caddy/Caddyfile&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare/etc:/data&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare/data/store:/srv&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare:/volshare&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
+</span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">certs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">web</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-3">/volshare/docker/caddy/caddyfile.conf</h3>
+<p>Version complète</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># Configuration du serveur Caddy</span>
+<span style="color:#60a0b0;font-style:italic"># https://caddyserver.com/docs/</span>
+
+<span style="color:#60a0b0;font-style:italic"># GLOBAL option</span>
+<span style="color:#60a0b0;font-style:italic"># https://www.ssllabs.com/ssltest/analyze.html?d=mon.domaine.com</span>
+<span style="color:#666">{</span>
+    email mon.email@gmail.com
+<span style="color:#666">}</span>
+
+<span style="color:#60a0b0;font-style:italic"># HOST</span>
+mon.domaine.com
+
+<span style="color:#60a0b0;font-style:italic"># blacklist - sites indésirables</span>
+@blaklist <span style="color:#666">{</span>
+    remote_ip 94.130.212.180 134.119.20.10
+<span style="color:#666">}</span>
+handle @blaklist <span style="color:#666">{</span>
+    respond <span style="color:#4070a0">&#34;Refused!&#34;</span> <span style="color:#40a070">403</span>
+<span style="color:#666">}</span>
+
+<span style="color:#60a0b0;font-style:italic"># Serveur de fichiers statiques</span>
+redir /store /store/
+handle_path /store/* <span style="color:#666">{</span>
+    root * /volshare/data/store
+    file_server browse
+<span style="color:#666">}</span>
+
+<span style="color:#60a0b0;font-style:italic"># Log du trafic (rotation automatique tous les 100 Mo (10 logs) </span>
+log <span style="color:#666">{</span>
+    output file /volshare/log/access.log
+    format single_field common_log
+<span style="color:#666">}</span>
+
+<span style="color:#60a0b0;font-style:italic"># filebrowser</span>
+<span style="color:#60a0b0;font-style:italic"># ...</span>
+<span style="color:#60a0b0;font-style:italic"># portainer</span>
+<span style="color:#60a0b0;font-style:italic"># ...</span>
+<span style="color:#60a0b0;font-style:italic"># bivouac</span>
+<span style="color:#60a0b0;font-style:italic"># ...</span>
+
+</code></pre></div><h2 id="procédure-dinstallation">Procédure d&rsquo;installation</h2>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#007020">cd</span> /volshare/docker
+<span style="color:#60a0b0;font-style:italic"># création/mise à jour des containers avec reconstruction des images</span>
+docker-compose up -d --build 
+<span style="color:#60a0b0;font-style:italic"># nettoyage des images intermédiaires</span>
+docker image prune -f
+</code></pre></div><h2 id="démarrage-de-victor">Démarrage de Victor</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/media/page-site.png">
+    <img class="ui medium  right floated image" src="/media/page-site.png"></img>
+</div>
+
+<p>Dans votre navigateur préféré taper l&rsquo;URL :</p>
+<p>
+<a href="https://mon.domaine.fr/victor" target="_blank" rel="noopener">https://mon.domaine.fr/victor</a></p>
+<p>puis renseigner le code utilisateur et son mot de passe que vous avez configuré</p>
+<p>et vous devriez avoir l&rsquo;écran d&rsquo;accueil de Victor :</p></article>
+        </section>
+
+        <footer class="ui attached segment" data-html2canvas-ignore>
+            
+            
+            <a class="ui label" href="/tags/technique/" title="technique">#technique</a>
+            
+            
+                
+                
+                <a class="ui link green float right icon bee-admin bee-edit-open" 
+                 title="Editer la page...">
+                    <i class="edit icon"></i>
+                </a>
+                <a class="ui icon" style="float: right; cursor: pointer;" onclick="savePostAsImg()" title="Save as image">
+                    <i class="save large icon"></i>
+                </a>
+        </footer>
+
+        
+
+    </div>
+    <div class="sixteen wide mobile sixteen wide tablet four wide computer column">
+        <article class="dream-header">
+  
+  <section class="ui top attached center aligned segment">
+    <div class="ui small circular image">
+      
+      <a href="">
+        <img src="/media/victor-help.png">
+      </a>
+      
+    </div>
+
+    <h1 class="ui medium header">VICTOR
+      <div class="sub header" style="margin-top: 0.5rem;">Guide d&#39;utilisation</div>
+    </h1>
+
+    
+    
+    
+    
+  </section>
+  
+
+  
+  
+  <section class="ui attached center aligned segment dream-tags">
+    
+    <a class="ui label" href="/tags/technique/" title="technique">#technique</a>
+    
+  </section>
+  
+  
+
+  
+
+<section class="ui bottom attached segment dream-categories" style="background-color: #e8e8e8;">
+
+  
+  
+  
+  
+  <div class="ui vertical accordion menu">
+    
+  
+  <div class="item">
+    
+    <div class="active title">
+      <i class="dropdown icon"></i>
+      <span>Technique Admin</span>
+    </div>
+    <div class="active content">
+      <div class="menu">
+      
+      <a class="item active"
+      href="/technique/installation/">Installation</a>
+      
+      <a class="item "
+      href="/technique/new-site/">Création d&#39;un site Hugo</a>
+      
+      <a class="item "
+      href="/technique/repertoires/">Le site Hugo</a>
+      
+      </div>
+    </div>
+    
+  </div> 
+  
+  
+  </div>
+  
+  
+  
+  
+  
+  
+  
+
+
+<div class="ui bottom right attached label">
+  <div id="about" class="ui icon"
+  data-html="<p>Generated by <a href='https://gohugo.io/' target='_blank'>Hugo</a><span> with theme <a href='https://github.com/pbillerot/beedream' target='_blank'>Beedream 1.2.1 du 18 avril 2021</a></p>"
+    data-variation="basic">
+    <i class="circle info blue icon"></i>
+  </div>
+</div>
+</section>
+
+</article>
+    </div>
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    
+<div id="bee-modal-image" class="ui large modal">
+    <div class="actions">
+        <div class="ui approve button bee-hidden"><i class="file pdf red icon"></i>Télécharger</div>
+        <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+        <img class="image center aligned" style="max-height: 100%;max-width: 100%;" src="">
+    </div>
+</div>
+
+<div id="bee-modal-player" class="ui tiny modal">
+    <div class="actions">
+        <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="content">
+        <div class="ui compact icon message bee-player" data-path="à venir">
+            <i class="play icon"></i>
+            <div class="content">
+                <p>à venir</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="javascript:" id="return-to-top"><i class="arrow up icon"></i></a>
+<script>
+    
+    var $BeeIsServer = 'false';
+    var $BeeFilePath = 'technique\/installation.md';
+</script>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/semantic.min.js"></script>
+<script src="/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/bee-script.js?v=1.2.1%20du%2018%20avril%202021"></script>
+<script src="/js/theme.js"></script>
+    
+<script src="/js/html2canvas.min.js"></script>
+<script src="/js/post.js"></script>
+
+
+
+<script src="/lightbox/js/lightgallery.min.js"></script>
+<script>
+    lightGallery(document.getElementById('article'),{ selector: '.bee-diapo'});
+</script>
+
+
+
+    
+
+    
+  </body>
+</html>

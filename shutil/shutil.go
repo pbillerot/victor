@@ -260,16 +260,14 @@ func CopyTree(src, dst string, options *CopyTreeOptions) error {
 	}
 
 	_, err = os.Open(dst)
-	if !os.IsNotExist(err) {
-		return &AlreadyExistsError{dst}
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(dst, srcFileInfo.Mode())
+		if err != nil {
+			return err
+		}
 	}
 
 	entries, err := ioutil.ReadDir(src)
-	if err != nil {
-		return err
-	}
-
-	err = os.MkdirAll(dst, srcFileInfo.Mode())
 	if err != nil {
 		return err
 	}

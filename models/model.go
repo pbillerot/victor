@@ -87,6 +87,7 @@ type AppConfig struct {
 	HugoRacine  string // /volshare/foirexpo
 	HugoTheme   string
 	Github      string
+	Help        string
 	// Calculé dans main
 	HugoContentDir string // /volshare/foirexpo/content
 	HugoPrivateDir string // /volshare/foirexpo/private

@@ -36,6 +36,9 @@ func init() {
 	if val, ok := config.String("github"); ok == nil {
 		models.Config.Github = val
 	}
+	if val, ok := config.String("help"); ok == nil {
+		models.Config.Help = val
+	}
 	if val, ok := config.String("hugo_theme"); ok == nil {
 		models.Config.HugoTheme = val
 	}
@@ -73,7 +76,19 @@ func init() {
 		web.SetStaticPath("/hugo", models.Config.HugoRacine+"/"+models.Config.HugoPrivateDir)
 		web.SetStaticPath("/", models.Config.HugoRacine+"/"+models.Config.HugoPublicDir)
 	}
-	web.SetStaticPath("/help", "site/public/")
+	// Récupération de l'aide en ligne
+	src := models.Config.Help
+	dst := "help"
+	_, err = os.Open(src + "/index.html")
+	if !os.IsNotExist(err) {
+		err = shutil.CopyTree(src, dst, nil)
+		if err != nil {
+			msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", src, dst, err)
+			logs.Error(msg)
+		}
+	}
+
+	web.SetStaticPath("/help", "help")
 	initConfigHugo()
 }
 
