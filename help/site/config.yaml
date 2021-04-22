@@ -2,7 +2,7 @@
 # Configuration du site
 # lien symbolyque /config/-default/config.yaml
 #
-baseURL: ""
+baseURL: "/"
 params:
   title: "VICTOR"
   subtitle: "Guide d'utilisation"

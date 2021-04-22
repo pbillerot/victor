@@ -9,6 +9,8 @@ func init() {
 
 	// web.Router("/hugo/", &controllers.MainController{}, "get:Hugo")
 
+	web.Router("/victor/app/:app", &controllers.MainController{}, "get:SelectHugoApp")
+
 	web.Router("/victor/", &controllers.MainController{}, "get:Main")
 	web.Router("/victor/folder/", &controllers.MainController{}, "get:Folder")
 	web.Router("/victor/folder/*.*", &controllers.MainController{}, "get:Folder")

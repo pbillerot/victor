@@ -68,10 +68,17 @@
                             title="Mettre le site en production..." data-message="Veuillez le confirmer">
                             <i class="red play circle outline square icon"></i> Mettre le site en production...
                         </div>
-                        <div class="ui icon item bee-window-open" data-url="/" data-posx="right" data-width="1200"
+                        <div class="ui icon item bee-window-open" data-url="{{.Config.HugoBaseURL}}" data-posx="right" data-width="1200"
                             data-posy="150" target="hugo-prod">
                             <i class="blue eye icon"></i> Voir le site de production
                         </div>
+                        <div class="divider"></div>
+                        {{$hugoName := .Config.HugoName}}
+                        {{range $hugoapp := .Config.HugoApps}}
+                        <a class="ui icon {{if eq $hugoapp.Name $hugoName}}active{{end}} item" href="/victor/app/{{$hugoapp.Name}}" >
+                            <i class="hospital symbol icon"></i> {{$hugoapp.Title}}
+                        </a>
+                        {{end}}
                         <!-- end if actions-->
                     </div>
                 </div>

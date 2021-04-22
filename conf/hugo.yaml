@@ -1,0 +1,14 @@
+
+hugoapp:
+  - name: victor
+    title: "Victor Administration"
+    folder: "/volshare/victor-doc"
+    baseurl: "/"
+  - name: beedream
+    title: "Beedream Administration"
+    folder: "/volshare/beedream-doc"
+    baseurl: "/beedream/"
+  - name: hyde
+    title: "Hyde Administration"
+    folder: "/volshare/hyde"
+    baseurl: "/hyde/"

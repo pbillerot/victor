@@ -51,7 +51,7 @@
 
 <link rel="stylesheet" href="/lightbox/css/lightgallery.min.css" />
 
-<link rel="stylesheet" href="/css/custom.css?v=1.2.1%20du%2018%20avril%202021" />
+<link rel="stylesheet" href="/css/custom.css?v=1.2.2%20du%2020%20avril%202021" />
 
 <style>
   a:hover {
@@ -86,7 +86,7 @@
 
   <body>
     <nav class="ui secondary menu dream-menu">
-    <a class="item" href="" style="color: black !important;">
+    <a class="item" href="/" style="color: black !important;">
         <i class="large link home icon" title="Home"></i>
     </a>
     
@@ -139,11 +139,11 @@
 </p>
 <p>Je vous propose d&rsquo;installer une plateforme complète pour héberger notre application <strong>Victor</strong>.</p>
 <p>Nous utiliserons une VM (Machine Virtuelle) 
-<a href="https://fr.wikipedia.org/wiki/Debian" target="_blank" rel="noopener">DEBIAN 10</a> avec le gestionnaire de conteneur 
-<a href="https://fr.wikipedia.org/wiki/Docker_%28logiciel%29" target="_blank" rel="noopener">Docker</a> installé.</p>
+<a href="https://fr.wikipedia.org/wiki/Debian" target="_blank">DEBIAN 10</a> avec le gestionnaire de conteneur 
+<a href="https://fr.wikipedia.org/wiki/Docker_%28logiciel%29" target="_blank">Docker</a> installé.</p>
 <p>Ce document ne décrit pas l&rsquo;installation d&rsquo;une VM Debian et de Docker.<br>
 Pour ma part je loue une <strong>VPS Debian 10 Docker</strong> chez l&rsquo;hébergeur 
-<a href="https://www.ovhcloud.com/fr/vps/" target="_blank" rel="noopener">OVH</a> (1 vCore 2 Go 20 Go 1 domaine.eu pour 46.16 €/an)</p>
+<a href="https://www.ovhcloud.com/fr/vps/" target="_blank">OVH</a> (1 vCore 2 Go 20 Go 1 domaine.eu pour 46.16 €/an)</p>
 <h2 id="prérequis-du-système-hôte">Prérequis du système hôte</h2>
 <p>Système : <code>Debian Buster</code></p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt;uname -a
@@ -186,25 +186,25 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 <p>Notre plateforme sera composée de 4 containers :</p>
 <ul>
 <li>
-<a href="https://caddyserver.com/docs/" target="_blank" rel="noopener">Caddy Server</a> le frontal web, c&rsquo;est l&rsquo;élément le plus important. Il sera chargé :
+<a href="https://caddyserver.com/docs/" target="_blank">Caddy Server</a> le frontal web, c&rsquo;est l&rsquo;élément le plus important. Il sera chargé :
 <ul>
 <li>de contrôler le trafic http (:80) et https (:443)</li>
 <li>de renouveller le certificat lié au nom de domaine</li>
 <li>de gérer les authentifications pour certaines 
-<a href="https://fr.wikipedia.org/wiki/Uniform_Resource_Identifier" target="_blank" rel="noopener">URI</a></li>
+<a href="https://fr.wikipedia.org/wiki/Uniform_Resource_Identifier" target="_blank">URI</a></li>
 <li>de rediriger les flux vers les autres containers en fonction des URI</li>
 <li>de journaliser les accès et les erreurs</li>
 </ul>
 </li>
 <li>
-<a href="https://www.billerot.eu" target="_blank" rel="noopener">Bivouac</a> le container de notre application qui utilisera une image de <strong>Victor</strong></li>
+<a href="https://www.billerot.eu" target="_blank">Bivouac</a> le container de notre application qui utilisera une image de <strong>Victor</strong></li>
 </ul>
 <p>Pour plus de confort, j&rsquo;utilise</p>
 <ul>
 <li>
-<a href="https://korben.info/portainer-io-un-outil-graphique-pour-gerer-vos-environnements-docker-en-toute-securite.html" target="_blank" rel="noopener">Portainer</a> pour gérer graphiquement l&rsquo;environnement Docker</li>
+<a href="https://korben.info/portainer-io-un-outil-graphique-pour-gerer-vos-environnements-docker-en-toute-securite.html" target="_blank">Portainer</a> pour gérer graphiquement l&rsquo;environnement Docker</li>
 <li>
-<a href="https://filebrowser.org/features" target="_blank" rel="noopener">Filebrowser</a> pour manipuler les fichiers du répertoire partagé (volshare)</li>
+<a href="https://filebrowser.org/features" target="_blank">Filebrowser</a> pour manipuler les fichiers du répertoire partagé (volshare)</li>
 </ul>
 <p>Les 4 containers ont accès à la même ressource de fichiers <code>volshare</code> et les échanges entre <strong>Caddy Server</strong> et les autres containers se font à travers le réseau privé <code>web</code>. Ces containers ne sont pas  accessibles de l&rsquo;extérieur.</p>
 <p>La configuration de <strong>Docker</strong> se fait à travers le fichier <code>/volshare/docker/docker-compose.yaml</code>, 
@@ -511,7 +511,7 @@ docker image prune -f
 
 <p>Dans votre navigateur préféré taper l&rsquo;URL :</p>
 <p>
-<a href="https://mon.domaine.fr/victor" target="_blank" rel="noopener">https://mon.domaine.fr/victor</a></p>
+<a href="https://mon.domaine.fr/victor" target="_blank">https://mon.domaine.fr/victor</a></p>
 <p>puis renseigner le code utilisateur et son mot de passe que vous avez configuré</p>
 <p>et vous devriez avoir l&rsquo;écran d&rsquo;accueil de Victor :</p></article>
         </section>
@@ -542,7 +542,7 @@ docker image prune -f
   <section class="ui top attached center aligned segment">
     <div class="ui small circular image">
       
-      <a href="">
+      <a href="/">
         <img src="/media/victor-help.png">
       </a>
       
@@ -616,7 +616,7 @@ docker image prune -f
 
 <div class="ui bottom right attached label">
   <div id="about" class="ui icon"
-  data-html="<p>Generated by <a href='https://gohugo.io/' target='_blank'>Hugo</a><span> with theme <a href='https://github.com/pbillerot/beedream' target='_blank'>Beedream 1.2.1 du 18 avril 2021</a></p>"
+  data-html="<p>Generated by <a href='https://gohugo.io/' target='_blank'>Hugo</a><span> with theme <a href='https://github.com/pbillerot/beedream' target='_blank'>Beedream 1.2.2 du 20 avril 2021</a></p>"
     data-variation="basic">
     <i class="circle info blue icon"></i>
   </div>
@@ -668,7 +668,7 @@ docker image prune -f
 <script src="/js/jquery.overlayScrollbars.min.js"></script>
 <script src="/js/header.js"></script>
 <script src="/js/main.js"></script>
-<script src="/js/bee-script.js?v=1.2.1%20du%2018%20avril%202021"></script>
+<script src="/js/bee-script.js?v=1.2.2%20du%2020%20avril%202021"></script>
 <script src="/js/theme.js"></script>
     
 <script src="/js/html2canvas.min.js"></script>

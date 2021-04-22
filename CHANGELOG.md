@@ -13,18 +13,25 @@ _build:
 ---
 <!--more-->
 ### À venir :
-- bug chemin des images /media non préfixé par /hugo
-- update theme ctrl git submodule
-- bivouac out data - lien bivouac_content dans data
-- doc sauvegarde data - docker
-- Structure du contenu - content/site/config.yaml -> ../config.yaml
-- Doc Environnements Test et Production
+- [ ] doc sauvegarde data - docker
+- [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
+- [ ] Doc Environnements Test et Production
+- [ ] recup automatique theme sous themes
+- [x] /config/hugo n'est plus nécessaire
+- [x] app.yaml liste des répertoires hugo à gérer
+- [x] ui sélection dans liste des site hugo
+- [x] update theme ctrl git submodule
+
+2.8.0 du 22 avril 2021
+----------------------
+- `added` fichier /conf/hugo.yaml pour indiquer les répertoires à administrer par Victor
+- `added` fichier /conf/ctx.yaml fichier contexte interne à victor (utilisation de viper)
+- `removed` conf/custom.conf n'est plus utile
 
 2.7.0 du 19 avril 2021
 ----------------------
 - `removed` référentiel de l'aide en ligne - Répertoire help alimenté par ../victor-doc/public
 - `changed` maj du thème via le git ou submodule
-
 
 2.6.4 du 18 avril 2021
 ----------------------

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/prometheus/common/log"
 	"gopkg.in/yaml.v2"
 )
 
@@ -84,14 +85,16 @@ type AppConfig struct {
 	Background  string
 	Favicon     string
 	Icon        string
-	HugoRacine  string // /volshare/foirexpo
-	HugoTheme   string
 	Github      string
 	Help        string
-	// Calculé dans main
+	// Lié à la webapp hugo délectionné
+	HugoApps       []HugoApp
+	HugoName       string // nom de la webapp hugo
+	HugoRacine     string // /volshare/foirexpo
+	HugoTheme      string // theme du hugo courant (calculé)
+	HugoBaseURL    string // BaseURL du site en production
 	HugoContentDir string // /volshare/foirexpo/content
 	HugoPrivateDir string // /volshare/foirexpo/private
-	HugoPublicDir  string // /volshare/foirexpo/public
 }
 
 // Breadcrumb as
@@ -446,4 +449,59 @@ func contains(s []string, str string) bool {
 	}
 
 	return false
+}
+
+// HugoAppStruct structure du fichier hugo.yaml
+type HugoAppStruct struct {
+	Apps []HugoApp `yaml:"hugoapp"`
+}
+
+// HugoApp prop d'une webapp Hugo
+type HugoApp struct {
+	Name    string `yaml:"name"`
+	Title   string `yaml:"title"`
+	Folder  string `yaml:"folder"`
+	BaseURL string `yaml:"baseurl"`
+}
+
+func (c *HugoAppStruct) getConf() *HugoAppStruct {
+
+	yamlFile, err := ioutil.ReadFile("conf/hugo.yaml")
+	if err != nil {
+		logs.Error("yamlFile.Get err", err)
+	}
+	err = yaml.Unmarshal(yamlFile, c)
+	if err != nil {
+		logs.Error("Unmarshal", err)
+	}
+
+	return c
+}
+
+// HugoApps LISTE DES REPERTOIRES HUGO A GERER
+var HugoApps HugoAppStruct
+
+// LoadHugoApps chargement de la liste des répertoires Hugo
+func LoadHugoApps() {
+	HugoApps.getConf()
+	log.Info("HugoApps", HugoApps)
+}
+
+// GetHugoApp retourne la HugoApp
+func GetHugoApp(app string) HugoApp {
+	var hugoApp HugoApp
+	for _, hugoapp := range HugoApps.Apps {
+		if app == hugoapp.Name {
+			hugoApp = hugoapp
+		}
+	}
+	return hugoApp
+}
+
+// GetFirstHugoApp retourne la première HugoApp
+func GetFirstHugoApp() HugoApp {
+	for _, hugoapp := range HugoApps.Apps {
+		return hugoapp
+	}
+	return HugoApp{}
 }

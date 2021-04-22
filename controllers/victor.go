@@ -11,6 +11,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/kennygrant/sanitize"
+	"github.com/spf13/viper"
 
 	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
@@ -643,6 +644,68 @@ func (c *MainController) APIFolders() {
 	c.ServeJSON()
 }
 
+// SelectHugoApp Sélection d'un folder à administrer
+func (c *MainController) SelectHugoApp() {
+
+	hugoApp := models.GetHugoApp(c.Ctx.Input.Param(":app"))
+
+	if hugoApp.Name != "" {
+		SetHugoApp(hugoApp)
+	}
+	c.Ctx.Redirect(302, "/victor/folder/")
+}
+
+// SetHugoApp positionnement du contaxte hugo
+func SetHugoApp(hugoApp models.HugoApp) {
+	// Changement des contextes
+	models.Config.HugoName = hugoApp.Name
+	models.Config.HugoBaseURL = hugoApp.BaseURL
+	models.Config.HugoRacine = hugoApp.Folder
+	models.Config.HugoContentDir = hugoApp.Folder + "/content"
+	models.Config.HugoPrivateDir = hugoApp.Folder + "/private"
+	web.SetStaticPath("/content", models.Config.HugoContentDir)
+	web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
+	models.Config.Title = hugoApp.Title
+	// detect theme
+	// ouverture du dossier themes
+	f, err := os.Open(hugoApp.Folder + "/themes")
+	if err == nil {
+		// lecture ds fichiers et dossiers du dossier courant
+		list, err := f.Readdir(-1)
+		f.Close()
+		if err == nil {
+			models.Config.HugoTheme = list[0].Name()
+		}
+	}
+	models.HugoReload()
+
+	// save hugoapp dans file properties
+	viper.Set("hugoapp", hugoApp.Name)
+	viper.WriteConfig()
+
+	logs.Info("StaticDir:", web.BConfig.WebConfig.StaticDir)
+}
+
+// newDocument : Exécution du moteur Hugo pour créer un nouveau document
+func newDocument(c *MainController, folder string, filename string) error {
+	folder = strings.TrimPrefix(folder, "/")
+	var cmd *exec.Cmd
+	if folder == "" {
+		cmd = exec.Command("hugo", "new", filename)
+	} else {
+		cmd = exec.Command("hugo", "new", folder+"/"+filename)
+	}
+	// cmd := exec.Command("ls", "-l")
+	logs.Info("newDocument", cmd)
+	cmd.Dir = models.Config.HugoRacine
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Error("newDocument", err)
+	}
+	logs.Info("newDocument", string(out))
+	return err
+}
+
 // APIFile as /api/file
 func (c *MainController) APIFile() {
 	type myStruct struct {
@@ -683,7 +746,7 @@ func (c *MainController) Action() {
 func pushDev(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("hugo", "-d", models.Config.HugoPrivateDir,
+	cmd := exec.Command("hugo", "-b", "/hugo/", "-d", models.Config.HugoPrivateDir,
 		"--environment", "hugo", "--cleanDestinationDir")
 	// cmd := exec.Command("ls", "-l")
 	logs.Info("pushDev", cmd)
@@ -698,31 +761,11 @@ func pushDev(c *MainController) {
 	logs.Info("pushDev", string(out))
 }
 
-// newDocument : Exécution du moteur Hugo pour créer un nouveau document
-func newDocument(c *MainController, folder string, filename string) error {
-	folder = strings.TrimPrefix(folder, "/")
-	var cmd *exec.Cmd
-	if folder == "" {
-		cmd = exec.Command("hugo", "new", filename)
-	} else {
-		cmd = exec.Command("hugo", "new", folder+"/"+filename)
-	}
-	// cmd := exec.Command("ls", "-l")
-	logs.Info("newDocument", cmd)
-	cmd.Dir = models.Config.HugoRacine
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		logs.Error("newDocument", err)
-	}
-	logs.Info("newDocument", string(out))
-	return err
-}
-
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de production
 func pushProd(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("hugo", "--cleanDestinationDir")
+	cmd := exec.Command("hugo", "-b", models.Config.HugoBaseURL, "--cleanDestinationDir")
 	logs.Info("pushProd", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
