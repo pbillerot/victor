@@ -17,10 +17,17 @@ _build:
 - [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
 - [ ] Doc Environnements Test et Production
 - [ ] recup automatique theme sous themes
+- [x] hugo.yaml HelpTheme
+- [x] Guide d'utilisation du thème
 - [x] /config/hugo n'est plus nécessaire
 - [x] app.yaml liste des répertoires hugo à gérer
 - [x] ui sélection dans liste des site hugo
 - [x] update theme ctrl git submodule
+
+2.8.1 du 23 avril 2021
+----------------------
+- `changed` hugo.yaml avec theme et themehelp
+- `added` creation automatique lien /document/site/config.yaml config.yaml
 
 2.8.0 du 22 avril 2021
 ----------------------

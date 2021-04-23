@@ -2,17 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on </title>
-    <link>/tags/</link>
+    <link>/help/tags/</link>
     <description>Recent content in Tags on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-FR</language>
-    <lastBuildDate>Thu, 08 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 08 Apr 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/help/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>technique</title>
-      <link>/tags/technique/</link>
+      <link>/help/tags/technique/</link>
       <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>/tags/technique/</guid>
+      <guid>/help/tags/technique/</guid>
       <description></description>
     </item>
     

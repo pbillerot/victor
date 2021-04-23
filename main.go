@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/beego/beego/v2/core/config"
 	"github.com/beego/beego/v2/core/logs"
@@ -85,6 +86,26 @@ func initConfigHugo() {
 	} else {
 		hugoApp := models.GetHugoApp(viper.GetString("hugoapp"))
 		controllers.SetHugoApp(hugoApp)
+	}
+
+	// Initialisation de content
+	// en créant un lien symbolique vers config.yaml
+	_, err = os.Open(models.Config.HugoRacine + "/content/site/config.yaml")
+	if os.IsNotExist(err) {
+		err = shutil.CreateDir(models.Config.HugoRacine + "/content/site")
+		if err != nil {
+			logs.Error("initConfigHugo", err)
+			return
+		}
+		cmd := exec.Command("ln", "-s", "../../config.yaml", "content/site/config.yaml")
+		logs.Info("Init content", cmd)
+		cmd.Dir = models.Config.HugoRacine
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			logs.Error("Init content", err)
+			return
+		}
+		logs.Info("Init content", string(out))
 	}
 
 }

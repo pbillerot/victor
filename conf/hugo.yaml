@@ -3,12 +3,24 @@ hugoapp:
   - name: victor
     title: "Victor Administration"
     folder: "/volshare/victor-doc"
-    baseurl: "/"
+    baseurl: "/help/"
+    theme: "beedream"
+    themehelp: "https://www.billerot.eu/beedream/"
   - name: beedream
     title: "Beedream Administration"
     folder: "/volshare/beedream-doc"
     baseurl: "/beedream/"
+    theme: "beedream"
+    themehelp: "https://www.billerot.eu/beedream/"
   - name: hyde
     title: "Hyde Administration"
     folder: "/volshare/hyde"
     baseurl: "/hyde/"
+    theme: "hyde"
+    themehelp: "https://github.com/spf13/hyde"
+  - name: beefree
+    title: "Beefree Administration"
+    folder: "/volshare/beefree"
+    baseurl: "/"
+    theme: "beedream"
+    themehelp: "https://www.billerot.eu/beedream/"

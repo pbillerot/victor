@@ -7,7 +7,7 @@
     <title>VICTOR</title>
 
     
-<link href="/media/victor-help.png" rel="shortcut icon" type="image/x-icon" />
+<link href="/help/media/victor-help.png" rel="shortcut icon" type="image/x-icon" />
 
 
 
@@ -17,41 +17,41 @@
 
 
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" sizes="192x192" href="/media/victor-help.png">
+<link rel="icon" sizes="192x192" href="/help/media/victor-help.png">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="VICTOR">
-<link rel="apple-touch-icon-precomposed" href="/media/victor-help.png">
+<link rel="apple-touch-icon-precomposed" href="/help/media/victor-help.png">
 
 
-<meta name="generator" content="Hugo 0.77.0-DEV" />
+<meta name="generator" content="Hugo 0.71.1" />
 
-<link rel="canonical" href="/technique/installation/" />
+<link rel="canonical" href="/help/technique/installation/" />
 
 
 <meta property="og:title" content="Installation" />
 <meta property="og:description" content="Guide pour l&rsquo;administrateur technique" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/technique/installation/" />
+<meta property="og:url" content="/help/technique/installation/" />
 <meta property="article:published_time" content="2021-04-08T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-04-08T00:00:00+00:00" /><meta property="og:site_name" content="VICTOR" />
 
 
-<link rel="stylesheet" href="/css/semantic.min.css" />
+<link rel="stylesheet" href="/help/css/semantic.min.css" />
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Rancho&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="/help/css/icomoon.css" />
 
-<link rel="stylesheet" href="/css/github-markdown.css" />
-<link rel="stylesheet" href="/css/site.css" />
+<link rel="stylesheet" href="/help/css/github-markdown.css" />
+<link rel="stylesheet" href="/help/css/site.css" />
 
-<link rel="stylesheet" href="/lightbox/css/lightgallery.min.css" />
+<link rel="stylesheet" href="/help/lightbox/css/lightgallery.min.css" />
 
-<link rel="stylesheet" href="/css/custom.css?v=1.2.2%20du%2020%20avril%202021" />
+<link rel="stylesheet" href="/help/css/custom.css?v=1.2.2%20du%2020%20avril%202021" />
 
 <style>
   a:hover {
@@ -74,7 +74,7 @@
 
     
     
-    background-image: url('/media/geometric.jpg');
+    background-image: url('/help/media/geometric.jpg');
     
     
   }
@@ -86,7 +86,7 @@
 
   <body>
     <nav class="ui secondary menu dream-menu">
-    <a class="item" href="/" style="color: black !important;">
+    <a class="item" href="/help" style="color: black !important;">
         <i class="large link home icon" title="Home"></i>
     </a>
     
@@ -179,8 +179,8 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 
 
 
-<div class="bee-diapo" data-src="/media/docker.png">
-    <img class="ui    image" src="/media/docker.png"></img>
+<div class="bee-diapo" data-src="/help/media/docker.png">
+    <img class="ui    image" src="/help/media/docker.png"></img>
 </div>
 
 <p>Notre plateforme sera composée de 4 containers :</p>
@@ -249,20 +249,20 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 
 
 
-<div class="bee-diapo" data-src="/media/filebrowser.gif">
-    <img class="ui medium  right floated image" src="/media/filebrowser.gif"></img>
+<div class="bee-diapo" data-src="/help/media/filebrowser.gif">
+    <img class="ui medium  right floated image" src="/help/media/filebrowser.gif"></img>
 </div>
 
 <h3 id="volsharedockerdocker-composeyaml">/volshare/docker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>filebrowser/filebrowser:latest<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>filebrowser<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>filebrowser/filebrowser:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>filebrowser<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare:/srv<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare/filebrowser/database.db:/database.db<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json    <span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json<span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockerfilebrowserfilebrowserjson">/volshare/docker/filebrowser/filebrowser.json</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
@@ -289,22 +289,22 @@ reverse_proxy /fb/* filebrowser:80
 
 
 
-<div class="bee-diapo" data-src="/media/portainer.png">
-    <img class="ui medium  right floated image" src="/media/portainer.png"></img>
+<div class="bee-diapo" data-src="/help/media/portainer.png">
+    <img class="ui medium  right floated image" src="/help/media/portainer.png"></img>
 </div>
 
 <h3 id="volsharedockerdocker-composeyaml-1">/volshare/docker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>portainer/portainer-ce<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>portainer<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">command</span>:<span style="color:#bbb"> </span>-H unix:///var/run/docker.sock<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>portainer/portainer-ce<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>portainer<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">command</span>:<span style="color:#bbb"> </span>-H<span style="color:#bbb"> </span>unix:///var/run/docker.sock<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /var/run/docker.sock:/var/run/docker.sock<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-1">/volshare/docker/caddy/caddyfile.conf</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># portainer </span>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># portainer</span> 
 <span style="color:#60a0b0;font-style:italic"># on supprime le préfix /portainer après le routage</span>
 redir /portainer /portainer/
 route /portainer/* <span style="color:#666">{</span>
@@ -323,22 +323,22 @@ route /portainer/* <span style="color:#666">{</span>
 
 
 
-<div class="bee-diapo" data-src="/media/page-site.png">
-    <img class="ui medium  right floated image" src="/media/page-site.png"></img>
+<div class="bee-diapo" data-src="/help/media/page-site.png">
+    <img class="ui medium  right floated image" src="/help/media/page-site.png"></img>
 </div>
 
 <h3 id="volsharedockerdocker-composeyaml-2">/volshare/docker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">build</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>victor:latest<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>bivouac<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">user</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1000</span>:<span style="color:#40a070">1000</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">bivouac</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">build</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#007020;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>victor:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>bivouac<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">user</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1000</span>:<span style="color:#40a070">1000</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare:/volshare<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- ./bivouac/custom.conf:/src/victor/conf/custom.conf<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockerbivouaccustomconf">/volshare/docker/bivouac/custom.conf</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># custom.conf -  Personnalisation du site déployé</span>
@@ -410,40 +410,40 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span></code></pre></div><h2 id="container-caddy">Container Caddy</h2>
 <h3 id="volsharedockerdocker-composeyaml-3">/volshare/docker/docker-compose.yaml</h3>
 <p>Version complète</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#062873;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">services</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#007020;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">services</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">caddy</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">caddy</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># https://hub.docker.com/_/caddy?tab=description</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>caddy:latest<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>caddy<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>caddy:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>caddy<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">ports</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;80:80&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;443:443&#39;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;./caddy/caddyfile.conf:/etc/caddy/Caddyfile&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare/etc:/data&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare/data/store:/srv&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare:/volshare&#39;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">portainer</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">bivouac</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">certs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">certs</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">web</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">web</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
 </span><span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-3">/volshare/docker/caddy/caddyfile.conf</h3>
 <p>Version complète</p>
@@ -474,7 +474,7 @@ handle_path /store/* <span style="color:#666">{</span>
     file_server browse
 <span style="color:#666">}</span>
 
-<span style="color:#60a0b0;font-style:italic"># Log du trafic (rotation automatique tous les 100 Mo (10 logs) </span>
+<span style="color:#60a0b0;font-style:italic"># Log du trafic (rotation automatique tous les 100 Mo (10 logs)</span> 
 log <span style="color:#666">{</span>
     output file /volshare/log/access.log
     format single_field common_log
@@ -505,8 +505,8 @@ docker image prune -f
 
 
 
-<div class="bee-diapo" data-src="/media/page-site.png">
-    <img class="ui medium  right floated image" src="/media/page-site.png"></img>
+<div class="bee-diapo" data-src="/help/media/page-site.png">
+    <img class="ui medium  right floated image" src="/help/media/page-site.png"></img>
 </div>
 
 <p>Dans votre navigateur préféré taper l&rsquo;URL :</p>
@@ -519,7 +519,7 @@ docker image prune -f
         <footer class="ui attached segment" data-html2canvas-ignore>
             
             
-            <a class="ui label" href="/tags/technique/" title="technique">#technique</a>
+            <a class="ui label" href="/help/tags/technique/" title="technique">#technique</a>
             
             
                 
@@ -542,8 +542,8 @@ docker image prune -f
   <section class="ui top attached center aligned segment">
     <div class="ui small circular image">
       
-      <a href="/">
-        <img src="/media/victor-help.png">
+      <a href="/help">
+        <img src="/help/media/victor-help.png">
       </a>
       
     </div>
@@ -563,7 +563,7 @@ docker image prune -f
   
   <section class="ui attached center aligned segment dream-tags">
     
-    <a class="ui label" href="/tags/technique/" title="technique">#technique</a>
+    <a class="ui label" href="/help/tags/technique/" title="technique">#technique</a>
     
   </section>
   
@@ -590,13 +590,13 @@ docker image prune -f
       <div class="menu">
       
       <a class="item active"
-      href="/technique/installation/">Installation</a>
+      href="/help/technique/installation/">Installation</a>
       
       <a class="item "
-      href="/technique/new-site/">Création d&#39;un site Hugo</a>
+      href="/help/technique/new-site/">Création d&#39;un site Hugo</a>
       
       <a class="item "
-      href="/technique/repertoires/">Le site Hugo</a>
+      href="/help/technique/repertoires/">Le site Hugo</a>
       
       </div>
     </div>
@@ -663,20 +663,20 @@ docker image prune -f
     var $BeeFilePath = 'technique\/installation.md';
 </script>
 
-<script src="/js/jquery.min.js"></script>
-<script src="/js/semantic.min.js"></script>
-<script src="/js/jquery.overlayScrollbars.min.js"></script>
-<script src="/js/header.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/bee-script.js?v=1.2.2%20du%2020%20avril%202021"></script>
-<script src="/js/theme.js"></script>
+<script src="/help/js/jquery.min.js"></script>
+<script src="/help/js/semantic.min.js"></script>
+<script src="/help/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/help/js/header.js"></script>
+<script src="/help/js/main.js"></script>
+<script src="/help/js/bee-script.js?v=1.2.2%20du%2020%20avril%202021"></script>
+<script src="/help/js/theme.js"></script>
     
-<script src="/js/html2canvas.min.js"></script>
-<script src="/js/post.js"></script>
+<script src="/help/js/html2canvas.min.js"></script>
+<script src="/help/js/post.js"></script>
 
 
 
-<script src="/lightbox/js/lightgallery.min.js"></script>
+<script src="/help/lightbox/js/lightgallery.min.js"></script>
 <script>
     lightGallery(document.getElementById('article'),{ selector: '.bee-diapo'});
 </script>

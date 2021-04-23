@@ -91,7 +91,8 @@ type AppConfig struct {
 	HugoApps       []HugoApp
 	HugoName       string // nom de la webapp hugo
 	HugoRacine     string // /volshare/foirexpo
-	HugoTheme      string // theme du hugo courant (calculé)
+	HugoTheme      string // theme du hugo courant
+	HugoThemeHelp  string // help du theme
 	HugoBaseURL    string // BaseURL du site en production
 	HugoContentDir string // /volshare/foirexpo/content
 	HugoPrivateDir string // /volshare/foirexpo/private
@@ -458,10 +459,12 @@ type HugoAppStruct struct {
 
 // HugoApp prop d'une webapp Hugo
 type HugoApp struct {
-	Name    string `yaml:"name"`
-	Title   string `yaml:"title"`
-	Folder  string `yaml:"folder"`
-	BaseURL string `yaml:"baseurl"`
+	Name      string `yaml:"name"`
+	Title     string `yaml:"title"`
+	Folder    string `yaml:"folder"`
+	BaseURL   string `yaml:"baseurl"`
+	Theme     string `yaml:"theme"`
+	ThemeHelp string `yaml:"themehelp"`
 }
 
 func (c *HugoAppStruct) getConf() *HugoAppStruct {

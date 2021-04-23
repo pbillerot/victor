@@ -661,6 +661,8 @@ func SetHugoApp(hugoApp models.HugoApp) {
 	models.Config.HugoName = hugoApp.Name
 	models.Config.HugoBaseURL = hugoApp.BaseURL
 	models.Config.HugoRacine = hugoApp.Folder
+	models.Config.HugoTheme = hugoApp.Theme
+	models.Config.HugoThemeHelp = hugoApp.ThemeHelp
 	models.Config.HugoContentDir = hugoApp.Folder + "/content"
 	models.Config.HugoPrivateDir = hugoApp.Folder + "/private"
 	web.SetStaticPath("/content", models.Config.HugoContentDir)
@@ -668,15 +670,15 @@ func SetHugoApp(hugoApp models.HugoApp) {
 	models.Config.Title = hugoApp.Title
 	// detect theme
 	// ouverture du dossier themes
-	f, err := os.Open(hugoApp.Folder + "/themes")
-	if err == nil {
-		// lecture ds fichiers et dossiers du dossier courant
-		list, err := f.Readdir(-1)
-		f.Close()
-		if err == nil {
-			models.Config.HugoTheme = list[0].Name()
-		}
-	}
+	// f, err := os.Open(hugoApp.Folder + "/themes")
+	// if err == nil {
+	// 	// lecture ds fichiers et dossiers du dossier courant
+	// 	list, err := f.Readdir(-1)
+	// 	f.Close()
+	// 	if err == nil {
+	// 		models.Config.HugoTheme = list[0].Name()
+	// 	}
+	// }
 	models.HugoReload()
 
 	// save hugoapp dans file properties

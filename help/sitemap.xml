@@ -3,47 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/technique/</loc>
+    <loc>/help/technique/</loc>
     <lastmod>2021-04-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/technique/new-site/</loc>
+    <loc>/help/technique/new-site/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/technique/deploiement/</loc>
+    <loc>/help/technique/deploiement/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/technique/installation/</loc>
+    <loc>/help/technique/installation/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/technique/repertoires/</loc>
+    <loc>/help/technique/repertoires/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>/help/tags/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/technique/</loc>
+    <loc>/help/tags/technique/</loc>
     <lastmod>2021-04-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>/help/</loc>
     <lastmod>2021-04-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/help/categories/</loc>
   </url>
   
 </urlset>
