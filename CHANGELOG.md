@@ -24,6 +24,9 @@ _build:
 - [x] ui sélection dans liste des site hugo
 - [x] update theme ctrl git submodule
 
+----------------------
+- `fixed` ajout cacheDir /tmp
+
 2.8.2 du 25 avril 2021
 ----------------------
 - `changed` nettoyage conf

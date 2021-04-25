@@ -749,7 +749,7 @@ func pushDev(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	cmd := exec.Command("hugo", "-b", "/hugo/", "-d", models.Config.HugoPrivateDir,
-		"--environment", "hugo", "--cleanDestinationDir")
+		"-e", "hugo", "--cleanDestinationDir", "--cacheDir", "/tmp")
 	// cmd := exec.Command("ls", "-l")
 	logs.Info("pushDev", cmd)
 	cmd.Dir = models.Config.HugoRacine
@@ -767,7 +767,7 @@ func pushDev(c *MainController) {
 func pushProd(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("hugo", "-b", models.Config.HugoBaseURL, "--cleanDestinationDir")
+	cmd := exec.Command("hugo", "-b", models.Config.HugoBaseURL, "--cleanDestinationDir", "--cacheDir", "/tmp")
 	logs.Info("pushProd", cmd)
 	cmd.Dir = models.Config.HugoRacine
 	out, err := cmd.CombinedOutput()
