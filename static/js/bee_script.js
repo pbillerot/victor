@@ -96,6 +96,26 @@ jQuery(function () {
   // Ouverture d'un dossier ou fichier ou sélection multiple
   $('.bee-tap').on('tap', function (event) {
     if ($bee_selector == false) {
+      // AUDIO
+      if ($(this).hasClass('bee-modal-player')) {
+        // titre du morceau
+        $('#bee-modal-player').find('p').html($(this).data('base'));
+        // path du morceau
+        $('.bee-player').data('path', '/content/' + $(this).data('path'));
+        $('#bee-modal-player')
+          .modal({
+            closable: false,
+            onDeny: function () {
+              $player.stop();
+              $player.path = null;
+              return true;
+            },
+            onVisible: function () {
+              return true;
+            }
+          }).modal('show');
+          return;
+      }
       // Mode sélection unique
       var $action = $(this).data('action')
       if ($action.indexOf('/folder') != -1) {
@@ -433,27 +453,6 @@ jQuery(function () {
     $('#bee-progress').removeClass('bee-hidden');
   }).on('upload:after', function (e, file, i) {
     window.location.reload();
-  });
-
-  // MODAL PLaYER
-  $('.bee-modal-player').on('click', function (event) {
-    // titre du morceau
-    $('#bee-modal-player').find('p').html($(this).data('base'));
-    // path du morceau
-    $('.bee-player').data('path', '/content/' + $(this).data('path'));
-    $('#bee-modal-player')
-      .modal({
-        closable: false,
-        onDeny: function () {
-          $player.stop();
-          $player.path = null;
-          return true;
-        },
-        onVisible: function () {
-          return true;
-        }
-      }).modal('show');
-    event.preventDefault();
   });
 
   /**

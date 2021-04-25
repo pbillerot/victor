@@ -21,3 +21,5 @@ mem*
 victor
 #site/public
 site/private
+conf/ctx.yaml
+conf/hugo.yaml

@@ -60,7 +60,7 @@
 </div>
 {{ else if $record.IsAudio}}
 <!-- AUDIO -->
-<div class="ui compact message bee-modal-player bee-press" data-action="/victor/content{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
+<div class="ui compact message bee-modal-player bee-tap bee-press" data-action="/victor/content{{$record.Path}}" data-base="{{$record.Base}}" data-path="{{$record.Path}}">
     <i class="file audio orange large icon"></i>{{$record.Base}}
 </div>
 {{ else if or $record.IsText $record.IsMarkdown }}

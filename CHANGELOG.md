@@ -24,6 +24,11 @@ _build:
 - [x] ui sélection dans liste des site hugo
 - [x] update theme ctrl git submodule
 
+2.8.2 du 25 avril 2021
+----------------------
+- `changed` nettoyage conf
+- `fixed` audio non sélectable
+
 2.8.1 du 23 avril 2021
 ----------------------
 - `changed` hugo.yaml avec theme et themehelp
