@@ -665,6 +665,7 @@ func SetHugoApp(hugoApp models.HugoApp) {
 	models.Config.HugoThemeHelp = hugoApp.ThemeHelp
 	models.Config.HugoContentDir = hugoApp.Folder + "/content"
 	models.Config.HugoPrivateDir = hugoApp.Folder + "/private"
+	models.Config.HugoPublicDir = hugoApp.Folder + "/public"
 	web.SetStaticPath("/content", models.Config.HugoContentDir)
 	web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
 	models.Config.Title = hugoApp.Title
@@ -749,7 +750,7 @@ func pushDev(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	cmd := exec.Command("hugo", "-b", "/hugo/", "-d", models.Config.HugoPrivateDir,
-		"-e", "hugo", "--cleanDestinationDir", "--cacheDir", "/tmp")
+		"--cleanDestinationDir", "--cacheDir", "/tmp")
 	// cmd := exec.Command("ls", "-l")
 	logs.Info("pushDev", cmd)
 	cmd.Dir = models.Config.HugoRacine

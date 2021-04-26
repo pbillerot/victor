@@ -96,6 +96,7 @@ type AppConfig struct {
 	HugoBaseURL    string // BaseURL du site en production
 	HugoContentDir string // /volshare/foirexpo/content
 	HugoPrivateDir string // /volshare/foirexpo/private
+	HugoPublicDir  string // /volshare/foirexpo/public
 }
 
 // Breadcrumb as

@@ -24,3 +24,9 @@ hugoapp:
     baseurl: "/"
     theme: "beedream"
     themehelp: "https://www.billerot.eu/beedream/"
+  - name: foirexpo
+    title: "FoirExpo Administration"
+    folder: "/volshare/foirexpo"
+    baseurl: "/fx/"
+    theme: "beedream"
+    themehelp: "https://www.billerot.eu/beedream/"

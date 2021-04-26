@@ -16,14 +16,12 @@ _build:
 - [ ] doc sauvegarde data - docker
 - [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
 - [ ] Doc Environnements Test et Production
-- [ ] recup automatique theme sous themes
-- [x] hugo.yaml HelpTheme
-- [x] Guide d'utilisation du thème
-- [x] /config/hugo n'est plus nécessaire
-- [x] app.yaml liste des répertoires hugo à gérer
-- [x] ui sélection dans liste des site hugo
-- [x] update theme ctrl git submodule
 
+2.8.5 du 26 avril 2021
+----------------------
+- `alert` le nom des répertoires racine du site doivent être différent de baseURL (bug HUGO)
+
+2.8.3 du 25 avril 2021
 ----------------------
 - `fixed` ajout cacheDir /tmp
 
