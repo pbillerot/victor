@@ -5,13 +5,13 @@ hugoapp:
     folder: "/volshare/victor-doc"
     baseurl: "/help/"
     theme: "beedream"
-    themehelp: "https://www.billerot.eu/beedream/"
+    themehelp: "https://pbillerot.freeboxos.fr/beedream/"
   - name: beedream
     title: "Beedream Administration"
     folder: "/volshare/beedream-doc"
     baseurl: "/beedream/"
     theme: "beedream"
-    themehelp: "https://www.billerot.eu/beedream/"
+    themehelp: "https://pbillerot.freeboxos.fr/beedream/"
   - name: hyde
     title: "Hyde Administration"
     folder: "/volshare/hyde"
@@ -23,10 +23,10 @@ hugoapp:
     folder: "/volshare/beefree"
     baseurl: "/"
     theme: "beedream"
-    themehelp: "https://www.billerot.eu/beedream/"
+    themehelp: "https://pbillerot.freeboxos.fr/beedream/"
   - name: foirexpo
     title: "FoirExpo Administration"
     folder: "/volshare/foirexpo"
     baseurl: "/fx/"
     theme: "beedream"
-    themehelp: "https://www.billerot.eu/beedream/"
+    themehelp: "https://pbillerot.freeboxos.fr/beedream/"

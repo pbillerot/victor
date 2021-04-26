@@ -17,6 +17,10 @@ _build:
 - [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
 - [ ] Doc Environnements Test et Production
 
+2.8.6 du 26 avril 2021
+----------------------
+- `fixed` pb ctx inconnu lors install container
+
 2.8.5 du 26 avril 2021
 ----------------------
 - `alert` le nom des répertoires racine du site doivent être différent de baseURL (bug HUGO)

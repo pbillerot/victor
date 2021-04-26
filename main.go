@@ -80,13 +80,14 @@ func initConfigHugo() {
 	}
 
 	// Positionnement sur la dernière hugoapp utilisée
-	if viper.GetString("hugoapp") == "" {
-		hugoApp := models.GetFirstHugoApp()
-		controllers.SetHugoApp(hugoApp)
-	} else {
-		hugoApp := models.GetHugoApp(viper.GetString("hugoapp"))
-		controllers.SetHugoApp(hugoApp)
+	hugoApp := models.HugoApp{}
+	if viper.GetString("hugoapp") != "" {
+		hugoApp = models.GetHugoApp(viper.GetString("hugoapp"))
 	}
+	if hugoApp.Name == "" {
+		hugoApp = models.GetFirstHugoApp()
+	}
+	controllers.SetHugoApp(hugoApp)
 
 	// Initialisation de content
 	// en créant un lien symbolique vers config.yaml
