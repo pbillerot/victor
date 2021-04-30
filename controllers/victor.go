@@ -663,6 +663,7 @@ func SetHugoApp(hugoApp models.HugoApp) {
 	models.Config.HugoRacine = hugoApp.Folder
 	models.Config.HugoTheme = hugoApp.Theme
 	models.Config.HugoThemeHelp = hugoApp.ThemeHelp
+	models.Config.HugoDeploy = hugoApp.Deploy
 	models.Config.HugoContentDir = hugoApp.Folder + "/content"
 	models.Config.HugoPrivateDir = hugoApp.Folder + "/private"
 	models.Config.HugoPublicDir = hugoApp.Folder + "/public"
@@ -739,6 +740,8 @@ func (c *MainController) Action() {
 		pushDev(c)
 	case "pushProd":
 		pushProd(c)
+	case "deploy":
+		deploy(c)
 	case "gitUpdateTheme":
 		gitUpdateTheme(c)
 	}
@@ -782,6 +785,26 @@ func pushProd(c *MainController) {
 	flash.Success(string(out))
 	flash.Store(&c.Controller)
 	logs.Info("pushProd", string(out))
+}
+
+// deploy : déployer la production sur un site
+func deploy(c *MainController) {
+	flash := beego.ReadFromRequest(&c.Controller)
+
+	cmd := exec.Command("/bin/sh", models.Config.HugoDeploy)
+	logs.Info("deploy", cmd)
+	cmd.Dir = models.Config.HugoRacine
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		logs.Error("deploy", err)
+		flash.Error("deploy : %v", err)
+		flash.Error(string(out))
+		flash.Store(&c.Controller)
+		return
+	}
+	flash.Success(string(out))
+	flash.Store(&c.Controller)
+	logs.Info("deploy", string(out))
 }
 
 // gitUpdateTheme : Mise à jour du thème à partir du référentiel git

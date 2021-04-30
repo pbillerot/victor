@@ -24,6 +24,7 @@ hugoapp:
     baseurl: "/"
     theme: "beedream"
     themehelp: "https://pbillerot.freeboxos.fr/beedream/"
+    deploy: "/volshare/docker/beefree/deploy.sh"
   - name: foirexpo
     title: "FoirExpo Administration"
     folder: "/volshare/foirexpo"

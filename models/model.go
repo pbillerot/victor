@@ -97,6 +97,7 @@ type AppConfig struct {
 	HugoContentDir string // /volshare/foirexpo/content
 	HugoPrivateDir string // /volshare/foirexpo/private
 	HugoPublicDir  string // /volshare/foirexpo/public
+	HugoDeploy     string // paramètre destination de la commande rsync de déploiement de public sur un autre site (user@site.com:/volshare/www)
 }
 
 // Breadcrumb as
@@ -466,9 +467,10 @@ type HugoApp struct {
 	BaseURL   string `yaml:"baseurl"`
 	Theme     string `yaml:"theme"`
 	ThemeHelp string `yaml:"themehelp"`
+	Deploy    string `yaml:"deploy"`
 }
 
-func (c *HugoAppStruct) getConf() *HugoAppStruct {
+func (c *HugoAppStruct) getConf() error {
 
 	yamlFile, err := ioutil.ReadFile("conf/hugo.yaml")
 	if err != nil {
@@ -479,16 +481,17 @@ func (c *HugoAppStruct) getConf() *HugoAppStruct {
 		logs.Error("Unmarshal", err)
 	}
 
-	return c
+	return err
 }
 
 // HugoApps LISTE DES REPERTOIRES HUGO A GERER
 var HugoApps HugoAppStruct
 
 // LoadHugoApps chargement de la liste des répertoires Hugo
-func LoadHugoApps() {
-	HugoApps.getConf()
+func LoadHugoApps() error {
+	err := HugoApps.getConf()
 	log.Info("HugoApps", HugoApps)
+	return err
 }
 
 // GetHugoApp retourne la HugoApp

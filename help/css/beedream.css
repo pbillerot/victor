@@ -1,0 +1,345 @@
+/* Personnalisation */
+
+body, .ui.header {
+    font-family: 'Jost', sans-serif;
+}
+h2 {
+  clear: both;
+}
+article.main {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.ui.attached.segment {
+  overflow: auto;
+}
+.ui.bee-segment-image {
+  padding: 0;
+  margin-top: 0.5em;
+  margin-left: 0;
+}
+.bee-admin, .bee-hidden {
+    display: none !important;
+}
+.bee-edit-open, .bee-open, .bee-modal-image, .bee-modal-viewer, .bee-modal-text, .bee-window-open, .bee-modal-player, .bee-player, .bee-radio, .bee-diapo, .bee-select-download {
+    cursor: pointer;
+}
+
+#bee-diaporama img {
+    object-fit: contain;
+}
+
+/* message */
+.compact.message {
+    margin: 0.5em;
+    padding: 0.5em 1em;
+}
+.ui.icon.message.bee-player
+, .ui.icon.message.bee-radio
+, .ui.icon.message.bee-modal-image 
+, .ui.icon.message.bee-open 
+, .ui.icon.message.bee-window-open 
+{
+    width: inherit;
+}
+/* Menu */
+.ui.vertical.menu {
+    width: unset;
+}
+.ui.accordion.menu .item> .active {
+    font-weight: 900;
+}
+.ui.vertical.menu .item .menu .active.item {
+    font-weight: 900;
+}
+/* Carte */
+.ui.cards {
+  margin-left: -0.4em;
+}
+.ui.cards>.bee-card-s, .bee-card-s {
+    width: 160px;
+}
+.ui.cards>.bee-card-m, .bee-card-m {
+    width: 274px;
+}
+.ui.cards>.bee-card-l, .bee-card-l {
+    width: 450px;
+}
+.ui.cards>.bee-card-xl, .bee-card-xl {
+    width: 740px;
+}
+
+/* image */
+.ui.circular.image, .ui.circular.image>*  {
+  border-radius: 50%;
+}
+
+/* markdown */
+.markdown-body {
+    font-family: inherit;
+}
+pre {
+    white-space: pre-wrap;
+    padding: 0.5em;
+}
+.markdown-body pre code {
+    white-space: pre-wrap;
+}
+.ui.header.bee-texte {
+    margin: 1rem 0 1rem;
+}
+.ui.header .icon:only-child, i.icon.bee-icon {
+    margin-right: 0;
+}
+.bee-centre {
+    text-align: center;
+}
+
+/* label */
+p>.ui.label {
+  margin-bottom: 1em; 
+}
+/* RETURN TO TOP */
+#return-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    display: block;
+    text-decoration: none;
+    -webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    border-radius: 35px;
+    display: none;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#return-to-top {
+    color: #fff !important;
+    background-color: #303030 !important;
+}
+#return-to-top i {
+    color: #fff;
+    margin: 0;
+    position: relative;
+    left: 14px;
+    top: 13px;
+    font-size: 19px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+#return-to-top:hover {
+    background: #616161;
+}
+
+#return-to-top:hover i {
+    color: #fff;
+    top: 5px;
+}
+
+/*******************************
+  Semantic Text redéfini car inopérant avec markdown
+*******************************/
+
+span.ui.text {
+    line-height: 1;
+  }
+  
+  span.ui.primary.text {
+    color: #2185D0;
+  }
+  
+  span.ui.inverted.primary.text {
+    color: #54C8FF;
+  }
+  
+  span.ui.secondary.text {
+    color: #1B1C1D;
+  }
+  
+  span.ui.inverted.secondary.text {
+    color: #545454;
+  }
+  
+  span.ui.red.text {
+    color: #DB2828;
+  }
+  
+  span.ui.inverted.red.text {
+    color: #FF695E;
+  }
+  
+  span.ui.orange.text {
+    color: #F2711C;
+  }
+  
+  span.ui.inverted.orange.text {
+    color: #FF851B;
+  }
+  
+  span.ui.yellow.text {
+    color: #FBBD08;
+  }
+  
+  span.ui.inverted.yellow.text {
+    color: #FFE21F;
+  }
+  
+  span.ui.olive.text {
+    color: #B5CC18;
+  }
+  
+  span.ui.inverted.olive.text {
+    color: #D9E778;
+  }
+  
+  span.ui.green.text {
+    color: #21BA45;
+  }
+  
+  span.ui.inverted.green.text {
+    color: #2ECC40;
+  }
+  
+  span.ui.teal.text {
+    color: #00B5AD;
+  }
+  
+  span.ui.inverted.teal.text {
+    color: #6DFFFF;
+  }
+  
+  span.ui.blue.text {
+    color: #2185D0;
+  }
+  
+  span.ui.inverted.blue.text {
+    color: #54C8FF;
+  }
+  
+  span.ui.violet.text {
+    color: #6435C9;
+  }
+  
+  span.ui.inverted.violet.text {
+    color: #A291FB;
+  }
+  
+  span.ui.purple.text {
+    color: #A333C8;
+  }
+  
+  span.ui.inverted.purple.text {
+    color: #DC73FF;
+  }
+  
+  span.ui.pink.text {
+    color: #E03997;
+  }
+  
+  span.ui.inverted.pink.text {
+    color: #FF8EDF;
+  }
+  
+  span.ui.brown.text {
+    color: #A5673F;
+  }
+  
+  span.ui.inverted.brown.text {
+    color: #D67C1C;
+  }
+  
+  span.ui.grey.text {
+    color: #767676;
+  }
+  
+  span.ui.inverted.grey.text {
+    color: #DCDDDE;
+  }
+  
+  span.ui.black.text {
+    color: #1B1C1D;
+  }
+  
+  span.ui.inverted.black.text {
+    color: #545454;
+  }
+  
+  span.ui.disabled.text {
+    opacity: 0.45;
+  }
+  
+  /* Sizes */
+  
+  span.ui.medium.text {
+    font-size: 1em;
+  }
+  
+  span.ui.mini.text {
+    font-size: 0.4em;
+  }
+  
+  span.ui.tiny.text {
+    font-size: 0.5em;
+  }
+  
+  span.ui.small.text {
+    font-size: 0.75em;
+  }
+  
+  span.ui.large.text {
+    font-size: 1.5em;
+  }
+  
+  span.ui.big.text {
+    font-size: 2em;
+  }
+  
+  span.ui.huge.text {
+    font-size: 4em;
+  }
+  
+  span.ui.massive.text {
+    font-size: 8em;
+  }
+
+/**
+  Style valorisé dans l'entête de l'article
+  bee-chanson
+  bee-doc
+
+**/
+/* bee-doc */
+.bee-doc h2 {
+  color: darkred;
+}
+.bee-doc h3 {
+  color: darkblue;
+}
+
+/* bee-chanson */
+.bee-chanson {
+  font-family: 'Rancho', cursive;
+  font-size: 1.7em;
+  color:saddlebrown;
+}
+.bee-chanson .ui.segment, .ui.segments .segment {
+  font-size: inherit;
+}
+.bee-chanson em {
+  font-family: 'Rancho', cursive;
+  color:grey;
+}
+.bee-chanson .ui.large.header {
+  font-family: 'Rancho', cursive;
+  font-size: 2em;
+}

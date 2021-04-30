@@ -17,6 +17,11 @@ _build:
 - [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
 - [ ] Doc Environnements Test et Production
 
+2.9.0 du 30 avril 2021
+----------------------
+- `added` menu déploiement sur site externe via un script /bin/sh
+- `fixed` exit si erreur config
+
 2.8.6 du 26 avril 2021
 ----------------------
 - `fixed` pb ctx inconnu lors install container

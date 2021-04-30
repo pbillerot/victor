@@ -65,7 +65,11 @@ func init() {
 
 func initConfigHugo() {
 	// Lecture hugo.yaml -> models.HugoApps.Apps
-	models.LoadHugoApps()
+	err = models.LoadHugoApps()
+	if err != nil {
+		logs.Error("LoadHugoApps", err)
+		return
+	}
 	models.Config.HugoApps = models.HugoApps.Apps
 
 	// Init Viper
