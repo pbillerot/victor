@@ -5,6 +5,10 @@
     <link>/help/categories/</link>
     <description>Recent content in Categories on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>fr-FR</language><atom:link href="/help/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>fr-FR</language>
+    
+	<atom:link href="/help/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
   </channel>
 </rss>

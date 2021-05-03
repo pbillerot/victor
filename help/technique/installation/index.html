@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon-precomposed" href="/help/media/victor-help.png">
 
 
-<meta name="generator" content="Hugo 0.77.0-DEV" />
+<meta name="generator" content="Hugo 0.71.1" />
 
 <link rel="canonical" href="/help/technique/installation/" />
 
@@ -194,8 +194,7 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 <li>de journaliser les accès et les erreurs</li>
 </ul>
 </li>
-<li>
-<a href="https://www.billerot.eu" target="_blank">Bivouac</a> le container de notre application qui utilisera une image de <strong>Victor</strong></li>
+<li><strong>Victor</strong> le container qui va administrer et servir les web-applications <strong>Hugo</strong></li>
 </ul>
 <p>Pour plus de confort, j&rsquo;utilise</p>
 <ul>
@@ -224,17 +223,18 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
     /store
       (le répertoire des fichiers statiques servi par Caddy)
     /bivouac
-      bivouac_content --&gt; ../../bivouac/content
+      bivouac_content --&gt; ../../bivouac/content (lien symbolique)
   /docker (les fichiers de configuration des containers)
     docker-compose.yaml
     /caddy
       caddyfile.conf
     /filebrowser
       filebrowser.conf
-    /bivouac
-      custom.conf
     /victor
       dockerfile
+      hugo.yaml
+    /bivouac
+      deploy.sh (script de déploiement sur un autre site)
 </code></pre><h2 id="container-filebrowser">Container Filebrowser</h2>
 
 
@@ -251,16 +251,19 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
     <img class="ui medium  right floated image" src="/help/media/filebrowser.gif"></img>
 </div>
 
+<p>
+<a href="https://filebrowser.org/features" target="_blank">Filebrowser</a> est un explorateur de fichiers en ligne.</p>
+<p>Nous allons le régler pour explorer le répertoire <code>/volshare</code> du système hôte via l&rsquo;url <code>/fb</code></p>
 <h3 id="volsharedockerdocker-composeyaml">/volshare/docker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>filebrowser/filebrowser:latest<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>filebrowser<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>filebrowser/filebrowser:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>filebrowser<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare:/srv<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare/filebrowser/database.db:/database.db<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json    <span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json<span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockerfilebrowserfilebrowserjson">/volshare/docker/filebrowser/filebrowser.json</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
@@ -291,25 +294,27 @@ reverse_proxy /fb/* filebrowser:80
     <img class="ui medium  right floated image" src="/help/media/portainer.png"></img>
 </div>
 
+<p>
+<a href="https://korben.info/portainer-io-un-outil-graphique-pour-gerer-vos-environnements-docker-en-toute-securite.html" target="_blank">Portainer</a> via son interface web permet de visualiser les ressources de la plateforme Docker, les containers, les images, les volumes, le réseau.</p>
 <h3 id="volsharedockerdocker-composeyaml-1">/volshare/docker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>portainer/portainer-ce<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>portainer<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">command</span>:<span style="color:#bbb"> </span>-H unix:///var/run/docker.sock<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>portainer/portainer-ce<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>portainer<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">command</span>:<span style="color:#bbb"> </span>-H<span style="color:#bbb"> </span>unix:///var/run/docker.sock<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /var/run/docker.sock:/var/run/docker.sock<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-1">/volshare/docker/caddy/caddyfile.conf</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># portainer </span>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># portainer</span> 
 <span style="color:#60a0b0;font-style:italic"># on supprime le préfix /portainer après le routage</span>
 redir /portainer /portainer/
 route /portainer/* <span style="color:#666">{</span>
     uri strip_prefix /portainer
     reverse_proxy portainer:9000
 <span style="color:#666">}</span>
-</code></pre></div><h2 id="container-bivouac-victor">Container Bivouac (Victor)</h2>
+</code></pre></div><h2 id="container-victor">Container Victor</h2>
 
 
 
@@ -325,37 +330,38 @@ route /portainer/* <span style="color:#666">{</span>
     <img class="ui medium  right floated image" src="/help/media/page-site.png"></img>
 </div>
 
+<p>Ce container va héberger l&rsquo;application <strong>Victor</strong> libre d&rsquo;utilisation sur 
+<a href="https://github.com/pbillerot/victor" target="_blank">Github</a>.</p>
+<p><strong>Victor</strong> a été écrit dans le langage 
+<a href="https://fr.wikipedia.org/wiki/Go_%28langage%29" target="_blank">Golang</a>.</p>
+<p><em>À noter que les 4 containers et Docker lui-même ont été développés en Golang</em></p>
 <h3 id="volsharedockerdocker-composeyaml-2">/volshare/docker/docker-compose.yaml</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">build</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>victor:latest<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>bivouac<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">user</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1000</span>:<span style="color:#40a070">1000</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">victor</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">build</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">      </span><span style="color:#007020;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">user</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1000</span>:<span style="color:#40a070">1000</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare:/volshare<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- ./bivouac/custom.conf:/src/victor/conf/custom.conf<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- ./victor/hugo.yaml:/src/victor/conf/hugo.yaml<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
-</span></code></pre></div><h3 id="volsharedockerbivouaccustomconf">/volshare/docker/bivouac/custom.conf</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># custom.conf -  Personnalisation du site déployé</span>
-
-<span style="color:#60a0b0;font-style:italic"># dev / production pour ne pas afficher les erreurs en détail</span>
-<span style="color:#bb60d5">runmode</span> <span style="color:#666">=</span> production
-
-<span style="color:#60a0b0;font-style:italic"># Session</span>
-<span style="color:#bb60d5">EnableXSRF</span> <span style="color:#666">=</span> <span style="color:#007020">true</span> <span style="color:#60a0b0;font-style:italic"># mettre true en HTTPS</span>
-
-<span style="color:#60a0b0;font-style:italic"># Titre de l&#39;application</span>
-<span style="color:#bb60d5">title</span> <span style="color:#666">=</span> <span style="color:#4070a0">&#34;BiVouac Admin&#34;</span>
-
-<span style="color:#60a0b0;font-style:italic"># Répertoire de la webapp Hugo</span>
-<span style="color:#bb60d5">hugo_dir</span> <span style="color:#666">=</span> <span style="color:#4070a0">&#34;/volshare/bivouac&#34;</span>
-</code></pre></div><h3 id="volsharedockercaddycaddyfileconf-2">/volshare/docker/caddy/caddyfile.conf</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># bivouac</span>
-<span style="color:#60a0b0;font-style:italic"># est l&#39;application d&#39;accueil du site</span>
-reverse_proxy /* bivouac:8080
+</span></code></pre></div><h3 id="volsharedockervictorhugoyaml">/volshare/docker/victor/hugo.yaml</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#60a0b0;font-style:italic"># Liste des webapp victor à gérer</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">hugoapp</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span>- <span style="color:#007020;font-weight:bold">name</span>:<span style="color:#bbb"> </span>bivouac<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Bivouac Admin&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/bivouac&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/bivouac/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;beedream&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://pbillerot.freeboxos.fr/beedream/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">deploy</span>:<span style="color:#bbb"> </span>&#34;/volshare/docker/bivouac/deploy.sh<span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-2">/volshare/docker/caddy/caddyfile.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># victor</span>
+<span style="color:#60a0b0;font-style:italic"># qui va servir les webapp hugo décrites dans hugo.yaml</span>
+reverse_proxy /* victor:8080
 
 <span style="color:#60a0b0;font-style:italic"># PROTECTION par mot de passe pour les uri /victor /hugo</span>
 <span style="color:#60a0b0;font-style:italic"># user: admin password: admin (qui a été haché par la commande ci-dessous)</span>
@@ -372,79 +378,97 @@ basicauth /hugo/* <span style="color:#666">{</span>
 
 </code></pre></div><h2 id="image-victor">Image Victor</h2>
 <p>Ci-après le script qui permet de construire l&rsquo;image Victor.</p>
+<p><em>À noter que ce container intègre le moteur <strong>Hugo</strong> et des utilitaires <strong>Git</strong> <strong>SSH</strong> et <strong>Ftp</strong> pour déployer les sites sur des serveurs externes</em></p>
 <h3 id="volsharedockervictordockerfile">/volshare/docker/victor/dockerfile</h3>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#60a0b0;font-style:italic"># IMAGE VICTOR &lt;200 Mo</span><span style="">
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#60a0b0;font-style:italic"># IMAGE VICTOR</span><span style="">
 </span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ETAPE COMPILATION</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le GOPATH par défaut de cette image est /go.</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">FROM</span><span style="color:#4070a0"> golang:alpine as goalpine</span><span style="">
+</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de GCC et GIT</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> apk add build-base git<span style="">
+</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de victor</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> git clone https://github.com/pbillerot/victor.git<span style="">
+</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src/victor</span><span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Build avec CGO du binaire victor</span><span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Build avec CGO</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> <span style="color:#bb60d5">GOOS</span><span style="color:#666">=</span>linux <span style="color:#bb60d5">GOARCH</span><span style="color:#666">=</span>amd64 go build -a -installsuffix cgo -o /src/victor/victor<span style="">
 </span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ETAPE GENERATION D&#39;UN IMAGE </span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># avec le projet</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">FROM</span><span style="color:#4070a0"> alpine</span><span style="">
+</span><span style="">
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Installation de victor...</span><span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># l&#39;environnement go ne sera pas installé car victor a été compilé dans l&#39;étape compilation</span><span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># ce qui réduit considérablement la taille de l&#39;image finale</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> mkdir -p /src/victor<span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">copy</span> --from<span style="color:#666">=</span>goalpine /src/victor /src/victor<span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Uptade OS + hugo + git + nano</span><span style="">
-</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> apk add --update nano hugo git<span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Ajout du user 1000</span><span style="">
-</span><span style=""></span><span style="color:#007020;font-weight:bold">USER</span><span style="color:#4070a0"> 1000:1000</span><span style="">
 </span><span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># POINT D&#39;ENTREE (l&#39;exécutable en écoute)</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Uptade OS + hugo + utilitaires</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> apk add --update nano openssh-client hugo git rsync sshpass lftp<span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Ajout du user 1000 afin de partager les fichiers avec le user du serveur hôte</span><span style="">
+</span><span style=""></span><span style="color:#007020;font-weight:bold">RUN</span> addgroup -g <span style="color:#40a070">1000</span> -S vigo <span style="color:#666">&amp;&amp;</span> <span style="color:#4070a0;font-weight:bold">\
+</span><span style="color:#4070a0;font-weight:bold"></span>    adduser -u <span style="color:#40a070">1000</span> -S vigo -G vigo<span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Point d&#39;entrée</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">WORKDIR</span><span style="color:#4070a0"> /src/victor</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">ENTRYPOINT</span> ./victor<span style="">
-</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le port sur lequel notre service écoute</span><span style="">
+</span><span style="">
+</span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le port sur lequel notre serveur écoute</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">EXPOSE</span><span style="color:#4070a0"> 8080</span><span style="">
 </span></code></pre></div><h2 id="container-caddy">Container Caddy</h2>
 <h3 id="volsharedockerdocker-composeyaml-3">/volshare/docker/docker-compose.yaml</h3>
 <p>Version complète</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#062873;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">services</span>:<span style="color:#bbb">
+<p><em>À seul ce container présente des ports accessible de l&rsquo;extérieur (ports 80 et 443)</em></p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#007020;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">services</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">caddy</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">caddy</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># https://hub.docker.com/_/caddy?tab=description</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>caddy:latest<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>caddy<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">image</span>:<span style="color:#bbb"> </span>caddy:latest<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>caddy<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">ports</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;80:80&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;443:443&#39;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;./caddy/caddyfile.conf:/etc/caddy/Caddyfile&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare/etc:/data&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare/data/store:/srv&#39;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#39;/volshare:/volshare&#39;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">filebrowser</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">portainer</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">    
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">bivouac</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">victor</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">certs</span>:<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">certs</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">web</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">web</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
 </span><span style="color:#bbb">
 </span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-3">/volshare/docker/caddy/caddyfile.conf</h3>
 <p>Version complète</p>
+<p>Dans ce fichier on trouvera :</p>
+<ul>
+<li>l'<code>email</code> qui sera utilisé pour demander le certificat SSL du domaine</li>
+<li>le nom du domaine du site</li>
+<li>éventuellement la liste de d&rsquo;adresses IP indésirables</li>
+<li>les répertoires servis par l&rsquo;explorateur web intégré à Caddy Server</li>
+<li>les fichiers logs</li>
+<li>et enfin les différents <code>reverse_proxy</code> redirigés vers nos containers (qui ont été détaillés plus haut)</li>
+</ul>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># Configuration du serveur Caddy</span>
 <span style="color:#60a0b0;font-style:italic"># https://caddyserver.com/docs/</span>
 
@@ -472,7 +496,7 @@ handle_path /store/* <span style="color:#666">{</span>
     file_server browse
 <span style="color:#666">}</span>
 
-<span style="color:#60a0b0;font-style:italic"># Log du trafic (rotation automatique tous les 100 Mo (10 logs) </span>
+<span style="color:#60a0b0;font-style:italic"># Log du trafic (rotation automatique tous les 100 Mo (10 logs)</span> 
 log <span style="color:#666">{</span>
     output file /volshare/log/access.log
     format single_field common_log
@@ -482,13 +506,15 @@ log <span style="color:#666">{</span>
 <span style="color:#60a0b0;font-style:italic"># ...</span>
 <span style="color:#60a0b0;font-style:italic"># portainer</span>
 <span style="color:#60a0b0;font-style:italic"># ...</span>
-<span style="color:#60a0b0;font-style:italic"># bivouac</span>
+<span style="color:#60a0b0;font-style:italic"># victor</span>
 <span style="color:#60a0b0;font-style:italic"># ...</span>
 
 </code></pre></div><h2 id="procédure-dinstallation">Procédure d&rsquo;installation</h2>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#007020">cd</span> /volshare/docker
 <span style="color:#60a0b0;font-style:italic"># création/mise à jour des containers avec reconstruction des images</span>
 docker-compose up -d --build 
+<span style="color:#60a0b0;font-style:italic"># creation/mise à jour des containers sans reconstruction des images</span>
+docker-compose up -d
 <span style="color:#60a0b0;font-style:italic"># nettoyage des images intermédiaires</span>
 docker image prune -f
 </code></pre></div><h2 id="démarrage-de-victor">Démarrage de Victor</h2>

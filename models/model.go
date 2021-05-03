@@ -88,16 +88,17 @@ type AppConfig struct {
 	Github      string
 	Help        string
 	// Lié à la webapp hugo délectionné
-	HugoApps       []HugoApp
-	HugoName       string // nom de la webapp hugo
-	HugoRacine     string // /volshare/foirexpo
-	HugoTheme      string // theme du hugo courant
-	HugoThemeHelp  string // help du theme
-	HugoBaseURL    string // BaseURL du site en production
-	HugoContentDir string // /volshare/foirexpo/content
-	HugoPrivateDir string // /volshare/foirexpo/private
-	HugoPublicDir  string // /volshare/foirexpo/public
-	HugoDeploy     string // paramètre destination de la commande rsync de déploiement de public sur un autre site (user@site.com:/volshare/www)
+	HugoApps        []HugoApp
+	HugoName        string // nom de la webapp hugo
+	HugoRacine      string // /volshare/foirexpo
+	HugoTheme       string // theme du hugo courant
+	HugoThemeHelp   string // help du theme
+	HugoBaseURL     string // BaseURL du site en production
+	HugoContentDir  string // /volshare/foirexpo/content
+	HugoPrivateDir  string // /volshare/foirexpo/private
+	HugoPublicDir   string // /volshare/foirexpo/public
+	HugoDeploy      string // paramètre destination de la commande rsync de déploiement de public sur un autre site (user@site.com:/volshare/www)
+	HugoDeployLabel string // label du menu déploiement
 }
 
 // Breadcrumb as
@@ -461,13 +462,14 @@ type HugoAppStruct struct {
 
 // HugoApp prop d'une webapp Hugo
 type HugoApp struct {
-	Name      string `yaml:"name"`
-	Title     string `yaml:"title"`
-	Folder    string `yaml:"folder"`
-	BaseURL   string `yaml:"baseurl"`
-	Theme     string `yaml:"theme"`
-	ThemeHelp string `yaml:"themehelp"`
-	Deploy    string `yaml:"deploy"`
+	Name        string `yaml:"name"`
+	Title       string `yaml:"title"`
+	Folder      string `yaml:"folder"`
+	BaseURL     string `yaml:"baseurl"`
+	Theme       string `yaml:"theme"`
+	ThemeHelp   string `yaml:"themehelp"`
+	Deploy      string `yaml:"deploy"`
+	DeployLabel string `yaml:"deploylabel"`
 }
 
 func (c *HugoAppStruct) getConf() error {

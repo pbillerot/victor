@@ -17,6 +17,10 @@ _build:
 - [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
 - [ ] Doc Environnements Test et Production
 
+2.9.1 du 3 mai 2021
+----------------------
+- `added` label menu déploiement
+
 2.9.0 du 30 avril 2021
 ----------------------
 - `added` menu déploiement sur site externe via un script /bin/sh

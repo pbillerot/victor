@@ -664,6 +664,7 @@ func SetHugoApp(hugoApp models.HugoApp) {
 	models.Config.HugoTheme = hugoApp.Theme
 	models.Config.HugoThemeHelp = hugoApp.ThemeHelp
 	models.Config.HugoDeploy = hugoApp.Deploy
+	models.Config.HugoDeployLabel = hugoApp.DeployLabel
 	models.Config.HugoContentDir = hugoApp.Folder + "/content"
 	models.Config.HugoPrivateDir = hugoApp.Folder + "/private"
 	models.Config.HugoPublicDir = hugoApp.Folder + "/public"
