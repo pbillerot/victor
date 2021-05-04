@@ -266,7 +266,7 @@ jQuery(function () {
     // Recherche du fichier sélectionné qui sera unique
     $selected = getSelectedPathHtml();
     var link = document.createElement('a');
-    link.href = $selected.paths;
+    link.href = '/content' + $selected.paths;
     link.download = $selected.baseUnique;
     link.click();
     // window.open($selected.paths, '_blank');
