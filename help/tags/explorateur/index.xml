@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title></title>
-    <link>/help/</link>
-    <description>Recent content on </description>
+    <title>explorateur on </title>
+    <link>/help/tags/explorateur/</link>
+    <description>Recent content in explorateur on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-FR</language>
-    <lastBuildDate>Wed, 05 May 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/help/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/help/tags/explorateur/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Introduction</title>
-      <link>/help/posts/intro/</link>
-      <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/help/posts/intro/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>L&#39;explorateur du contenu</title>
@@ -53,24 +44,6 @@
       <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>/help/posts/draw-edit/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Installation de Victor</title>
-      <link>/help/posts/installation/</link>
-      <pubDate>Sat, 30 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/help/posts/installation/</guid>
-      <description>&lt;p&gt;&lt;em&gt;Guide pour l&amp;rsquo;administrateur technique&lt;/em&gt;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Déclaration d&#39;un site Hugo</title>
-      <link>/help/posts/new-site/</link>
-      <pubDate>Wed, 20 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/help/posts/new-site/</guid>
       <description></description>
     </item>
     

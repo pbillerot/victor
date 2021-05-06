@@ -3,47 +3,76 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/help/technique/</loc>
-    <lastmod>2021-04-12T00:00:00+00:00</lastmod>
+    <loc>/help/</loc>
+    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/help/technique/new-site/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
+    <loc>/help/tags/intro/</loc>
+    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/help/technique/deploiement/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
+    <loc>/help/posts/intro/</loc>
+    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/help/technique/installation/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/help/technique/repertoires/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
+    <loc>/help/posts/</loc>
+    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/help/tags/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
+    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/tags/explorateur/</loc>
+    <lastmod>2021-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/accueil/</loc>
+    <lastmod>2021-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/doc-edit/</loc>
+    <lastmod>2021-03-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/image-edit/</loc>
+    <lastmod>2021-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/draw-edit/</loc>
+    <lastmod>2021-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/installation/</loc>
+    <lastmod>2021-01-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/help/tags/technique/</loc>
-    <lastmod>2021-04-08T00:00:00+00:00</lastmod>
+    <lastmod>2021-01-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/help/</loc>
-    <lastmod>2021-04-07T00:00:00+00:00</lastmod>
+    <loc>/help/posts/new-site/</loc>
+    <lastmod>2021-01-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/help/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>/help/posts/publier/</loc>
   </url>
   
 </urlset>

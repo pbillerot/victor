@@ -382,6 +382,7 @@ jQuery(function () {
     const config = {
       language: 'fr',
       tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize', 'text'],
+      colorScheme: 'dark',
       translations: {
         fr: {
           'toolbar.download': 'Valider'

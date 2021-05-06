@@ -1,5 +1,4 @@
 ---
-# lien symbolyque victor/CHANGELOG.md
 title: "Quoi de neuf dans Victor ?"
 date: 2021-04-08
 draft: false
@@ -7,15 +6,17 @@ tags:
 - technique
 categories:
 - news
-style: bee-doc
 _build:
    list: false
 ---
-<!--more-->
 ### À venir :
-- [ ] doc sauvegarde data - docker
-- [ ] Structure du contenu - content/site/config.yaml -> ../config.yaml
-- [ ] Doc Environnements Test et Production
+- `added` gérer contexte appli dans la session
+- `added` ajouter dans readme.md l'installation simple de l'application
+- `removed` enlever l'aide en ligne de la webapp /help
+
+2.9.3 du 6 mai 2021
+----------------------
+- `changed` Documentation bien avancée
 
 2.9.2 du 4 mai 2021
 ----------------------
