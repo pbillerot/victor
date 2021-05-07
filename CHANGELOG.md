@@ -14,6 +14,10 @@ _build:
 - `added` ajouter dans readme.md l'installation simple de l'application
 - `removed` enlever l'aide en ligne de la webapp /help
 
+2.9.4 du 7 mai 2021
+----------------------
+- `changed` Documentation terminée
+
 2.9.3 du 6 mai 2021
 ----------------------
 - `changed` Documentation bien avancée

@@ -51,7 +51,7 @@
 
 <link rel="stylesheet" href="/help/lightbox/css/lightgallery.min.css" />
 
-<link rel="stylesheet" href="/help/css/beedream.css?v=1.3.12%20du%206%20mai%202021" />
+<link rel="stylesheet" href="/help/css/beedream.css?v=1.3.13%20du%206%20mai%202021" />
 
 <style>
   a:hover {
@@ -146,6 +146,7 @@
 │       └── doc-2.md 
 ├── data              (données éventuelles)
 ├── layouts           (modèles de présentation de certaines pages)
+├── data              (données éventuelles)
 ├── resources         (fichiers de resources)
 │   └── _gen
 │       ├── assets
@@ -182,11 +183,49 @@
 </span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/hyde/&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;hyde&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://github.com/spf13/hyde&#34;</span><span style="color:#bbb">
-</span></code></pre></div><h2 id="script-de-déploiement">Script de déploiement</h2>
+</span></code></pre></div><h2 id="les-fichiers-de-configurations-de-hugo">Les fichiers de configurations de Hugo</h2>
+<p>Le fichier de configuration du site est localisé directement sous la racine.</p>
+<pre><code>racine
+├── content
+│   ...
+│   └── site
+│       └── config.yaml -&gt; ../../config.yaml
+├── config.yaml
+    
+</code></pre><p>Il peut être intéressant de donner la possiblité de le modifier directement dans l&rsquo;interface Victor.</p>
+<p>Pour se faire, vous pouvez créer un lien symbolique par exemple sous <code>content/site/config.yaml</code> qui pointerai sur le fichier de config du site.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">mkdir content/site
+<span style="color:#007020">cd</span> content/site
+ln -s ../../config.yaml config.yaml
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+<div class="" data-src="/help/media/lien-config.png">
+    <img class="ui    image" src="/help/media/lien-config.png"></img>
+</div>
+
+<h2 id="script-de-déploiement">Script de déploiement</h2>
 <p>Si le site de développement n&rsquo;est pas sur le site de déploiement, l&rsquo;administrateur technique devra écrire un script de déploiement.</p>
-<p>Lors des étapes de <strong>test</strong>, Victor pilote Hugo pour générer les fichiers dans le répertoire <strong>/private</strong>.</p>
-<p>La génération du site de <strong>production</strong> se fera dans le répertoire <strong>/public</strong> (répertoire par défaut de Hugo).</p>
-<p>Le script de déploiement devra par conséquent recopier le répertoire <strong>/public</strong> sur le site de déploiement.</p>
+<p>Lors des étapes de <strong>test</strong>, Victor pilote Hugo pour générer les fichiers dans le répertoire <code>private</code>. Ce répertoire est actualisé à chaque modification/ajout/suppression de fichiers dans <code>content</code></p>
+<p>La génération du site de <strong>production</strong> se fera dans le répertoire <code>public</code> (répertoire par défaut de Hugo).</p>
+<pre><code>racine
+├── content
+│   ...
+├── private
+│   ... fichiers du site de test 
+├── public
+│   ... fichiers du site de production
+├── config.yaml
+    
+</code></pre><p>Le script de déploiement devra par conséquent recopier le répertoire <code>public</code> sur le site de déploiement.</p>
 <p>Lors de l&rsquo;exécution du script Victor se positionne sous le répertoire racine de site Hugo.</p>
 <p>Exemple de script en utilisant le script lftp</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#007020">#!/bin/bash
@@ -345,7 +384,7 @@ lftp sftp://user:password@site-production.com -e <span style="color:#4070a0">&#3
 <script src="/help/js/jquery.overlayScrollbars.min.js"></script>
 <script src="/help/js/header.js"></script>
 <script src="/help/js/main.js"></script>
-<script src="/help/js/bee-script.js?v=1.3.12%20du%206%20mai%202021"></script>
+<script src="/help/js/bee-script.js?v=1.3.13%20du%206%20mai%202021"></script>
 <script src="/help/js/theme.js"></script>
     
 <script src="/help/js/html2canvas.min.js"></script>
