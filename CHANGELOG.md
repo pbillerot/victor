@@ -12,7 +12,10 @@ _build:
 ### À venir :
 - `added` gérer contexte appli dans la session
 - `added` ajouter dans readme.md l'installation simple de l'application
-- `removed` enlever l'aide en ligne de la webapp /help
+
+2.9.5 du 9 mai 2021
+----------------------
+- `changed` Fin version mono session
 
 2.9.4 du 7 mai 2021
 ----------------------
