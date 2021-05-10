@@ -9,7 +9,7 @@
         <div class="ui container">
             <a href="/victor" class="header item">
                 <img class="logo" src="{{.Config.Icon}}">
-                <span class="ui large text bee-press-hidden-mobile">{{.Config.Title}}<span>
+                <span class="ui large text bee-press-hidden-mobile">{{.Hugo.Title}}<span>
             </a>
             <!-- RIGHT MENU -->
             <div class="right menu">
@@ -68,18 +68,18 @@
                             title="Mettre le site en production..." data-message="Veuillez le confirmer">
                             <i class="red play circle outline square icon"></i> Mettre le site en production...
                         </div>
-                        <div class="ui icon item bee-window-open" data-url="{{.Config.HugoBaseURL}}" data-posx="right" data-width="1200"
+                        <div class="ui icon item bee-window-open" data-url="{{.Hugo.BaseURL}}" data-posx="right" data-width="1200"
                             data-posy="150" target="hugo-prod">
                             <i class="blue eye icon"></i> Voir le site de production
                         </div>
-                        {{if .Config.HugoDeploy}}
+                        {{if .Hugo.Deploy}}
                         <div class="ui icon item bee-modal-confirm" data-action="/victor/action/deploy"
                             data-message="Veuillez le confirmer">
-                            <i class="red play circle outline square icon"></i> {{if .Config.HugoDeployLabel}}{{.Config.HugoDeployLabel}}{{else}}Deployer la production sur un autre site...{{end}}
+                            <i class="red play circle outline square icon"></i> {{if .Hugo.DeployLabel}}{{.Hugo.DeployLabel}}{{else}}Deployer la production sur un autre site...{{end}}
                         </div>
                         {{end}}
                         <div class="divider"></div>
-                        {{$hugoName := .Config.HugoName}}
+                        {{$hugoName := .Hugo.Name}}
                         {{range $hugoapp := .Config.HugoApps}}
                         <a class="ui icon {{if eq $hugoapp.Name $hugoName}}active{{end}} item" href="/victor/app/{{$hugoapp.Name}}" >
                             <i class="hospital symbol icon"></i> {{$hugoapp.Title}}
@@ -123,9 +123,9 @@
                 <i class="info circle icon"></i>
                 Guide d'utilisation de Victor
             </a>
-            <a class="ui right floated image label" href="{{.Config.HugoThemeHelp}}" target="_blank">
+            <a class="ui right floated image label" href="{{.Hugo.ThemeHelp}}" target="_blank">
                 <i class="hospital symbol circle icon"></i>
-                Guide d'utilisation du thème {{.Config.HugoTheme}}
+                Guide d'utilisation du thème {{.Hugo.Theme}}
             </a>
             <div class="ui left floated compact info message bee-hidden" id="bee-progress">
             </div>

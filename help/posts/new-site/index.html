@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon-precomposed" href="/help/media/victor-help.png">
 
 
-<meta name="generator" content="Hugo 0.71.1" />
+<meta name="generator" content="Hugo 0.77.0-DEV" />
 
 <link rel="canonical" href="/help/posts/new-site/" />
 
@@ -158,31 +158,31 @@
 <p>La déclaration se fera dans le fichier de configuration</p>
 <h3 id="hugoyaml">hugo.yaml</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#60a0b0;font-style:italic"># Liste des webapp victor à gérer</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">hugoapp</span>:<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">hugoapp</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">  </span><span style="color:#60a0b0;font-style:italic"># nom du site</span><span style="color:#bbb">
-</span><span style="color:#bbb">  </span>- <span style="color:#007020;font-weight:bold">name</span>:<span style="color:#bbb"> </span>beefree<span style="color:#bbb">
+</span><span style="color:#bbb">  </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>beefree<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># titre du site dans l&#39;application Victor (et nom pas le titre du site Hugo)</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Beefree Admin&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Beefree Admin&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># répertoire racine du répertoire hugo</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/beefree&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/beefree&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># chemin d&#39;accès du site en PRODUCTION</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/beefree/&#34;</span><span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic"># ou &#34;/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/beefree/&#34;</span><span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic"># ou &#34;/&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># theme du site Hugo</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;beedream&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;beedream&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># aide en ligne du thème</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://www.billerot.eu/beedream/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://www.billerot.eu/beedream/&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># script de déploiement de la production sur un autre site (commandes ftp, rsync ...)</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">deploy</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/docker/beefree/deploy.sh&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">deploy</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/docker/beefree/deploy.sh&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic"># Libellé dans Victor du menu de lancement du déploiement</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">deploylabel</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Deployer la production sur le site OVH...&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">deploylabel</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Deployer la production sur le site OVH...&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">
 </span><span style="color:#bbb">  </span><span style="color:#60a0b0;font-style:italic"># autre site...</span><span style="color:#bbb">
-</span><span style="color:#bbb">  </span>- <span style="color:#007020;font-weight:bold">name</span>:<span style="color:#bbb"> </span>hyde<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Hyde Admin&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/hyde&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/hyde/&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;hyde&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://github.com/spf13/hyde&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>hyde<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Hyde Admin&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/hyde&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/hyde/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;hyde&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://github.com/spf13/hyde&#34;</span><span style="color:#bbb">
 </span></code></pre></div><h2 id="les-fichiers-de-configurations-de-hugo">Les fichiers de configurations de Hugo</h2>
 <p>Le fichier de configuration du site est localisé directement sous la racine.</p>
 <pre><code>racine

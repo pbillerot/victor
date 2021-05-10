@@ -29,6 +29,12 @@ func setSession(c *MainController, name string, value string) {
 // Prepare implements Prepare method for loggedRouter.
 func (c *MainController) Prepare() {
 	// Session
+	if c.GetSession("Hugo") != nil {
+		c.Data["Hugo"] = c.GetSession("Hugo").(models.Hugo)
+	} else {
+		c.Data["Hugo"] = models.Hugo{}
+		c.SetSession("Hugo", models.Hugo{})
+	}
 	if c.GetSession("Folder") != nil {
 		c.Data["Folder"] = c.GetSession("Folder").(string)
 	} else {

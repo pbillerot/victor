@@ -3,16 +3,13 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 
 	"github.com/beego/beego/v2/core/config"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/pbillerot/victor/controllers"
 	"github.com/pbillerot/victor/models"
 	_ "github.com/pbillerot/victor/routers"
 	"github.com/pbillerot/victor/shutil"
-	"github.com/spf13/viper"
 )
 
 var err error
@@ -72,45 +69,11 @@ func initConfigHugo() {
 	}
 	models.Config.HugoApps = models.HugoApps.Apps
 
-	// Init Viper
-	viper.SetConfigName("ctx")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("conf/")
-	viper.ReadInConfig()
-
 	// Déclaration des url de production à servir
+	logs.Info("HugoApp: liste des webapp à servir")
 	for _, hugoApp := range models.Config.HugoApps {
 		web.SetStaticPath(hugoApp.BaseURL, hugoApp.Folder+"/public")
-	}
-
-	// Positionnement sur la dernière hugoapp utilisée
-	hugoApp := models.HugoApp{}
-	if viper.GetString("hugoapp") != "" {
-		hugoApp = models.GetHugoApp(viper.GetString("hugoapp"))
-	}
-	if hugoApp.Name == "" {
-		hugoApp = models.GetFirstHugoApp()
-	}
-	controllers.SetHugoApp(hugoApp)
-
-	// Initialisation de content
-	// en créant un lien symbolique vers config.yaml
-	_, err = os.Open(models.Config.HugoRacine + "/content/site/config.yaml")
-	if os.IsNotExist(err) {
-		err = shutil.CreateDir(models.Config.HugoRacine + "/content/site")
-		if err != nil {
-			logs.Error("initConfigHugo", err)
-			return
-		}
-		cmd := exec.Command("ln", "-s", "../../config.yaml", "content/site/config.yaml")
-		logs.Info("Init content", cmd)
-		cmd.Dir = models.Config.HugoRacine
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			logs.Error("Init content", err)
-			return
-		}
-		logs.Info("Init content", string(out))
+		logs.Info("HugoApp:", hugoApp.Title, hugoApp.Folder)
 	}
 
 }

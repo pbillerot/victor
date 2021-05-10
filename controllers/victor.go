@@ -11,7 +11,6 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/kennygrant/sanitize"
-	"github.com/spf13/viper"
 
 	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
@@ -30,11 +29,30 @@ func (c *MainController) Main() {
 
 	web.ReadFromRequest(&c.Controller)
 
+	if c.GetSession("Hugo").(models.Hugo).Name == "" {
+		hugoApp := models.GetFirstHugoApp()
+		if hugoApp.Name != "" {
+			SetHugoApp(c, hugoApp)
+			c.Ctx.Redirect(302, "/victor/folder/")
+		}
+	}
+
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Hugo").(models.Hugo), c.GetSession("Folder").(string))
 
 	c.TplName = "index.html"
+}
+
+// SelectHugoApp Sélection d'un folder à administrer
+func (c *MainController) SelectHugoApp() {
+
+	hugoApp := models.GetHugoApp(c.Ctx.Input.Param(":app"))
+
+	if hugoApp.Name != "" {
+		SetHugoApp(c, hugoApp)
+	}
+	c.Ctx.Redirect(302, "/victor/folder/")
 }
 
 // Folder Demande de lister le dossier
@@ -45,8 +63,8 @@ func (c *MainController) Folder() {
 	web.ReadFromRequest(&c.Controller)
 
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Hugo").(models.Hugo), c.GetSession("Folder").(string))
 
 	c.TplName = "index.html"
 }
@@ -58,7 +76,7 @@ func (c *MainController) Image() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Recherche du record
-	record := models.HugoGetRecord(pathFile)
+	record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), pathFile)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -81,7 +99,8 @@ func (c *MainController) Image() {
 			c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 			return
 		}
-		pathAbsolu := models.Config.HugoContentDir + pathFile
+		// pathAbsolu := c.Data["Hugo"].ContentDir(models.Hugo) + pathFile
+		pathAbsolu := c.GetSession("Hugo").(models.Hugo).ContentDir + pathFile
 		err = ioutil.WriteFile(pathAbsolu, unbased, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", pathAbsolu, err)
@@ -91,14 +110,14 @@ func (c *MainController) Image() {
 			c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 			return
 		}
-		models.HugoReload()
+		hugoReload(c)
 		pushDev(c)
 		c.Data["Refresh"] = true
 	}
 
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Hugo").(models.Hugo), c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
 	if record.IsDrawio {
@@ -120,7 +139,7 @@ func (c *MainController) Pdf() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Recherche du record
-	record := models.HugoGetRecord(pathFile)
+	record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), pathFile)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -130,8 +149,8 @@ func (c *MainController) Pdf() {
 	// c.SetSession("Folder", record.Dir)
 
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Hugo").(models.Hugo), c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
 	c.TplName = "file.html"
@@ -147,7 +166,7 @@ func (c *MainController) Document() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Recherche du record
-	record := models.HugoGetRecord(pathFile)
+	record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), pathFile)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -181,13 +200,13 @@ func (c *MainController) Document() {
 			c.Ctx.Redirect(302, c.Ctx.Request.URL.String())
 			return
 		}
-		models.HugoReload()
+		hugoReload(c)
 		pushDev(c)
 		c.Data["Refresh"] = true
 	}
 	// Remplissage du contexte pour le template
-	c.Data["Record"] = models.HugoGetRecord(c.GetSession("File").(string))
-	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Folder").(string))
+	c.Data["Record"] = models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
+	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Hugo").(models.Hugo), c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
 	c.TplName = "file.html"
@@ -202,7 +221,7 @@ func (c *MainController) FileRename() {
 	pathFolder := c.GetSession("Folder").(string)
 	flash := beego.ReadFromRequest(&c.Controller)
 	// Recherche du record
-	record := models.HugoGetRecord(path)
+	record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), path)
 	if record.Path == "" {
 		msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 		logs.Error(msg)
@@ -237,7 +256,7 @@ func (c *MainController) FileRename() {
 		}
 	} else {
 		// Copie du fichier sur la cible
-		newFile := models.Config.HugoContentDir + record.Dir + "/" + c.GetString("new_name")
+		newFile := c.GetSession("Hugo").(models.Hugo).ContentDir + record.Dir + "/" + c.GetString("new_name")
 		if _, err := os.Stat(newFile); err == nil {
 			// path/to/whatever exists
 			msg := fmt.Sprintf("Renommer en [%s] : %s", newFile, "existe déjà")
@@ -281,7 +300,7 @@ func (c *MainController) FileRename() {
 		c.SetSession("File", "")
 	}
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -298,7 +317,7 @@ func (c *MainController) FileMove() {
 	pathFolder := c.GetSession("Folder").(string) // répertoire source des fichiers
 	// Traitement unitaire des fichiers ou répertoires
 	for _, path := range paths {
-		record := models.HugoGetRecord(path)
+		record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), path)
 		if record.Path == "" {
 			msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 			logs.Error(msg)
@@ -308,13 +327,13 @@ func (c *MainController) FileMove() {
 			return
 		}
 		if record.IsDir {
-			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			newPath := c.GetSession("Hugo").(models.Hugo).ContentDir + dest + "/" + record.Base
 			if _, err := os.Stat(newPath); err == nil {
 				msg := fmt.Sprintf("Déplacer [%s] vers [%s] : Existe déjà", record.PathAbsolu, newPath)
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
@@ -325,19 +344,19 @@ func (c *MainController) FileMove() {
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
 			}
 		} else {
-			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			newPath := c.GetSession("Hugo").(models.Hugo).ContentDir + dest + "/" + record.Base
 			if _, err := os.Stat(newPath); err == nil {
 				msg := fmt.Sprintf("Déplacer [%s] vers [%s] : Existe déjà", record.PathAbsolu, newPath)
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
@@ -348,7 +367,7 @@ func (c *MainController) FileMove() {
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
@@ -360,7 +379,7 @@ func (c *MainController) FileMove() {
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
@@ -372,7 +391,7 @@ func (c *MainController) FileMove() {
 	}
 
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -389,7 +408,7 @@ func (c *MainController) FileCp() {
 	pathFolder := c.GetSession("Folder").(string) // répertoire source des fichiers
 	// Traitement unitaire des fichiers ou répertoires
 	for _, path := range paths {
-		record := models.HugoGetRecord(path)
+		record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), path)
 		if record.Path == "" {
 			msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 			logs.Error(msg)
@@ -399,23 +418,23 @@ func (c *MainController) FileCp() {
 			return
 		}
 		if record.IsDir {
-			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			newPath := c.GetSession("Hugo").(models.Hugo).ContentDir + dest + "/" + record.Base
 			err = shutil.CopyTree(record.PathAbsolu, newPath, nil)
 			if err != nil {
 				msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", record.PathAbsolu, newPath, err)
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
 			}
 		} else {
-			newPath := models.Config.HugoContentDir + dest + "/" + record.Base
+			newPath := c.GetSession("Hugo").(models.Hugo).ContentDir + dest + "/" + record.Base
 			if _, err := os.Stat(newPath); err == nil {
 				// path/to/whatever exists
-				newPath = models.Config.HugoContentDir + dest + "/" + "Copy " + record.Base
+				newPath = c.GetSession("Hugo").(models.Hugo).ContentDir + dest + "/" + "Copy " + record.Base
 			}
 			err = shutil.CopyFile(record.PathAbsolu, newPath, false)
 			if err != nil {
@@ -423,7 +442,7 @@ func (c *MainController) FileCp() {
 				logs.Error(msg)
 				flash.Error(msg)
 				flash.Store(&c.Controller)
-				models.HugoReload()
+				hugoReload(c)
 				pushDev(c)
 				c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 				return
@@ -432,7 +451,7 @@ func (c *MainController) FileCp() {
 	}
 
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -448,7 +467,7 @@ func (c *MainController) FileNew() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	newName := c.GetString("new_name")
-	newFile := models.Config.HugoContentDir + pathFolder + "/" + newName
+	newFile := c.GetSession("Hugo").(models.Hugo).ContentDir + pathFolder + "/" + newName
 	if strings.Contains(newName, ".md") {
 		err = newDocument(c, pathFolder, newName)
 		if err != nil {
@@ -485,7 +504,7 @@ func (c *MainController) FileNew() {
 	}
 
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -500,7 +519,7 @@ func (c *MainController) FileRm() {
 	pathFolder := c.GetSession("Folder").(string) // répertoire source des fichiers
 	// Traitement unitaire des fichiers ou répertoires
 	for _, path := range paths {
-		record := models.HugoGetRecord(path)
+		record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), path)
 		if record.Path == "" {
 			msg := fmt.Sprintf("[%s] : non trouvé", record.Path)
 			logs.Error(msg)
@@ -515,7 +534,7 @@ func (c *MainController) FileRm() {
 			logs.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
-			models.HugoReload()
+			hugoReload(c)
 			pushDev(c)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 			return
@@ -526,7 +545,7 @@ func (c *MainController) FileRm() {
 	}
 
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -557,7 +576,7 @@ func (c *MainController) FileUpload() {
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		}
 		fileContents, err := ioutil.ReadAll(file)
-		path := models.Config.HugoContentDir + pathFolder + "/" + mfile.Filename
+		path := c.GetSession("Hugo").(models.Hugo).ContentDir + pathFolder + "/" + mfile.Filename
 		err = ioutil.WriteFile(path, fileContents, 0644)
 		if err != nil {
 			msg := fmt.Sprintf("Import : %s", err)
@@ -568,7 +587,7 @@ func (c *MainController) FileUpload() {
 		}
 	}
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -584,7 +603,7 @@ func (c *MainController) FileMkdir() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	newName := sanitize.Name(c.GetString("new_name"))
-	newDir := models.Config.HugoContentDir + pathFolder + "/" + newName
+	newDir := c.GetSession("Hugo").(models.Hugo).ContentDir + pathFolder + "/" + newName
 
 	err = os.MkdirAll(newDir, 0744)
 	if err != nil {
@@ -597,7 +616,7 @@ func (c *MainController) FileMkdir() {
 	}
 
 	// reLoad Folder
-	models.HugoReload()
+	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 	return
@@ -617,7 +636,7 @@ func (c *MainController) APIFolders() {
 		Results []myList `json:"results"`
 	}
 	var list []myList
-	for _, record := range models.HugoGetFolders() {
+	for _, record := range models.HugoGetFolders(c.GetSession("Hugo").(models.Hugo)) {
 		if record.Path == c.GetSession("Folder").(string) {
 			list = append(list, myList{
 				Base:     record.Base,
@@ -644,51 +663,29 @@ func (c *MainController) APIFolders() {
 	c.ServeJSON()
 }
 
-// SelectHugoApp Sélection d'un folder à administrer
-func (c *MainController) SelectHugoApp() {
-
-	hugoApp := models.GetHugoApp(c.Ctx.Input.Param(":app"))
-
-	if hugoApp.Name != "" {
-		SetHugoApp(hugoApp)
-	}
-	c.Ctx.Redirect(302, "/victor/folder/")
-}
-
 // SetHugoApp positionnement du contaxte hugo
-func SetHugoApp(hugoApp models.HugoApp) {
-	// Changement des contextes
-	models.Config.HugoName = hugoApp.Name
-	models.Config.HugoBaseURL = hugoApp.BaseURL
-	models.Config.HugoRacine = hugoApp.Folder
-	models.Config.HugoTheme = hugoApp.Theme
-	models.Config.HugoThemeHelp = hugoApp.ThemeHelp
-	models.Config.HugoDeploy = hugoApp.Deploy
-	models.Config.HugoDeployLabel = hugoApp.DeployLabel
-	models.Config.HugoContentDir = hugoApp.Folder + "/content"
-	models.Config.HugoPrivateDir = hugoApp.Folder + "/private"
-	models.Config.HugoPublicDir = hugoApp.Folder + "/public"
-	web.SetStaticPath("/content", models.Config.HugoContentDir)
-	web.SetStaticPath("/hugo", models.Config.HugoPrivateDir)
-	models.Config.Title = hugoApp.Title
-	// detect theme
-	// ouverture du dossier themes
-	// f, err := os.Open(hugoApp.Folder + "/themes")
-	// if err == nil {
-	// 	// lecture ds fichiers et dossiers du dossier courant
-	// 	list, err := f.Readdir(-1)
-	// 	f.Close()
-	// 	if err == nil {
-	// 		models.Config.HugoTheme = list[0].Name()
-	// 	}
-	// }
-	models.HugoReload()
+func SetHugoApp(c *MainController, hugoApp models.HugoApp) {
+	// Changement de contexte webapp hugo
+	hugo := models.Hugo{}
+	hugo.Name = hugoApp.Name
+	hugo.Title = hugoApp.Title
+	hugo.BaseURL = hugoApp.BaseURL
+	hugo.Racine = hugoApp.Folder
+	hugo.Theme = hugoApp.Theme
+	hugo.ThemeHelp = hugoApp.ThemeHelp
+	hugo.Deploy = hugoApp.Deploy
+	hugo.DeployLabel = hugoApp.DeployLabel
+	hugo.ContentDir = hugoApp.Folder + "/content"
+	hugo.PrivateDir = hugoApp.Folder + "/private"
+	hugo.PublicDir = hugoApp.Folder + "/public"
+	logs.Info("SetHugoApp:", hugo.Name, hugo.Racine)
 
-	// save hugoapp dans file properties
-	viper.Set("hugoapp", hugoApp.Name)
-	viper.WriteConfig()
+	c.SetSession("Hugo", hugo)
+	hugoReload(c)
 
-	logs.Info("StaticDir:", web.BConfig.WebConfig.StaticDir)
+	web.SetStaticPath("/content", hugo.ContentDir)
+	web.SetStaticPath("/hugo", hugo.PrivateDir)
+
 }
 
 // newDocument : Exécution du moteur Hugo pour créer un nouveau document
@@ -702,7 +699,7 @@ func newDocument(c *MainController, folder string, filename string) error {
 	}
 	// cmd := exec.Command("ls", "-l")
 	logs.Info("newDocument", cmd)
-	cmd.Dir = models.Config.HugoRacine
+	cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Error("newDocument", err)
@@ -718,7 +715,7 @@ func (c *MainController) APIFile() {
 		Message string          `json:"message"`
 		Results models.HugoFile `json:"results"`
 	}
-	record := models.HugoGetRecord(c.GetSession("File").(string))
+	record := models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
 
 	var resp myStruct
 	resp.Success = true
@@ -735,7 +732,7 @@ func (c *MainController) Action() {
 
 	switch action {
 	case "refresh":
-		models.HugoReload()
+		hugoReload(c)
 		pushDev(c)
 	case "publishDev":
 		pushDev(c)
@@ -753,11 +750,11 @@ func (c *MainController) Action() {
 func pushDev(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("hugo", "-b", "/hugo/", "-d", models.Config.HugoPrivateDir,
+	cmd := exec.Command("hugo", "-b", "/hugo/", "-d", c.GetSession("Hugo").(models.Hugo).PrivateDir,
 		"--cleanDestinationDir", "--cacheDir", "/tmp")
 	// cmd := exec.Command("ls", "-l")
 	logs.Info("pushDev", cmd)
-	cmd.Dir = models.Config.HugoRacine
+	cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Error("publishDev", err)
@@ -772,9 +769,9 @@ func pushDev(c *MainController) {
 func pushProd(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("hugo", "-b", models.Config.HugoBaseURL, "--cleanDestinationDir", "--cacheDir", "/tmp")
+	cmd := exec.Command("hugo", "-b", c.GetSession("Hugo").(models.Hugo).BaseURL, "--cleanDestinationDir", "--cacheDir", "/tmp")
 	logs.Info("pushProd", cmd)
-	cmd.Dir = models.Config.HugoRacine
+	cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Error("pushProd", err)
@@ -792,9 +789,9 @@ func pushProd(c *MainController) {
 func deploy(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	cmd := exec.Command("/bin/sh", models.Config.HugoDeploy)
+	cmd := exec.Command("/bin/sh", c.GetSession("Hugo").(models.Hugo).Deploy)
 	logs.Info("deploy", cmd)
-	cmd.Dir = models.Config.HugoRacine
+	cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		logs.Error("deploy", err)
@@ -813,12 +810,12 @@ func gitUpdateTheme(c *MainController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// git or submodule ? .gitmodules
-	_, err = os.Open(models.Config.HugoRacine + "/.gitmodules")
+	_, err = os.Open(c.GetSession("Hugo").(models.Hugo).Racine + "/.gitmodules")
 	if !os.IsNotExist(err) {
 		// submodule
 		cmd := exec.Command("git", "submodule", "update", "--remote")
 		logs.Info("gitUpdateTheme submodule", cmd)
-		cmd.Dir = models.Config.HugoRacine
+		cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			logs.Error("gitUpdateTheme", err)
@@ -834,7 +831,7 @@ func gitUpdateTheme(c *MainController) {
 		// git
 		cmd := exec.Command("git", "reset", "--hard")
 		logs.Info("gitUpdateTheme git reset", cmd)
-		cmd.Dir = models.Config.HugoRacine + "/themes/" + models.Config.HugoTheme
+		cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine + "/themes/" + c.GetSession("Hugo").(models.Hugo).Theme
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			logs.Error("gitUpdateTheme", err)
@@ -847,7 +844,7 @@ func gitUpdateTheme(c *MainController) {
 		logs.Info("gitUpdateTheme", string(out))
 		cmd = exec.Command("git", "pull")
 		logs.Info("gitUpdateTheme git reset", cmd)
-		cmd.Dir = models.Config.HugoRacine + "/themes/" + models.Config.HugoTheme
+		cmd.Dir = c.GetSession("Hugo").(models.Hugo).Racine + "/themes/" + c.GetSession("Hugo").(models.Hugo).Theme
 		out, err = cmd.CombinedOutput()
 		if err != nil {
 			logs.Error("gitUpdateTheme", err)
@@ -861,4 +858,11 @@ func gitUpdateTheme(c *MainController) {
 		logs.Info("gitUpdateTheme", string(out))
 	}
 
+}
+
+func hugoReload(c *MainController) {
+	hugo := c.GetSession("Hugo").(models.Hugo)
+	hugo.LoadFile()
+	c.SetSession("Hugo", hugo)
+	c.Data["Hugo"] = hugo
 }

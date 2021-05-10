@@ -10,15 +10,11 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/prometheus/common/log"
 	"gopkg.in/yaml.v2"
 )
 
 // Config de config.yaml
 var Config AppConfig
-
-// La liste des répertoires et fichiers du contenu du site Hugo
-var hugo []HugoFile
 
 // HugoFile propriétés d'un fichier dans le dossier hugoDir
 type HugoFile struct {
@@ -76,6 +72,22 @@ type HugoPathInfo struct {
 	Info os.FileInfo
 }
 
+// Hugo Context webapp courante dans la session
+type Hugo struct {
+	Name        string     // nom de la webapp hugo
+	Title       string     // Titre de la webapp
+	Racine      string     // /volshare/foirexpo
+	Theme       string     // theme du hugo courant
+	ThemeHelp   string     // help du theme
+	BaseURL     string     // BaseURL du site en production
+	ContentDir  string     // /volshare/foirexpo/content
+	PrivateDir  string     // /volshare/foirexpo/private
+	PublicDir   string     // /volshare/foirexpo/public
+	Deploy      string     // paramètre destination de la commande rsync de déploiement de public sur un autre site (user@site.com:/volshare/www)
+	DeployLabel string     // label du menu déploiement
+	File        []HugoFile // la liste des fichiers de content
+}
+
 // AppConfig structure du fichier de configuration de l'application app.conf
 type AppConfig struct {
 	Appname     string
@@ -87,18 +99,8 @@ type AppConfig struct {
 	Icon        string
 	Github      string
 	Help        string
-	// Lié à la webapp hugo délectionné
-	HugoApps        []HugoApp
-	HugoName        string // nom de la webapp hugo
-	HugoRacine      string // /volshare/foirexpo
-	HugoTheme       string // theme du hugo courant
-	HugoThemeHelp   string // help du theme
-	HugoBaseURL     string // BaseURL du site en production
-	HugoContentDir  string // /volshare/foirexpo/content
-	HugoPrivateDir  string // /volshare/foirexpo/private
-	HugoPublicDir   string // /volshare/foirexpo/public
-	HugoDeploy      string // paramètre destination de la commande rsync de déploiement de public sur un autre site (user@site.com:/volshare/www)
-	HugoDeployLabel string // label du menu déploiement
+	// Liste webaapp hugo définie dans hugo.yaml
+	HugoApps []HugoApp
 }
 
 // Breadcrumb as
@@ -110,28 +112,10 @@ type Breadcrumb struct {
 
 var err error
 
-// GetFilesFolder retourne la liste des fichiers du <folder>
-func GetFilesFolder(folder string) (hugoFiles []HugoFile, err error) {
-	// suppression du / à la fin
-	hugoFolder := strings.TrimSuffix(Config.HugoContentDir+folder, "/")
-	var pis []HugoPathInfo
-	err = readFolder(hugoFolder, &pis)
-	if err != nil {
-		return
-	}
-	for _, pi := range pis {
-		record := fileRecord(hugoFolder, pi.Path, pi.Info)
-		// ajout dans hugo
-		hugoFiles = append(hugoFiles, record)
-	}
-
-	return
-}
-
-func fileRecord(hugoContent string, pathAbsolu string, info os.FileInfo) (record HugoFile) {
+func fileRecord(hugo *Hugo, pathAbsolu string, info os.FileInfo) (record HugoFile) {
 
 	// On elève le chemin absolu du path
-	lenPrefixe := len(Config.HugoContentDir)
+	lenPrefixe := len(hugo.ContentDir)
 	path := pathAbsolu[lenPrefixe:]
 	if path == "" {
 		return
@@ -365,30 +349,29 @@ func readFolder(dirname string, info *[]HugoPathInfo) (err error) {
 	return
 }
 
-// loadHugo retourne la liste des HugoFile
-func loadHugo() {
-	hugoFolder := Config.HugoContentDir
+// LoadFile rechargemnt de l'arborescence content de la webapp hugo
+func (hugo *Hugo) LoadFile() {
 	var pis []HugoPathInfo
-	err := readFolder(hugoFolder, &pis)
+	err := readFolder(hugo.ContentDir, &pis)
 	if err != nil {
 		return
 	}
+	hugo.File = hugo.File[:0]
 	for _, pi := range pis {
-		record := fileRecord(hugoFolder, pi.Path, pi.Info)
+		record := fileRecord(hugo, pi.Path, pi.Info)
 		// ajout dans hugo
-		hugo = append(hugo, record)
+		hugo.File = append(hugo.File, record)
 	}
-	logs.Info("Hugo", Config.HugoRacine, "rechargé")
-	return
+	logs.Info("Hugo", hugo.Racine, "rechargé")
 }
 
 // HugoGetFolder return les HugoFile correspondant au folder
-func HugoGetFolder(folder string) (hugoFiles []HugoFile) {
-	if hugo == nil {
-		loadHugo()
+func HugoGetFolder(hugo Hugo, folder string) (hugoFiles []HugoFile) {
+	if hugo.ContentDir == "" {
+		hugo.LoadFile()
 	}
 	qSlashMax := strings.Count(folder, "/") + 1
-	for _, record := range hugo {
+	for _, record := range hugo.File {
 		qSlash := strings.Count(record.Path, "/")
 		if folder == "/" {
 			if qSlash == 1 {
@@ -407,11 +390,11 @@ func HugoGetFolder(folder string) (hugoFiles []HugoFile) {
 }
 
 // HugoGetRecord return le HugoFile correspondant au path
-func HugoGetRecord(path string) (hugoFile HugoFile) {
-	if hugo == nil {
-		loadHugo()
+func HugoGetRecord(hugo Hugo, path string) (hugoFile HugoFile) {
+	if hugo.ContentDir == "" {
+		hugo.LoadFile()
 	}
-	for _, record := range hugo {
+	for _, record := range hugo.File {
 		if record.Path == path {
 			hugoFile = record
 		}
@@ -420,11 +403,11 @@ func HugoGetRecord(path string) (hugoFile HugoFile) {
 }
 
 // HugoGetFolders return seulement les répertoires de Hugo
-func HugoGetFolders() (hugoFiles []HugoFile) {
-	if hugo == nil {
-		loadHugo()
+func HugoGetFolders(hugo Hugo) (hugoFiles []HugoFile) {
+	if hugo.ContentDir == "" {
+		hugo.LoadFile()
 	}
-	for _, record := range hugo {
+	for _, record := range hugo.File {
 		if record.IsDir {
 			hugoFiles = append(hugoFiles, record)
 		}
@@ -434,13 +417,6 @@ func HugoGetFolders() (hugoFiles []HugoFile) {
 		return hugoFiles[i].Path < hugoFiles[j].Path
 	})
 
-	return
-}
-
-// HugoReload demande de rechargement de hugo
-func HugoReload() {
-	hugo = nil
-	loadHugo()
 	return
 }
 
@@ -492,7 +468,6 @@ var HugoApps HugoAppStruct
 // LoadHugoApps chargement de la liste des répertoires Hugo
 func LoadHugoApps() error {
 	err := HugoApps.getConf()
-	log.Info("HugoApps", HugoApps)
 	return err
 }
 

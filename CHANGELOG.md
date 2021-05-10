@@ -10,8 +10,13 @@ _build:
    list: false
 ---
 ### À venir :
-- `added` gérer contexte appli dans la session
 - `added` ajouter dans readme.md l'installation simple de l'application
+- `removed` enlever le chargement de l'aide en ligne au démarrage
+
+3.0.0 du 10 mai 2021
+----------------------
+- `changed` Gestion d'un contexte hugo par session pour permettre le travail à plusieurs sur la même instance Victor sur des webapp Hugo différentes.
+- `removed` suppression gestion ctx viper - n'est plus utile car ctx géré dans session
 
 2.9.5 du 9 mai 2021
 ----------------------
