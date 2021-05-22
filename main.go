@@ -26,6 +26,9 @@ func init() {
 	if val, ok := config.String("help"); ok == nil {
 		models.Config.Help = val
 	}
+	if val, ok := config.String("helpEditor"); ok == nil {
+		models.Config.HelpEditor = val
+	}
 	if val, ok := config.String("version"); ok == nil {
 		models.Config.Version = val
 	}

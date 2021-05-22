@@ -1,17 +1,14 @@
----
-title: "Quoi de neuf dans Victor ?"
-date: 2021-04-08
-draft: false
-tags:
-- technique
-categories:
-- news
-_build:
-   list: false
----
+
+# CHANGELOG
+
 ### À venir :
-- `added` ajouter dans readme.md l'installation simple de l'application
-- `removed` enlever le chargement de l'aide en ligne au démarrage
+- editeur: completion shortcode - mémo curseur - 
+- lien changelog dans news
+- activation de la recherche
+
+3.0.1 du 22 mai 2021
+----------------------
+- `changed` eddy : completion shortcode - mémo curseur - aide des commandes 
 
 3.0.0 du 10 mai 2021
 ----------------------

@@ -99,6 +99,7 @@ type AppConfig struct {
 	Icon        string
 	Github      string
 	Help        string
+	HelpEditor  string
 	// Liste webaapp hugo définie dans hugo.yaml
 	HugoApps []HugoApp
 }

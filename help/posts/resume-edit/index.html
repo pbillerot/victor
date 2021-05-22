@@ -27,13 +27,13 @@
 
 <meta name="generator" content="Hugo 0.77.0-DEV" />
 
-<link rel="canonical" href="/help/posts/doc-edit/" />
+<link rel="canonical" href="/help/posts/resume-edit/" />
 
 
-<meta property="og:title" content="L&#39;éditeur de document" />
+<meta property="og:title" content="Résumé des commandes de l&#39;Éditeur de texte" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/help/posts/doc-edit/" />
+<meta property="og:url" content="/help/posts/resume-edit/" />
 <meta property="article:published_time" content="2021-03-20T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-03-20T00:00:00+00:00" /><meta property="og:site_name" content="VICTOR" />
 
@@ -119,49 +119,121 @@
         <section class="ui top attached segment">
             <header>
                 <h1 class="ui large header">
-                    L&#39;éditeur de document
+                    Résumé des commandes de l&#39;Éditeur de texte
                     <div class="sub header">
                         Publié le 20 mars
                         2021
                     </div>
                 </h1>
             </header>
-            <article id="article" class="main"><div class="bee-diapo" data-src="/help/media/open-doc.png">
-    <img class="ui    image" src="/help/media/open-doc.png"></img>
-</div>
-
-<br/>
-<p>L&rsquo;éditeur de document va s&rsquo;ouvrir :</p>
-<ul>
-<li>
+            <article id="article" class="main"><h3 id="touches-fonctions">Touches fonctions</h3>
+<p>
 
 
-<span class="ui  large red  text">1</span>
- à partir de Victor en cliquant sur l&rsquo;icône 
-<i class="ui file alternate outline green icon bee-icon"></i> du document</li>
-<li>
+<span class="ui   red  text"><strong>ctrl+s</strong></span>
+ : sauvegarde du document<br>
 
 
-<span class="ui  large red  text">2</span>
- depuis le site de test via l&rsquo;icône 
-<i class="ui edit green   icon bee-icon"></i> en bas du document<br>
-<em>Dans ce cas, les modifications enregistrées à partir de l&rsquo;éditeur seront rendues automatiquement dans l&rsquo;aperçu.</em></li>
-</ul>
-<p>L&rsquo;aperçu du document est accessible :</p>
-<ul>
-<li>
+
+<span class="ui   red  text"><strong>ctrl+/</strong></span>
+ : mise en commentaire de la méta-données<br>
 
 
-<span class="ui  large red  text">3</span>
- via le bouton 
-<i class="ui eye blue   icon bee-icon"></i> de la fenêtre Victor</li>
-<li>
 
+<span class="ui   red  text"><strong>ctrl+espace</strong></span>
+ : liste et complétion des shortcodes</p>
+<h3 id="méta-données">Méta-données</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#062873;font-weight:bold">title</span>:<span style="color:#bbb"> </span>Exemple page<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">draft</span>:<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">false</span><span style="color:#bbb"> 
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">date</span>:<span style="color:#bbb"> </span>2020-12-26<span style="color:#bbb"> 
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">tags</span>:<span style="color:#bbb"> 
+</span><span style="color:#bbb"></span>- contenu<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">cover</span>:<span style="color:#bbb"> </span>/media/image.jpg<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">categories</span>:<span style="color:#bbb"> 
+</span><span style="color:#bbb"></span>- news<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">publishDate</span>:<span style="color:#bbb"> </span>2021-02-10<span style="color:#bbb"> 
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">expiryDate</span>:<span style="color:#bbb"> </span>2021-05-01<span style="color:#bbb">  
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">_build</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">list</span>:<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">false</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">style</span>:<span style="color:#bbb"> </span>bee-doc bee-chanson<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">menu</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">page</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">weight</span>:<span style="color:#bbb"> </span><span style="color:#40a070">10</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">parent</span>:<span style="color:#bbb"> </span>shortcode<span style="color:#bbb">
+</span></code></pre></div><h3 id="shortcode">Shortcode</h3>
+<pre><code>{{&lt;bouton [icone=&quot;nom icone&quot;] [image=&quot;image&quot;] titre=&quot;titre&quot; [lien=&quot;lien&quot;]&gt;}}
 
-<span class="ui  large red  text">4</span>
- via le bouton 
-<i class="ui eye blue   icon bee-icon"></i> de l&rsquo;éditeur</li>
-</ul></article>
+{{&lt;cartes taille=&quot;s m l xl&quot;&gt;}}
+
+{{&lt;carte image=&quot;image&quot; [diapo=&quot;diapo&quot;] [titre=&quot;titre&quot;] [lien=&quot;lien&quot;] [pdf=&quot;pdf&quot;] [taille=&quot;s m l xl&quot;]&gt;}}  
+texte...  
+{{&lt;/carte&gt;}}
+
+{{&lt;/cartes&gt;}}
+
+{{&lt;colonnes [two three]&gt;}}...&lt;---&gt;...{{&lt;/colonnes&gt;}}
+
+{{&lt;centre&gt;}}...{{&lt;/centre&gt;}}
+
+{{&lt;diaporama&gt;}}
+
+{{&lt;galerie [sous-repertoire]&gt;}}
+
+{{&lt;icone nomIcone&gt;}}
+
+{{&lt;image image=&quot;/...&quot; [lien=&quot;lien&quot;] [position=&quot;gauche droite&quot;] [taille=&quot;s m l xl]&quot; [forme=&quot;ronde&quot;]&gt;}}
+
+{{&lt;label label=&quot;libellé&quot; [icone=&quot;nomIcone&quot;] [lien=&quot;lien&quot;]&gt;}}
+
+{{&lt;message [info success warning error]&gt;}}message{{&lt;/message&gt;}}
+
+{{&lt;player &quot;lien_vers_audio&quot; [&quot;titre&quot;] [&quot;boucle&quot;]&gt;}}
+
+{{&lt; players répertoire&gt;}}
+
+{{&lt;repertoire &quot;répertoire&quot;&gt;}}
+
+{{&lt;toc&gt;}}
+
+{{&lt;texte [xs s m l xl] [rouge orange vert cyan bleu pourpre violet marron gris]&gt;}}...{{&lt;/texte&gt;}}
+</code></pre><h3 id="markdown">Markdown</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown"><span style="color:#000080;font-weight:bold"># Titre 1
+</span><span style="color:#000080;font-weight:bold"></span><span style="color:#800080;font-weight:bold">## Titre 2
+</span><span style="color:#800080;font-weight:bold">### Titre 3
+</span><span style="color:#800080;font-weight:bold">#### Titre 4
+</span><span style="color:#800080;font-weight:bold">##### Titre 5
+</span><span style="color:#800080;font-weight:bold">###### Titre 6
+</span><span style="color:#800080;font-weight:bold"></span>
+<span style="font-weight:bold">**gras**</span>
+<span style="font-style:italic">_soulignement_</span>
+~~barré~~
+
+Liste:
+<span style="color:#007020;font-weight:bold">-</span> non ordonnée
+<span style="color:#007020;font-weight:bold">-</span> non ordonnée
+  <span style="color:#007020;font-weight:bold">-</span> sous-liste non ordonée
+
+<span style="color:#007020;font-weight:bold">1.</span> numérotée
+<span style="color:#007020;font-weight:bold">1.</span> numérotée
+   1 sous-liste numérotée
+
+[<span style="color:#062873;font-weight:bold">Je suis un lien</span>](<span style="color:#4070a0">https://www.google.com</span>)
+
+![][/image]
+
+| Tables         | Sont            | Frais  |
+| -------------- |:---------------:| ------:|
+| col 3 est      | aligné à droite | 1600 € |
+| col 2 est      | centré          |   12 € |
+| lignes zébrées | harmonieuses    |    1 € |
+
+&gt;citation
+
+ligne horizontale
+---
+
+</code></pre></div></article>
         </section>
 
         <footer class="ui attached segment" data-html2canvas-ignore>
@@ -303,7 +375,7 @@
 <script>
     
     var $BeeIsServer = 'false';
-    var $BeeFilePath = 'posts\/doc-edit.md';
+    var $BeeFilePath = 'posts\/resume-edit.md';
 </script>
 
 <script src="/help/js/jquery.min.js"></script>
@@ -318,11 +390,6 @@
 <script src="/help/js/post.js"></script>
 
 
-
-<script src="/help/lightbox/js/lightgallery.min.js"></script>
-<script>
-    lightGallery(document.getElementById('article'),{ selector: '.bee-diapo'});
-</script>
 
 
 

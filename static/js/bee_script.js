@@ -114,7 +114,7 @@ jQuery(function () {
               return true;
             }
           }).modal('show');
-          return;
+        return;
       }
       // Mode sélection unique
       var $action = $(this).data('action')
@@ -413,7 +413,37 @@ jQuery(function () {
     event.preventDefault();
   });
 
-  // Coloriage syntaxique CODEMIRROR
+
+  // CODEMIRROR : coloration syntaxique et auto-complétion
+  // https://codemirror.net/
+  // déclaration de la foncion autocomplete pour les mots définis dans shortcodes.js
+  CodeMirror.commands.autocomplete = function (cm) {
+    CodeMirror.showHint(cm, CodeMirror.hint.shortcode, { list: $shortcodes });
+  }
+  CodeMirror.hint.shortcode = function (cm, options) {
+    var list = options.list || [];
+    var cursor = cm.getCursor();
+    var currentLine = cm.getLine(cursor.line);
+    var start = cursor.ch;
+    var end = start;
+    while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end))) ++end;
+    while (start && /[\w$]+/.test(currentLine.charAt(start - 1))) --start;
+    var curWord = start != end && currentLine.slice(start, end);
+    var regex = new RegExp('' + curWord, 'i');
+    var result = {
+      list: (!curWord ? list : list.filter(function (item) {
+        if (typeof item == "object") {
+          return item.displayText.match(regex);
+        } else {
+          return item.match(regex);
+        }
+      })).sort(),
+      from: CodeMirror.Pos(cursor.line, start),
+      to: CodeMirror.Pos(cursor.line, end)
+    };
+    return result;
+  };
+  // Activation de CODEMIRROR
   if ($("#bee-editor").length != 0) {
     var $mode = $("#bee-editor").data("mode");
     var myCodeMirror = CodeMirror.fromTextArea(
@@ -423,24 +453,33 @@ jQuery(function () {
       mode: $mode,
       readOnly: false,
       theme: 'eclipse',
-      viewportMargin: 20
+      viewportMargin: 20,
     }
     );
-    myCodeMirror.on("change", function (cm) {
-      $(".bee-submit").removeClass('disabled');
-    })
-    // CTRL+S
-    $(window).bind('keydown', function (event) {
-      if (event.ctrlKey || event.metaKey) {
-        switch (String.fromCharCode(event.which).toLowerCase()) {
-          case 's':
-            event.preventDefault();
-            $(".bee-submit").trigger('click');
-            break;
-        }
+    myCodeMirror.focus();
+    myCodeMirror.setCursor({ line: $('#cursor_line').val(), ch: $('#cursor_ch').val() });
+    myCodeMirror.setOption("extraKeys", {
+      Tab: function (cm) {
+        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+        cm.replaceSelection(spaces);
+      },
+      "Ctrl-S": function (cm) {
+        var cursor = cm.getCursor();
+        $('#cursor_ch').val(cursor.ch);
+        $('#cursor_line').val(cursor.line);
+        $("#button_validate").trigger('click');
+      },
+      "Ctrl-Space": "autocomplete",
+      "Ctrl-/": function (cm) {
+        cm.toggleComment();
       }
     });
-    $("#bee-editor").focus();
+    myCodeMirror.on("change", function (cm) {
+      var cursor = cm.getCursor();
+      $('#cursor_ch').val(cursor.ch);
+      $('#cursor_line').val(cursor.line);
+      $(".bee-submit").removeClass('disabled');
+    })
   }
 
   $('#bee-upload-file').simpleUpload({

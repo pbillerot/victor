@@ -158,6 +158,10 @@ func (c *MainController) Pdf() {
 
 // Document Visualiser Modifier un document
 func (c *MainController) Document() {
+	// Mémorisation de la position du curseur
+	cursorCh := c.GetString("cursor_ch")
+	cursorLine := c.GetString("cursor_line")
+
 	pathFile := "/" + c.Ctx.Input.Param(":path")
 	if c.Ctx.Input.Param(":ext") != "" {
 		pathFile += "." + c.Ctx.Input.Param(":ext")
@@ -209,6 +213,10 @@ func (c *MainController) Document() {
 	c.Data["Records"] = models.HugoGetFolder(c.GetSession("Hugo").(models.Hugo), c.GetSession("Folder").(string))
 	c.Data["Folder"] = c.GetSession("Folder").(string)
 	c.Data["File"] = c.GetSession("File").(string)
+	// Mémorisation de la position du curseur
+	c.Data["CursorCh"] = cursorCh
+	c.Data["CursorLine"] = cursorLine
+
 	c.TplName = "file.html"
 }
 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>editeur on </title>
+    <link>/help/tags/editeur/</link>
+    <description>Recent content in editeur on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>fr-FR</language>
+    <lastBuildDate>Sat, 20 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="/help/tags/editeur/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>L&#39;éditeur de document</title>
+      <link>/help/posts/doc-edit/</link>
+      <pubDate>Sat, 20 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/help/posts/doc-edit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Résumé des commandes de l&#39;Éditeur de texte</title>
+      <link>/help/posts/resume-edit/</link>
+      <pubDate>Sat, 20 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/help/posts/resume-edit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>L&#39;éditeur d&#39;image</title>
+      <link>/help/posts/image-edit/</link>
+      <pubDate>Mon, 15 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/help/posts/image-edit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>L&#39;éditeur de diagrammes</title>
+      <link>/help/posts/draw-edit/</link>
+      <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/help/posts/draw-edit/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
