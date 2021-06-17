@@ -52,7 +52,7 @@
 
 <link rel="stylesheet" href="/help/lightbox/css/lightgallery.min.css" />
 
-<link rel="stylesheet" href="/help/css/beedream.css?v=1.3.13%20du%206%20mai%202021" />
+<link rel="stylesheet" href="/help/css/beedream.css?v=1.3.14%20du%2015%20juin%202021" />
 
 <style>
   a:hover {
@@ -90,12 +90,12 @@
     </a>
     
     
-    <a class="item" href="https://beedream.billerot.eu/" style="color: black !important;" target="_blank"
+    <a class="item" href="https://www.billerot.eu/beedream" style="color: black !important;" target="_blank"
         >
         <i class="large help icon" title="Documentation sur le thème BeeDream"></i>
     </a>
     
-    <a class="item" href="https://semantic-ui.com/elements/icon.html" style="color: black !important;" target="_blank"
+    <a class="item" href="https://1.semantic-ui.com/elements/icon.html#/icons" style="color: black !important;" target="_blank"
         >
         <i class="large font awesome icon" title="Bibliothèque des icônes"></i>
     </a>
@@ -182,7 +182,7 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
     <img class="ui    image" src="/help/media/docker.png"></img>
 </div>
 
-<p>Notre plateforme sera composée de 4 containers :</p>
+<p>Notre plateforme sera composée de 5 containers :</p>
 <ul>
 <li>
 <a href="https://caddyserver.com/docs/" target="_blank">Caddy Server</a> le frontal web, c&rsquo;est l&rsquo;élément le plus important. Il sera chargé :
@@ -203,28 +203,31 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 <a href="https://korben.info/portainer-io-un-outil-graphique-pour-gerer-vos-environnements-docker-en-toute-securite.html" target="_blank">Portainer</a> pour gérer graphiquement l&rsquo;environnement Docker</li>
 <li>
 <a href="https://filebrowser.org/features" target="_blank">Filebrowser</a> pour manipuler les fichiers du répertoire partagé (volshare)</li>
+<li>
+<a href="https://goaccess.io/" target="_blank">GoAccess</a> pour visualiser en live l&rsquo;analyse du trafic réseaux</li>
 </ul>
-<p>Les 4 containers ont accès à la même ressource de fichiers <code>volshare</code> et les échanges entre <strong>Caddy Server</strong> et les autres containers se font à travers le réseau privé <code>web</code>. Ces containers ne sont pas  accessibles de l&rsquo;extérieur.</p>
+<p>Les 5 containers ont accès à la même ressource de fichiers <code>volshare</code> et les échanges entre <strong>Caddy Server</strong> et les autres containers se font à travers le réseau privé <code>web</code>. Ces containers ne sont pas  accessibles de l&rsquo;extérieur.</p>
 <p>La configuration de <strong>Docker</strong> se fait à travers le fichier <code>/volshare/docker/docker-compose.yaml</code>, 
 <strong>Caddy Server</strong> via <code>/volshare/docker/caddy/caddyfile.conf</code></p>
-<p>Nous allons détailler tout cela ci-aprés.</p>
+<p>Nous allons détailler tout cela ci-après.</p>
 <h2 id="volume-partagé-volshare">Volume partagé /volshare</h2>
 <p><code>/volshare</code> est le répertoire partagé entre tous les containers.</p>
 <p>Il aura la structure suivante :</p>
 <pre><code>/volshare
-  /logs
-    access.log access.0.log ... access.9.log
   /etc
     (les certificats du domaine)
-  /bivouac
-    (le site web Hugo administré par Victor)
   /filebrowser
     database.db
+  /goaccess
+    index.html (le fichier résultat de l'analyse du log
+    requests.log (le fichier log de caddy)
+    goaccess.conf (les paramètres de config de l'outil)
+    dbip-city-lite-2021-06.mmdb (la base internationale des adresses ip)
   /data (le répertoire des données à sauvegarder)
     /store
       (le répertoire des fichiers statiques servi par Caddy)
-    /bivouac
-      bivouac_content --&gt; ../../bivouac/content (lien symbolique)
+    /beefree
+      (le site hugo qui sert d'exercice à la documentation)
   /docker (les fichiers de configuration des containers)
     docker-compose.yaml
     /caddy
@@ -234,7 +237,7 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
     /victor
       dockerfile
       hugo.yaml
-    /bivouac
+    /beefree
       deploy.sh (script de déploiement sur un autre site)
 </code></pre><h2 id="container-filebrowser">Container Filebrowser</h2>
 
@@ -262,7 +265,7 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- /volshare:/srv<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>- /volshare/filebrowser/database.db:/database.db<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- /volshare/data/filebrowser/database.db:/database.db<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- ./filebrowser/filebrowser.json:/.filebrowser.json    <span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
@@ -275,10 +278,23 @@ OpenSSL version: OpenSSL 1.1.1d  <span style="color:#40a070">10</span> Sep <span
   <span style="color:#062873;font-weight:bold">&#34;database&#34;</span>: <span style="color:#4070a0">&#34;/database.db&#34;</span>,
   <span style="color:#062873;font-weight:bold">&#34;root&#34;</span>: <span style="color:#4070a0">&#34;/srv&#34;</span>,
 }
+</code></pre></div><p>ou si création d&rsquo;une zone <code>file</code> dans le dns</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#062873;font-weight:bold">&#34;port&#34;</span>: <span style="color:#40a070">80</span>,
+  <span style="color:#062873;font-weight:bold">&#34;baseURL&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;address&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;log&#34;</span>: <span style="color:#4070a0">&#34;stdout&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;database&#34;</span>: <span style="color:#4070a0">&#34;/database.db&#34;</span>,
+  <span style="color:#062873;font-weight:bold">&#34;root&#34;</span>: <span style="color:#4070a0">&#34;/srv&#34;</span>,
+}
 </code></pre></div><h3 id="volsharedockercaddycaddyfileconf">/volshare/docker/caddy/caddyfile.conf</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># filebrowser /fb</span>
-redir /fb /fb/
+rewrite /fb /fb/
 reverse_proxy /fb/* filebrowser:80
+</code></pre></div><p>ou si création d&rsquo;une zone <code>file</code> dans le dns</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">file.domain.com <span style="color:#666">{</span>
+    reverse_proxy filebrowser:80
+<span style="color:#666">}</span>
 </code></pre></div><h2 id="container-portainer">Container Portainer</h2>
 
 
@@ -310,11 +326,66 @@ reverse_proxy /fb/* filebrowser:80
 </span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-1">/volshare/docker/caddy/caddyfile.conf</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># portainer </span>
 <span style="color:#60a0b0;font-style:italic"># on supprime le préfix /portainer après le routage</span>
-redir /portainer /portainer/
+rewrite /portainer /portainer/
 route /portainer/* <span style="color:#666">{</span>
     uri strip_prefix /portainer
     reverse_proxy portainer:9000
 <span style="color:#666">}</span>
+</code></pre></div><p>ou si création d&rsquo;une zone <code>portainer</code> dans le dns</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">portainer.domain.com <span style="color:#666">{</span>
+    reverse_proxy portainer:9000
+<span style="color:#666">}</span>
+</code></pre></div><h2 id="container-goaccess">Container Goaccess</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div class="bee-diapo" data-src="/help/media/goaccess.png">
+    <img class="ui medium  right floated image" src="/help/media/goaccess.png"></img>
+</div>
+
+<p>
+<a href="https://goaccess.io" target="_blank">Goaccess</a> est un analyseur de journaux web. Il dispose d&rsquo;une interface web pour visualiser les statistiques du serveur en <strong>temps réels</strong>.</p>
+<h3 id="volsharedockerdocker-composeyaml-2">/volshare/docker/docker-compose.yaml</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">goaccess</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>allinurl/goaccess<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">container_name</span>:<span style="color:#bbb"> </span>goaccess<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">restart</span>:<span style="color:#bbb"> </span>unless-stopped<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">user</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1000</span>:<span style="color:#40a070">1000</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">volumes</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- /volshare/goaccess:/goaccess<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">networks</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>- web<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">entrypoint</span>:<span style="color:#bbb"> </span>goaccess --no-global-config --config-file=/goaccess/goaccess.conf<span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-2">/volshare/docker/caddy/caddyfile.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># PORT GOACCESS</span>
+www.domain.com:7890 <span style="color:#666">{</span>
+  reverse_proxy / goaccess:7890
+<span style="color:#666">}</span>
+www.domain.com <span style="color:#666">{</span>
+    <span style="color:#60a0b0;font-style:italic"># STATS GOACCESS</span>
+    rewrite /stats /stats/
+    handle_path /stats/* <span style="color:#666">{</span>
+        root * /volshare/goaccess
+        file_server browse
+    <span style="color:#666">}</span>
+    ...
+<span style="color:#666">}</span>
+</code></pre></div><h3 id="volsharegoaccessgoaccessconf">/volshare/goaccess/goaccess.conf</h3>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">log-format CADDY
+time-format CADDY
+date-format CADDY
+log-file /goaccess/requests.log
+output /goaccess/index.html
+real-time-html <span style="color:#007020">true</span>
+geoip-database /goaccess/dbip-city-lite-2021-06.mmdb
 </code></pre></div><h2 id="container-victor">Container Victor</h2>
 
 
@@ -336,7 +407,7 @@ route /portainer/* <span style="color:#666">{</span>
 <p><strong>Victor</strong> a été écrit dans le langage 
 <a href="https://fr.wikipedia.org/wiki/Go_%28langage%29" target="_blank">Golang</a>.</p>
 <p><em>À noter que les 4 containers et Docker lui-même ont été développés en Golang</em></p>
-<h3 id="volsharedockerdocker-composeyaml-2">/volshare/docker/docker-compose.yaml</h3>
+<h3 id="volsharedockerdocker-composeyaml-3">/volshare/docker/docker-compose.yaml</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">victor</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">build</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">context</span>:<span style="color:#bbb"> </span>victor<span style="color:#bbb">
@@ -352,14 +423,14 @@ route /portainer/* <span style="color:#666">{</span>
 </span></code></pre></div><h3 id="volsharedockervictorhugoyaml">/volshare/docker/victor/hugo.yaml</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#60a0b0;font-style:italic"># Liste des webapp victor à gérer</span><span style="color:#bbb">
 </span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">hugoapp</span>:<span style="color:#bbb">
-</span><span style="color:#bbb">  </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>bivouac<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Bivouac Admin&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/bivouac&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/bivouac/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">  </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>beefree<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">title</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Beefree Admin&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">folder</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/volshare/data/beefree&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">baseurl</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/beefree/&#34;</span><span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">theme</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;beedream&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://pbillerot.freeboxos.fr/beedream/&#34;</span><span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">deploy</span>:<span style="color:#bbb"> </span>&#34;/volshare/docker/bivouac/deploy.sh<span style="color:#bbb">
-</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-2">/volshare/docker/caddy/caddyfile.conf</h3>
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">themehelp</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;https://www.billerot.eu/beedream/&#34;</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">deploy</span>:<span style="color:#bbb"> </span>&#34;/volshare/docker/beefree/deploy.sh<span style="color:#bbb">
+</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-3">/volshare/docker/caddy/caddyfile.conf</h3>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#60a0b0;font-style:italic"># victor</span>
 <span style="color:#60a0b0;font-style:italic"># qui va servir les webapp hugo décrites dans hugo.yaml</span>
 reverse_proxy /* victor:8080
@@ -421,7 +492,7 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span><span style=""></span><span style="color:#60a0b0;font-style:italic"># Le port sur lequel notre serveur écoute</span><span style="">
 </span><span style=""></span><span style="color:#007020;font-weight:bold">EXPOSE</span><span style="color:#4070a0"> 8080</span><span style="">
 </span></code></pre></div><h2 id="container-caddy">Container Caddy</h2>
-<h3 id="volsharedockerdocker-composeyaml-3">/volshare/docker/docker-compose.yaml</h3>
+<h3 id="volsharedockerdocker-composeyaml-4">/volshare/docker/docker-compose.yaml</h3>
 <p>Version complète</p>
 <p><em>À seul ce container présente des ports accessible de l&rsquo;extérieur (ports 80 et 443)</em></p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#062873;font-weight:bold">version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3.3&#34;</span><span style="color:#bbb">
@@ -449,6 +520,9 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">portainer</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">    
+</span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">goaccess</span>:<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>...<span style="color:#bbb">
+</span><span style="color:#bbb">    
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">victor</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span>...<span style="color:#bbb">
 </span><span style="color:#bbb">
@@ -459,7 +533,7 @@ basicauth /hugo/* <span style="color:#666">{</span>
 </span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">web</span>:<span style="color:#bbb">
 </span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">driver</span>:<span style="color:#bbb"> </span>bridge<span style="color:#bbb">
 </span><span style="color:#bbb">
-</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-3">/volshare/docker/caddy/caddyfile.conf</h3>
+</span></code></pre></div><h3 id="volsharedockercaddycaddyfileconf-4">/volshare/docker/caddy/caddyfile.conf</h3>
 <p>Version complète</p>
 <p>Dans ce fichier on trouvera :</p>
 <ul>
@@ -480,35 +554,63 @@ basicauth /hugo/* <span style="color:#666">{</span>
 <span style="color:#666">}</span>
 
 <span style="color:#60a0b0;font-style:italic"># HOST</span>
-mon.domaine.com
-
-<span style="color:#60a0b0;font-style:italic"># blacklist - sites indésirables</span>
-@blaklist <span style="color:#666">{</span>
-    remote_ip 94.130.212.180 134.119.20.10
-<span style="color:#666">}</span>
-handle @blaklist <span style="color:#666">{</span>
-    respond <span style="color:#4070a0">&#34;Refused!&#34;</span> <span style="color:#40a070">403</span>
-<span style="color:#666">}</span>
-
-<span style="color:#60a0b0;font-style:italic"># Serveur de fichiers statiques</span>
-redir /store /store/
-handle_path /store/* <span style="color:#666">{</span>
+www.domaine.com <span style="color:#666">{</span>
+  log <span style="color:#666">{</span>
+    <span style="color:#60a0b0;font-style:italic"># log analysé par goaccess</span>
+    output file <span style="color:#4070a0">&#34;/volshare/goaccess/requests.log&#34;</span>
+  <span style="color:#666">}</span>
+  <span style="color:#60a0b0;font-style:italic"># STORE des fichiers static</span>
+  rewrite /store /store/
+  handle_path /store/* <span style="color:#666">{</span>
     root * /volshare/data/store
     file_server browse
-<span style="color:#666">}</span>
+  <span style="color:#666">}</span>
+  <span style="color:#60a0b0;font-style:italic"># RACINE application</span>
+  <span style="color:#60a0b0;font-style:italic"># application du site</span>
+  route /* <span style="color:#666">{</span>
+    rewrite /help /help/
+    reverse_proxy /fb/* filebrowser:80
+    reverse_proxy /* victor:8080
+  <span style="color:#666">}</span>
+  <span style="color:#60a0b0;font-style:italic"># Déclaration de beefree en tant qu&#39;application root</span>
+  rewrite / /beefree/
+  rewrite /beefree /beefree/
+  <span style="color:#60a0b0;font-style:italic"># GOACCESS</span>
+  rewrite /stats /stats/
+  handle_path /stats/* <span style="color:#666">{</span>
+    root * /volshare/goaccess
+    file_server browse
+  <span style="color:#666">}</span>
+  <span style="color:#60a0b0;font-style:italic"># FILEBROWSER</span>
+  rewrite /fb /fb/
+  <span style="color:#60a0b0;font-style:italic"># PORTAINER</span>
+  rewrite /portainer /portainer/
+  route /portainer/* <span style="color:#666">{</span>
+    uri strip_prefix /portainer
+    reverse_proxy portainer:9000
+  <span style="color:#666">}</span>
+  <span style="color:#60a0b0;font-style:italic"># PROTECTION par mots de passe</span>
+  <span style="color:#60a0b0;font-style:italic"># docker exec -it caddy caddy hash-password --plaintext &lt;lemotdepasse&gt;</span>
+  <span style="color:#60a0b0;font-style:italic"># docker restart caddy</span>
+  basicauth /stats/* <span style="color:#666">{</span>
+    admin JDJhJDE0JGRKNmt6a3g5L1BlSXRmbmVWV2RXeU9Lc2NlZzFGUnV6eHFyYlVYOUFGc3FmL3NsSS5zRXdt
+  <span style="color:#666">}</span>
+  basicauth /victor/* <span style="color:#666">{</span>
+    admin JDJhJDE0JGRKNmt6a3g5L1BlSXRmbmVWV2RXeU9Lc2NlZzFGUnV6eHFyYlVYOUFGc3FmL3NsSS5zRXdt
+  <span style="color:#666">}</span>
+  basicauth /hugo/* <span style="color:#666">{</span>
+    admin JDJhJDE0JGRKNmt6a3g5L1BlSXRmbmVWV2RXeU9Lc2NlZzFGUnV6eHFyYlVYOUFGc3FmL3NsSS5zRXdt
+  <span style="color:#666">}</span>
+  
+  <span style="color:#60a0b0;font-style:italic"># blacklist</span>
+  @blaklist <span style="color:#666">{</span>
+      remote_ip 94.130.212.180 134.119.20.10
+  <span style="color:#666">}</span>
+  handle @blaklist <span style="color:#666">{</span>
+      respond <span style="color:#4070a0">&#34;Refused!&#34;</span> <span style="color:#40a070">403</span>
+  <span style="color:#666">}</span>
 
-<span style="color:#60a0b0;font-style:italic"># Log du trafic (rotation automatique tous les 100 Mo (10 logs) </span>
-log <span style="color:#666">{</span>
-    output file /volshare/log/access.log
-    format single_field common_log
 <span style="color:#666">}</span>
-
-<span style="color:#60a0b0;font-style:italic"># filebrowser</span>
-<span style="color:#60a0b0;font-style:italic"># ...</span>
-<span style="color:#60a0b0;font-style:italic"># portainer</span>
-<span style="color:#60a0b0;font-style:italic"># ...</span>
-<span style="color:#60a0b0;font-style:italic"># victor</span>
-<span style="color:#60a0b0;font-style:italic"># ...</span>
 
 </code></pre></div><h2 id="procédure-dinstallation">Procédure d&rsquo;installation</h2>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#007020">cd</span> /volshare/docker
@@ -536,7 +638,7 @@ docker image prune -f
 
 <p>Dans votre navigateur préféré taper l&rsquo;URL :</p>
 <p>
-<a href="https://mon.domaine.fr/victor" target="_blank">https://mon.domaine.fr/victor</a></p>
+<a href="https://www.domaine.fr/victor" target="_blank">https://www.domaine.fr/victor</a></p>
 <p>puis renseigner le code utilisateur et son mot de passe que vous avez configuré</p>
 <p>et vous devriez avoir l&rsquo;écran d&rsquo;accueil de Victor :</p></article>
         </section>
@@ -613,6 +715,21 @@ docker image prune -f
   
   
   
+  <div class="content">
+    <div class="ui list">
+      
+  
+  <div class="item">
+    <div class="content">
+      <a href="https://github.com/pbillerot/victor/blob/master/CHANGELOG.md" target="_blank" class="item " 
+      style="color: rgba(0,0,0,.6) !important;">Quoi de neuf ?</a>
+    </div>
+  </div>
+  
+  
+    </div>
+  </div>
+  
   
 
 </section>
@@ -688,7 +805,7 @@ docker image prune -f
 <script src="/help/js/jquery.overlayScrollbars.min.js"></script>
 <script src="/help/js/header.js"></script>
 <script src="/help/js/main.js"></script>
-<script src="/help/js/bee-script.js?v=1.3.13%20du%206%20mai%202021"></script>
+<script src="/help/js/bee-script.js?v=1.3.14%20du%2015%20juin%202021"></script>
 <script src="/help/js/theme.js"></script>
     
 <script src="/help/js/html2canvas.min.js"></script>

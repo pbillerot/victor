@@ -8,6 +8,12 @@ hugoapp:
     themehelp: "https://pbillerot.freeboxos.fr/beedream/"
     deploy: "/volshare/docker/beedream-doc/deploy.sh"
     deploylabel: "Deployer la production sur le site OVH..."
+  - name: beedule
+    title: "Beedule-doc Edition"
+    folder: "/volshare/beedule-doc"
+    baseurl: "/bee/help/"
+    theme: "beedream"
+    themehelp: "https://www.billerot.eu/beedream/"
   - name: beedream
     title: "Beedream Administration"
     folder: "/volshare/beedream-doc"

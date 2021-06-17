@@ -74,7 +74,7 @@
                         </div>
                         {{if .Hugo.Deploy}}
                         <div class="ui icon item bee-modal-confirm" data-action="/victor/action/deploy"
-                            data-message="Veuillez le confirmer">
+                          title="{{if .Hugo.DeployLabel}}{{.Hugo.DeployLabel}}{{else}}Deployer la production sur un autre site...{{end}}" data-message="Veuillez le confirmer">
                             <i class="red play circle outline square icon"></i> {{if .Hugo.DeployLabel}}{{.Hugo.DeployLabel}}{{else}}Deployer la production sur un autre site...{{end}}
                         </div>
                         {{end}}

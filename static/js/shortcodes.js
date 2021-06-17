@@ -6,7 +6,7 @@
   { text: '{{< bouton [icone="nom icone"] [image="image"] titre="titre" [lien="lien"] >}}', displayText: 'bouton' },
   { text: '{{< cartes taille="s m l xl" >}}\n{{< carte image="image" [diapo="diapo"] [titre="titre"] [lien="lien"] [pdf="pdf"] [taille="s m l xl"] >}}\ntexte...\n{{< /carte >}}\n{{< /cartes >}}', displayText: 'carte' },
   { text: '{{< colonnes [two three]>}}\n...\n<--->\n...\n{{< /colonnes >}}', displayText: 'colonne' },
-  { text: '{{<centre>}}...{{</centre>}}', displayText: 'colonne' },
+  { text: '{{<centre>}}...{{</centre>}}', displayText: 'centre' },
   { text: '{{<diaporama>}}', displayText: 'diaporama' },
   { text: '{{< galerie [sous-repertoire] />}', displayText: 'galerie' },
   { text: '{{< icone nomIcone >}}', displayText: 'icone' },

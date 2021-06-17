@@ -2,9 +2,13 @@
 # CHANGELOG
 
 ### À venir :
-- editeur: completion shortcode - mémo curseur - 
-- lien changelog dans news
 - activation de la recherche
+
+3.0.2 du 17 juin 2021
+----------------------
+- `fixed` correction du titre de la modal déployer
+- `added` lien changelog dans news
+- `added` doc goaccess
 
 3.0.1 du 22 mai 2021
 ----------------------
