@@ -4,6 +4,10 @@
 ### À venir :
 - activation de la recherche
 
+3.0.3 du 24 juin 2021
+----------------------
+- `changed` maj extension + go mod tidy 
+
 3.0.2 du 17 juin 2021
 ----------------------
 - `fixed` correction du titre de la modal déployer

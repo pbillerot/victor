@@ -4,7 +4,17 @@
   
   <url>
     <loc>/help/</loc>
-    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
+    <lastmod>2021-06-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/brouillon/</loc>
+    <lastmod>2021-06-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/help/posts/</loc>
+    <lastmod>2021-06-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -14,11 +24,6 @@
   
   <url>
     <loc>/help/posts/intro/</loc>
-    <lastmod>2021-05-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/help/posts/</loc>
     <lastmod>2021-05-05T00:00:00+00:00</lastmod>
   </url>
   
