@@ -6,15 +6,10 @@
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-FR</language>
-    <lastBuildDate>Thu, 24 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="/help/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Brouillon</title>
-      <link>/help/posts/brouillon/</link>
-      <pubDate>Thu, 24 Jun 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/help/posts/brouillon/</guid>
-      <description>&lt;p&gt;Bac à sable pour tester les fonctionnalités&lt;/p&gt;</description>
-    </item>
+    <lastBuildDate>Wed, 05 May 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/help/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Introduction</title>

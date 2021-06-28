@@ -4,6 +4,10 @@
 ### À venir :
 - activation de la recherche
 
+3.0.4 du 28 juin 2021
+----------------------
+- `changed` aide en ligne actualisée
+
 3.0.3 du 24 juin 2021
 ----------------------
 - `changed` maj extension + go mod tidy 

@@ -6,7 +6,11 @@
     <description>Recent content in explorateur on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-FR</language>
-    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="/help/tags/explorateur/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/help/tags/explorateur/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>L&#39;explorateur du contenu</title>
       <link>/help/posts/explorateur/</link>

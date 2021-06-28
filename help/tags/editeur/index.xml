@@ -6,7 +6,11 @@
     <description>Recent content in editeur on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>fr-FR</language>
-    <lastBuildDate>Sat, 20 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="/help/tags/editeur/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Mar 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/help/tags/editeur/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>L&#39;éditeur de document</title>
       <link>/help/posts/doc-edit/</link>
