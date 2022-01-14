@@ -174,6 +174,11 @@ func fileRecord(hugo *Hugo, pathAbsolu string, info os.FileInfo) (record HugoFil
 		record.Mode = "javascript"
 		record.Order = 1
 	}
+	if contains([]string{".css"}, record.Ext) {
+		record.IsSystem = true
+		record.Mode = "css"
+		record.Order = 1
+	}
 	if contains([]string{".ini", ".conf", ".properties"}, record.Ext) {
 		record.IsSystem = true
 		record.Mode = "properties"

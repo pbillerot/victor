@@ -58,11 +58,11 @@
                             title="Actualiser le répertoire..." data-message="Veuillez le confirmer">
                             <i class="teal refresh icon"></i> Actualiser le répertoire...
                         </div>
-                        <div class="divider"></div>
+                        <!-- <div class="divider"></div>
                         <div class="ui icon item bee-modal-confirm" data-action="/victor/action/gitUpdateTheme"
                             title="Mettre à jour le thème Hugo à partir de Github..." data-message="Veuillez le confirmer">
                             <i class="teal github icon"></i> Mettre à jour le thème Hugo à partir de Github...
-                        </div>
+                        </div> -->
                         <div class="divider"></div>
                         <div class="ui icon item bee-modal-confirm" data-action="/victor/action/pushProd"
                             title="Mettre le site en production..." data-message="Veuillez le confirmer">
@@ -119,7 +119,7 @@
                 {{.Config.Appname}}
                 <div class="detail">{{.Config.Version}}</div>
             </a>
-            <a class="ui right floated image label" href="/help/" target="_blank">
+            <a class="ui right floated image label" href="{{.Hugo.BaseURL}}" target="_blank">
                 <i class="info circle icon"></i>
                 Guide d'utilisation de Victor
             </a>

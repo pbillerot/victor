@@ -4,6 +4,10 @@
 ### À venir :
 - activation de la recherche
 
+3.1.0 du 14 janvier 2022
+- `removed` suppression de l'aide dans la webapp
+- `added` editeur des css
+
 3.0.5 du 15 aout 2021
 ----------------------
 - `changed` aide en ligne actualisée

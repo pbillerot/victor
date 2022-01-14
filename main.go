@@ -1,15 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/beego/beego/v2/core/config"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/pbillerot/victor/models"
 	_ "github.com/pbillerot/victor/routers"
-	"github.com/pbillerot/victor/shutil"
 )
 
 var err error
@@ -26,9 +22,9 @@ func init() {
 	if val, ok := config.String("help"); ok == nil {
 		models.Config.Help = val
 	}
-	if val, ok := config.String("helpEditor"); ok == nil {
-		models.Config.HelpEditor = val
-	}
+	// if val, ok := config.String("helpEditor"); ok == nil {
+	// 	models.Config.HelpEditor = val
+	// }
 	if val, ok := config.String("version"); ok == nil {
 		models.Config.Version = val
 	}
@@ -49,17 +45,17 @@ func init() {
 	}
 
 	// Récupération de l'aide en ligne
-	src := models.Config.Help
-	dst := "help"
-	_, err = os.Open(src + "/index.html")
-	if !os.IsNotExist(err) {
-		err = shutil.CopyTree(src, dst, nil)
-		if err != nil {
-			msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", src, dst, err)
-			logs.Error(msg)
-		}
-	}
-	web.SetStaticPath("/help", "help")
+	// src := models.Config.Help
+	// dst := "help"
+	// _, err = os.Open(src + "/index.html")
+	// if !os.IsNotExist(err) {
+	// 	err = shutil.CopyTree(src, dst, nil)
+	// 	if err != nil {
+	// 		msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", src, dst, err)
+	// 		logs.Error(msg)
+	// 	}
+	// }
+	// web.SetStaticPath("/help", "help")
 	initConfigHugo()
 }
 
