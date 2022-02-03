@@ -4,6 +4,9 @@
 ### À venir :
 - activation de la recherche
 
+3.1.1 du 3 février 2022
+- `fixed` lien sur l'aide en ligne de victor
+
 3.1.0 du 14 janvier 2022
 - `removed` suppression de l'aide dans la webapp
 - `added` editeur des css
