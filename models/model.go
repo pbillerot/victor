@@ -246,6 +246,7 @@ func fileRecord(hugo *Hugo, pathAbsolu string, info os.FileInfo) (record HugoFil
 	if record.IsMarkdown || ext == ".yaml" {
 		// Extraction des meta entre les --- meta ---
 		var meta HugoFileMeta
+		// logs.Info(string(content[:]))
 		err = yaml.Unmarshal(content, &meta)
 		if err != nil {
 			logs.Error(err)

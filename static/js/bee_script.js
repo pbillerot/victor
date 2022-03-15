@@ -129,7 +129,7 @@ jQuery(function () {
         var $width = 'large';
         var $posx = 'right';
         var $posy = '5';
-        var $target = 'hugo-file';
+        var $target = '_blank';
         if (window.opener == null) {
           window.open($action, $target, computeWindow($posx, $posy, $width, $height, false));
         } else {
