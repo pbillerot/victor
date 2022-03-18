@@ -4,6 +4,10 @@
 ### À venir :
 - activation de la recherche
 
+3.1.3 du 18 mars 2022
+- `changed` eddy html
+- `changed` beego 2.0.1 vers 2.0.2
+
 3.1.2 du 15 mars 2022
 - `changed` ouverture eddy dans n fenêtres
 - `changed` beego 2.0.1 vers 2.0.2

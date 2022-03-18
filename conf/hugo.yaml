@@ -1,33 +1,39 @@
 
 hugoapp:
-  - name: victor
-    title: "Victor Administration"
-    folder: "/volshare/dev/victor-doc"
-    baseurl: "/victor-doc/"
-    theme: "beedream"
-    themehelp: "https://philippe.billerot.eu/beedream/"
-    deploy: "/volshare/docker/victor/deploy.sh"
-    # deploylabel: "Deployer la production sur le site OVH..."
+  # - name: victor
+  #   title: "Victor Administration"
+  #   folder: "/volshare/dev/victor-doc"
+  #   baseurl: "/victor-doc/"
+  #   theme: "beedream"
+  #   themehelp: "https://philippe.billerot.eu/beedream/"
+  #   deploy: "/volshare/docker/victor/deploy.sh"
+  #   # deploylabel: "Deployer la production sur le site OVH..."
+  # - name: beedule
+  #   title: "Beedule-learn Edition"
+  #   folder: "/volshare/dev/beedule-learn"
+  #   baseurl: "/beedule-learn/"
+  #   theme: "hugo-theme-relearn"
+  #   themehelp: "https://mcshelby.github.io/hugo-theme-relearn/"
   - name: beedule
     title: "Beedule-learn Edition"
-    folder: "/volshare/dev/beedule-learn"
+    folder: "/home/billerot/Dev/beedule-learn"
     baseurl: "/beedule-learn/"
     theme: "hugo-theme-relearn"
     themehelp: "https://mcshelby.github.io/hugo-theme-relearn/"
-  - name: beedream
-    title: "Beedream Administration"
-    folder: "/volshare/dev/beedream-doc"
-    baseurl: "/beedream/"
-    theme: "beedream"
-    themehelp: "https://philippe.billerot.eu/beedream/"
-  - name: beefree
-    title: "Beefree Admin"
-    folder: "/volshare/dev/beefree"
-    baseurl: "/beefree/"
-    theme: "beedream"
-    themehelp: "https://philippe.billerot.eu/beedream/"
-    deploy: "/volshare/docker/beefree/deploy.sh"
-    deploylabel: "Deployer la production sur le site OVH..."
+  # - name: beedream
+  #   title: "Beedream Administration"
+  #   folder: "/volshare/dev/beedream-doc"
+  #   baseurl: "/beedream/"
+  #   theme: "beedream"
+  #   themehelp: "https://philippe.billerot.eu/beedream/"
+  # - name: beefree
+  #   title: "Beefree Admin"
+  #   folder: "/volshare/dev/beefree"
+  #   baseurl: "/beefree/"
+  #   theme: "beedream"
+  #   themehelp: "https://philippe.billerot.eu/beedream/"
+  #   deploy: "/volshare/docker/beefree/deploy.sh"
+  #   deploylabel: "Deployer la production sur le site OVH..."
   # - name: foirexpo
   #   title: "FoirExpo Administration"
   #   folder: "/volshare/foirexpo"

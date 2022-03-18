@@ -162,27 +162,32 @@ func fileRecord(hugo *Hugo, pathAbsolu string, info os.FileInfo) (record HugoFil
 	if strings.Contains(strings.ToLower(record.Base), "dockerfile") {
 		record.IsSystem = true
 		record.Mode = "dockerfile"
-		record.Order = 1
+		record.Order = 9
 	}
 	if contains([]string{".sh"}, record.Ext) {
 		record.IsSystem = true
 		record.Mode = "shell"
-		record.Order = 1
+		record.Order = 5
 	}
 	if contains([]string{".json", ".js"}, record.Ext) {
 		record.IsSystem = true
 		record.Mode = "javascript"
-		record.Order = 1
+		record.Order = 4
 	}
 	if contains([]string{".css"}, record.Ext) {
 		record.IsSystem = true
 		record.Mode = "css"
-		record.Order = 1
+		record.Order = 4
 	}
 	if contains([]string{".ini", ".conf", ".properties"}, record.Ext) {
 		record.IsSystem = true
 		record.Mode = "properties"
 		record.Order = 1
+	}
+	if contains([]string{".html"}, record.Ext) {
+		record.IsSystem = true
+		record.Mode = "htmlmixed"
+		record.Order = 4
 	}
 	if contains([]string{".yaml", ".toml"}, record.Ext) {
 		record.IsSystem = true
