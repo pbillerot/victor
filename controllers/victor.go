@@ -12,7 +12,6 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/kennygrant/sanitize"
 
-	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
 	"github.com/pbillerot/victor/models"
 	"github.com/pbillerot/victor/shutil"
@@ -27,7 +26,7 @@ import (
 func (c *MainController) Main() {
 	setSession(c, "Folder", "/")
 
-	web.ReadFromRequest(&c.Controller)
+	beego.ReadFromRequest(&c.Controller)
 
 	if c.GetSession("Hugo").(models.Hugo).Name == "" {
 		hugoApp := models.GetFirstHugoApp()
@@ -60,7 +59,7 @@ func (c *MainController) Folder() {
 	pathFolder := "/" + c.Ctx.Input.Param(":path")
 	setSession(c, "Folder", pathFolder)
 
-	web.ReadFromRequest(&c.Controller)
+	beego.ReadFromRequest(&c.Controller)
 
 	// Remplissage du contexte pour le template
 	c.Data["Record"] = models.HugoGetRecord(c.GetSession("Hugo").(models.Hugo), c.GetSession("File").(string))
@@ -311,7 +310,6 @@ func (c *MainController) FileRename() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // FileMove Déplacer le fichier
@@ -402,7 +400,6 @@ func (c *MainController) FileMove() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // FileCp Recopier le fichier ou dossier
@@ -462,7 +459,6 @@ func (c *MainController) FileCp() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // FileNew Nouveau document à partir du modele.md
@@ -499,6 +495,14 @@ func (c *MainController) FileNew() {
 		}
 		newFile = strings.Replace(newFile, ".drawio", ".png", 1)
 		err = ioutil.WriteFile(newFile, data, 0644)
+		if err != nil {
+			msg := fmt.Sprintf("Nouveau fichier %s : %s", newFile, err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+			return
+		}
 	} else {
 		err = ioutil.WriteFile(newFile, []byte("Created by Victor"), 0644)
 	}
@@ -515,7 +519,6 @@ func (c *MainController) FileNew() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // FileRm Supprimer le fichier ou dossier
@@ -556,7 +559,6 @@ func (c *MainController) FileRm() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // FileUpload Charger le fichier sur le serveur
@@ -575,7 +577,6 @@ func (c *MainController) FileUpload() {
 	}
 	for _, mfile := range files {
 		file, err := mfile.Open()
-		defer file.Close()
 		if err != nil {
 			msg := fmt.Sprintf("Import : %s", err)
 			logs.Error(msg)
@@ -583,7 +584,15 @@ func (c *MainController) FileUpload() {
 			flash.Store(&c.Controller)
 			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
 		}
+		defer file.Close()
 		fileContents, err := ioutil.ReadAll(file)
+		if err != nil {
+			msg := fmt.Sprintf("Import : %s", err)
+			logs.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
+		}
 		path := c.GetSession("Hugo").(models.Hugo).ContentDir + pathFolder + "/" + mfile.Filename
 		err = ioutil.WriteFile(path, fileContents, 0644)
 		if err != nil {
@@ -598,7 +607,6 @@ func (c *MainController) FileUpload() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // FileMkdir Créer un dossier
@@ -627,7 +635,6 @@ func (c *MainController) FileMkdir() {
 	hugoReload(c)
 	pushDev(c)
 	c.Ctx.Redirect(302, "/victor/folder"+pathFolder)
-	return
 }
 
 // APIFolders as /api/folders
@@ -691,8 +698,8 @@ func SetHugoApp(c *MainController, hugoApp models.HugoApp) {
 	c.SetSession("Hugo", hugo)
 	hugoReload(c)
 
-	web.SetStaticPath("/content", hugo.ContentDir)
-	web.SetStaticPath("/hugo", hugo.PrivateDir)
+	beego.SetStaticPath("/content", hugo.ContentDir)
+	beego.SetStaticPath("/hugo", hugo.PrivateDir)
 
 }
 
@@ -769,6 +776,9 @@ func pushDev(c *MainController) {
 		flash.Error("ERREURG Génération des pages : %v", err)
 		flash.Error(string(out))
 		flash.Store(&c.Controller)
+	} else {
+		flash.Success(string(out))
+		flash.Store(&c.Controller)
 	}
 	logs.Info("pushDev", string(out))
 }
@@ -786,10 +796,10 @@ func pushProd(c *MainController) {
 		flash.Error("pushProd : %v", err)
 		flash.Error(string(out))
 		flash.Store(&c.Controller)
-		return
+	} else {
+		flash.Success(string(out))
+		flash.Store(&c.Controller)
 	}
-	flash.Success(string(out))
-	flash.Store(&c.Controller)
 	logs.Info("pushProd", string(out))
 }
 

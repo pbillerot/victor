@@ -60,21 +60,21 @@ func (c *MainController) Prepare() {
 }
 
 // int contains in slice
-func containsInt(sl []int, in int) bool {
-	for _, v := range sl {
-		if v == in {
-			return true
-		}
-	}
-	return false
-}
+// func containsInt(sl []int, in int) bool {
+// 	for _, v := range sl {
+// 		if v == in {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
 
 // string contains in slice
-func containsString(sl []string, in string) bool {
-	for _, v := range sl {
-		if v == in {
-			return true
-		}
-	}
-	return false
-}
+// func containsString(sl []string, in string) bool {
+// 	for _, v := range sl {
+// 		if v == in {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
