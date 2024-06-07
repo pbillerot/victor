@@ -4,7 +4,7 @@
 ### À venir :
 - https://github.com/SVG-Edit/svgedit
 
-3.1.4 du 24 mars 2022
+3.1.5 du 7 juin 2024
 - `changed` message après rafraichissement dico
 
 3.1.3 du 18 mars 2022
