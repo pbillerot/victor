@@ -16,7 +16,7 @@ _build:
 
 Explorateur et éditeur de contenu d'un site Web HUGO
 
-Retrouvez la documentation complète [ici](https://philippe.billerot.com/victor-doc/)
+Retrouvez la documentation complète [ici](https://philippe.billerot.net/victor-doc/)
 
 Outils utilisés
 - langage GOLANG
