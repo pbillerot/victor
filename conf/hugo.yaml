@@ -1,19 +1,13 @@
 
 hugoapp:
-  # - name: victor
-  #   title: "Victor Administration"
-  #   folder: "/volshare/dev/victor-doc"
-  #   baseurl: "/victor-doc/"
-  #   theme: "beedream"
-  #   themehelp: "https://philippe.billerot.eu/beedream/"
-  #   deploy: "/volshare/docker/victor/deploy.sh"
-  #   # deploylabel: "Deployer la production sur le site OVH..."
-  # - name: beedule
-  #   title: "Beedule-learn Edition"
-  #   folder: "/volshare/dev/beedule-learn"
-  #   baseurl: "/beedule-learn/"
-  #   theme: "hugo-theme-relearn"
-  #   themehelp: "https://mcshelby.github.io/hugo-theme-relearn/"
+  - name: victor
+    title: "Victor Documentation"
+    folder: "/volshare/dev/vidoc"
+    baseurl: "/vidoc/"
+    theme: "beedream"
+    themehelp: "https://philippe.billerot.net/beedream/"
+    deploy: "/volshare/docker/victor/deploy.sh"
+    # deploylabel: "Deployer la production sur le site OVH..."
   - name: beedule
     title: "Beedule-learn Edition"
     folder: "/home/billerot/Dev/beedule-learn"

@@ -4,6 +4,9 @@
 ### À venir :
 - https://github.com/SVG-Edit/svgedit
 
+3.1.6 du 9 juin 2024
+- `changed` /vidoc = doc sur l'éditeur de site Hugo
+
 3.1.5 du 7 juin 2024
 - `changed` message après rafraichissement dico
 
